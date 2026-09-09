@@ -200,3 +200,4 @@ input, textarea { color: var(--text); }
 .presentation-canvas.canvas-layout-statement p, .presentation-stage.canvas-layout-statement p { display: none; }
 .presentation-canvas .canvas-kicker, .presentation-stage .canvas-kicker { position: absolute; }
 .utility-empty { min-height: 180px; display: grid; place-items: center; align-content: center; gap: 9px; color: #7e899f; text-align: center; }.utility-empty svg { color: #9b8de8; }.utility-empty strong { color: #d9daea; font-size: 14px; }.utility-empty small { color: #7e899f; font-size: 11px; }
+.sheet-tabs { display: flex; align-items: center; gap: 4px; }.sheet-tabs button { padding: 5px 8px; border-radius: 5px; }.sheet-tabs button.selected { color: #eae7ff; background: rgba(158, 139, 239, .22); }

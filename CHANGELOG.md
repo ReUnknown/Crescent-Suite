@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.35 — Sheets can grow beyond one tab
+
+Published September 9, 2026.
+
+### Changed
+
+- Added persisted Sheets tabs with independent cell maps.
+- Existing single-sheet workspaces migrate automatically into `Sheet 1`.
+- Add sheet creates and selects a new blank tab; switching tabs preserves each tab’s cells and active selection.
+
+### Verification
+
+- Added `Sheet 2`, entered “Notes” in its A1 cell, switched back to Sheet 1 and confirmed the original B2 value remained, then reloaded and confirmed Sheet 2/A1 persisted.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.34 — Calendar navigation is live
 
 Published September 8, 2026.
