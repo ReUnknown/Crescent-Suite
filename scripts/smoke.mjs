@@ -56,6 +56,11 @@ try {
         }
         if (route === "trash" && !(await page.locator(".utility-panel").innerText()).includes("Trash is empty.")) failures.push({ viewport: viewport.name, route, emptyState: "Trash is empty." });
         if (route === "home" && viewport.name === "desktop") {
+          const launchers = page.locator(".app-launch");
+          if (await launchers.count() !== 8) failures.push({ viewport: viewport.name, route, launcherCount: await launchers.count() });
+          const railBox = await page.locator(".home-rail").boundingBox();
+          const formsBox = await launchers.filter({ hasText: "Forms" }).boundingBox();
+          if (!formsBox || (railBox && formsBox.right > railBox.left)) failures.push({ viewport: viewport.name, route, formsLauncher: formsBox, homeRail: railBox });
           await page.getByRole("textbox", { name: "Search across Crescent" }).fill("North star");
           const searchHits = await page.locator(".search-results .search-result").count();
           if (!searchHits) failures.push({ viewport: viewport.name, route, search: "North star" });

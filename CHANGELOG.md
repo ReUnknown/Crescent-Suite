@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.162 — Complete app launcher layout
+
+Published September 9, 2026.
+
+### Fixed
+
+- Home now lays out all eight suite apps in a balanced 4×2 launcher at desktop widths, keeping Forms inside the main column instead of allowing it to slip beneath the right rail.
+- Refreshed the committed Home preview to show the complete launcher.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 30 desktop/mobile route checks.
+
 ## v0.1.161 — Utility surface consistency
 
 Published September 9, 2026.

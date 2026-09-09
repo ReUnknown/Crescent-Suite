@@ -101,7 +101,7 @@ input, textarea { color: var(--text); }
 .home-hero p, .utility-heading p, .tasks-heading p, .calendar-heading p, .drive-heading p, .forms-heading p { margin: 10px 0 0; color: #9da4bd; font-size: 15px; }
 .hero-moon { display: flex; align-items: center; gap: 14px; color: #aeb0ca; font-size: 12px; line-height: 1.25; padding-top: 3px; }
 .hero-moon-shape { width: 46px; height: 46px; position: relative; display: block; border-radius: 50%; background: linear-gradient(135deg, #d7ccff, #8b7ce5); box-shadow: 0 0 34px rgba(171, 152, 255, .25); }.hero-moon-shape::after { content: ""; position: absolute; width: 48px; height: 48px; top: -9px; left: 13px; border-radius: 50%; background: #131824; }
-.app-launcher { display: grid; grid-template-columns: repeat(8, minmax(82px, 1fr)); gap: 10px; padding-bottom: 28px; }
+.app-launcher { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding-bottom: 28px; }
 .app-launch { min-height: 103px; padding: 15px 7px 12px; display: grid; justify-items: center; align-content: center; gap: 7px; border: 1px solid var(--line); border-radius: 12px; color: #eceafb; background: linear-gradient(145deg, rgba(28, 34, 49, .92), rgba(21, 26, 39, .86)); transition: .18s ease; }
 .app-launch:hover { transform: translateY(-3px); border-color: rgba(186, 172, 255, .38); background: linear-gradient(145deg, rgba(43, 48, 77, .95), rgba(24, 29, 45, .96)); box-shadow: 0 10px 28px rgba(0,0,0,.18); }
 .app-launch span:not(.app-icon) { font-size: 13px; font-weight: 600; }.app-launch small { font-size: 10px; color: var(--muted); white-space: nowrap; }
