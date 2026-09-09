@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.1.4 — Clear container navigation
+
+Published September 9, 2026.
+
+### Improved
+
+- Fixed the shared editor header so Notes, Tasks, Calendar, and Drive no longer present fixed surface names as editable file titles.
+- Real document, sheet, slide, and form titles remain editable and continue to update local Starred metadata.
+- Added read-only semantics and visual treatment for fixed container titles.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.1.3 — Exact utility destinations
 
 Published September 9, 2026.

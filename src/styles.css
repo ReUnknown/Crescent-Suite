@@ -264,3 +264,4 @@ input, textarea { color: var(--text); }
 .toolbar-select { min-width: 82px; padding: 3px 2px; border: 0; outline: 0; color: #a7aec3; background: transparent; font: inherit; font-size: 12px; }.toolbar-select option { color: #26283a; background: #fff; }
 .task-due { border: 0; cursor: pointer; }.task-due:hover { color: white; background: rgba(148, 158, 192, .18); }
 .form-textarea { min-height: 96px; resize: vertical; }
+.editor-breadcrumb input[readonly] { cursor: default; color: #b6bed5; }
