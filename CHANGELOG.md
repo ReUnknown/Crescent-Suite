@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.3.4 — Search accessibility semantics
+
+Published September 9, 2026.
+
+### Improved
+
+- Universal Search now exposes its open state with `aria-expanded`.
+- The search input now identifies its result region with `aria-controls="crescent-search-results"`.
+- Added production smoke assertions for the new search semantics.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.3.3 — Surface-aware editor headers
 
 Published September 9, 2026.
