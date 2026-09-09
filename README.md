@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.48 — Trash preview clarified**
+**v0.1.49 — Forms validate collected email**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -48,6 +48,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Added a committed Trash screenshot showing a recoverable deleted task
 - Updated the visual archive header to match the latest committed preview set
 - Re-captured the Trash preview after the page animation settled for a clearer GitHub review image
+- Forms blocks submission with a local message when email collection is enabled but the email field is empty
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device

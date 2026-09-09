@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.49 — Forms validate collected email
+
+Published September 9, 2026.
+
+### Changed
+
+- Forms now blocks submission when email collection is enabled and the email field is empty.
+- The existing local toast explains the required next step; valid email input continues through the saved response flow.
+
+### Verification
+
+- Confirmed empty email leaves the form unsaved with “Add an email address before submitting.”, then entered `alex@example.com` and confirmed the success state.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.48 — Trash preview clarified
 
 Published September 9, 2026.
