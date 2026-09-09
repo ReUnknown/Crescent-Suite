@@ -303,10 +303,15 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
 function Header({ activeApp, onOpenSidebar, query, onQueryChange, onNavigate, workspace }) {
   const utilityTitles = { recent: "Recent", starred: "Starred", shared: "Shared with me", trash: "Trash", settings: "Settings" };
   const title = activeApp === "home" ? "Home" : APP_META.find((app) => app.id === activeApp)?.label ?? utilityTitles[activeApp] ?? "Crescent";
+  const handleSearchKeyDown = (event) => {
+    const firstResult = document.querySelector(".search-result");
+    if (event.key === "ArrowDown" && firstResult) { event.preventDefault(); firstResult.focus(); }
+    if (event.key === "Enter" && firstResult) { event.preventDefault(); firstResult.click(); }
+  };
   return <header className="topbar">
     <button className="mobile-menu icon-button" onClick={onOpenSidebar} aria-label="Open navigation"><Menu size={20} /></button>
     <div className="mobile-title"><BrandMark small /><span>{title}</span></div>
-    <div className="global-search"><Search size={19} /><input value={query} onChange={(event) => onQueryChange(event.target.value)} placeholder="Search across Crescent..." aria-label="Search across Crescent" /><kbd><Command size={13} />K</kbd></div>
+    <div className="global-search"><Search size={19} /><input value={query} onChange={(event) => onQueryChange(event.target.value)} onKeyDown={handleSearchKeyDown} placeholder="Search across Crescent..." aria-label="Search across Crescent" /><kbd><Command size={13} />K</kbd></div>
     <div className="topbar-actions"><button className="icon-button" aria-label="Help" onClick={() => emitNotice("Help center is coming soon to this local workspace.")}><CircleHelp size={19} /></button><button className="icon-button" aria-label="Settings" onClick={() => onNavigate("settings")}><Settings2 size={19} /></button><div className="topbar-divider" /><button className="profile-button" aria-label="Open profile" onClick={() => emitNotice("Crescent is running locally in this browser.")}><span>A</span><ChevronDown size={15} /></button></div>
     {query && <SearchResults query={query} onNavigate={onNavigate} workspace={workspace} />}
   </header>;
@@ -332,7 +337,16 @@ function SearchResults({ query, onNavigate, workspace }) {
   const searchTextFor = (file) => file.type === "Docs" ? workspace.docs?.body?.replace(/<[^>]+>/g, " ") ?? "" : file.type === "Sheets" ? Object.values(workspace.sheets?.cells ?? {}).join(" ") : file.type === "Slides" ? (workspace.slides ?? []).map((slide) => `${slide.title} ${slide.body}`).join(" ") : file.type === "Notes" ? workspace.notes?.find((note) => note.title === file.title)?.body ?? "" : file.type === "Forms" ? (workspace.forms ?? []).map((question) => question.label).join(" ") : "";
   const mergedResults = new Map([...getLiveRecentFiles(workspace), ...localResults].map((file) => [`${file.type}-${file.title}`, file]));
   const results = [...mergedResults.values()].filter((file) => `${file.title} ${file.type} ${file.opened} ${searchTextFor(file)}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
-  return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.type.toLowerCase())}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
+  const handleResultKeyDown = (event) => {
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+    event.preventDefault();
+    const resultButtons = [...document.querySelectorAll(".search-result")];
+    const currentIndex = resultButtons.indexOf(event.currentTarget);
+    const nextIndex = event.key === "ArrowDown" ? Math.min(resultButtons.length - 1, currentIndex + 1) : currentIndex - 1;
+    if (nextIndex < 0) document.querySelector(".global-search input")?.focus();
+    else resultButtons[nextIndex]?.focus();
+  };
+  return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.type.toLowerCase())} onKeyDown={handleResultKeyDown}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
 function HomeView({ workspace, update, onNavigate, onFocusSearch }) {

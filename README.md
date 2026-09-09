@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.0.4 — Calendar time across Home**
+**v1.0.5 — Keyboard-friendly search**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -33,6 +33,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Calendar events now support inline title and time editing with natural-language date recalculation and local persistence
 - Task title editing now collapses to a compact save/cancel state on small screens without horizontal overflow
 - Saved same-day calendar events now carry their actual time into Home’s My day rail
+- Global Search now supports ArrowDown/ArrowUp focus movement and Enter-to-open navigation
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.0.5 — Keyboard-friendly search
+
+Published September 9, 2026.
+
+### Added
+
+- Search results can now be reached from the search field with ArrowDown.
+- ArrowUp moves through results and returns to the search field at the top.
+- Enter opens the focused local result and preserves the existing route navigation behavior.
+- Added a committed visual preview of the focused search result state.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage verifies search result focus and Enter navigation to Docs.
+
 ## v1.0.4 — Calendar time across Home
 
 Published September 9, 2026.

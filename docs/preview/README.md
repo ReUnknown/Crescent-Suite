@@ -1,4 +1,4 @@
-# v1.0.4 visual preview
+# v1.0.5 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -13,6 +13,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `calendar-edit.png` — Calendar with a saved local event title and time being edited in place
 - `tasks-edit-mobile.png` — Compact mobile task title editing state with no horizontal overflow
 - `home-local-event-time.png` — Home My day rail showing a saved Calendar event with its actual local time
+- `search-keyboard.png` — Global Search with the first result focused for keyboard navigation
 - `sheets.png` — editable Sheets surface with formula bar, populated grid, and persistent tabs
 - `sheets-formatting.png` — Sheets with persistent Bold and Italic state on the selected cell
 - `sheets-insights.png` — Sheets Insights view calculated from the grid
