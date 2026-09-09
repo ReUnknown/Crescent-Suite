@@ -69,6 +69,11 @@ try {
     await behaviorPage.getByRole("button", { name: "Delete question 1" }).click();
     const questionCount = await behaviorPage.locator(".question-label-input").count();
     if (questionCount !== 2) failures.push({ route: "forms", controls: "question delete", questionCount });
+    await behaviorPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("textbox", { name: "File title" }).fill("Crescent smoke favorite");
+    await behaviorPage.goto(`${baseUrl}/starred`, { waitUntil: "networkidle" });
+    const renamedFavorite = await behaviorPage.locator(".utility-panel").innerText();
+    if (!renamedFavorite.includes("Crescent smoke favorite")) failures.push({ route: "starred", controls: "rename favorite" });
   } finally {
     await behaviorPage.close();
   }
@@ -78,7 +83,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Month has 42 cells; content search, local formulas, and Forms controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Month has 42 cells; content search, local formulas, Forms controls, and favorite continuity are active.`);
   }
 } finally {
   server.kill("SIGTERM");
