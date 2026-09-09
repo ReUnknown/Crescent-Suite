@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.163 — Focused Home day rail**
+**v0.1.164 — Preview archive alignment**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -25,6 +25,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Recent, Starred, Shared, Trash, and Settings now keep their correct mobile page titles and contextual empty-state copy
 - Home now presents all eight suite apps in a visible 4×2 launcher so Forms remains discoverable beside the other core tools
 - Home’s My day rail now includes only saved events on the current local day; future events remain available in Calendar and Recent
+- The committed preview archive header and Home screenshot description now match the current published shell
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

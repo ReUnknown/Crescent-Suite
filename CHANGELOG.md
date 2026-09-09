@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.164 — Preview archive alignment
+
+Published September 9, 2026.
+
+### Documentation
+
+- Aligned the committed visual preview archive with the current v0.1.163 Home shell and refreshed screenshot description.
+
+### Verification
+
+- Repository remains clean after the metadata-only release update; the underlying v0.1.163 implementation passed lint, build, Pages verification, and 30-route smoke checks.
+
 ## v0.1.163 — Focused Home day rail
 
 Published September 9, 2026.

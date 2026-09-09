@@ -1,8 +1,8 @@
-# v0.1.162 visual preview
+# v0.1.163 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
-- `home.png` — desktop home dashboard
+- `home.png` — desktop home dashboard with all eight apps visible and a focused local-day rail
 - `local-workspaces.png` — Home with the persistent Workspaces and Projects navigation shell
 - `workspace-drive.png` — a locally created Workspace mirrored as an empty Drive folder
 - `search-local-navigation.png` — Global Search finding a locally created Workspace
