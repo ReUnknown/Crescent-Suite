@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.38 — Forms response settings persist
+
+Published September 9, 2026.
+
+### Changed
+
+- Added a versioned local `formSettings` object with `collectEmail` and `oneResponse` flags.
+- Forms settings toggles now expose pressed state, update immediately, and persist through reloads.
+
+### Verification
+
+- Toggled both response settings, reloaded the app, and confirmed both states were restored.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.37 — Sheets visual checkpoint refreshed
 
 Published September 9, 2026.
