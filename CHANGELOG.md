@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.0.9 — Exact Calendar and Drive destinations
+
+Published September 9, 2026.
+
+### Added
+
+- Search results now carry local navigation context into Calendar and Drive.
+- Selecting a Calendar event opens the saved event list with that event highlighted.
+- Selecting a Drive folder opens the folder context with the matching folder selected, including case-insensitive matches.
+- Added committed visual previews for both destination states.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage verifies exact Drive folder and Calendar event result routing.
+
 ## v1.0.8 — Exact task destinations
 
 Published September 9, 2026.

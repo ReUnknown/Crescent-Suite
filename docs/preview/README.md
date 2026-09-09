@@ -1,4 +1,4 @@
-# v1.0.8 visual preview
+# v1.0.9 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -16,6 +16,8 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `search-keyboard.png` — Global Search with the first result focused for keyboard navigation
 - `search-exact-slide.png` — Search opening the exact matching slide inside Slides
 - `search-exact-task.png` — Search opening the exact matching task with its Project filter selected
+- `search-exact-calendar.png` — Search opening the exact matching Calendar event with the saved event highlighted
+- `search-exact-drive.png` — Search opening the exact matching Drive folder with its context panel selected
 - `sheets.png` — editable Sheets surface with formula bar, populated grid, and persistent tabs
 - `sheets-formatting.png` — Sheets with persistent Bold and Italic state on the selected cell
 - `sheets-insights.png` — Sheets Insights view calculated from the grid

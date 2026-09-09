@@ -103,6 +103,11 @@ try {
     if (await behaviorPage.locator(".folder-card").filter({ hasText: "Smoke folder" }).count() !== 1) failures.push({ route: "drive", controls: "duplicate folder guard" });
     await behaviorPage.reload({ waitUntil: "networkidle" });
     if (await behaviorPage.locator(".folder-card").filter({ hasText: "Smoke folder" }).count() !== 1) failures.push({ route: "drive", controls: "folder persistence" });
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Smoke folder");
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
+    await behaviorPage.waitForSelector('[data-folder-name="Smoke folder"].selected');
+    if (behaviorPage.url().split("#")[1] !== "drive" || await behaviorPage.locator('[data-folder-name="Smoke folder"].selected').count() !== 1) failures.push({ route: "search", controls: "open exact Drive folder result", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
     let calendarPrompt = 0;
     const calendarAnswers = ["Smoke focus block", "Tomorrow · 3:00 PM", "Smoke Friday", "Friday · 9:00 AM", "Smoke today", "Today · 5:00 PM"];
@@ -139,6 +144,10 @@ try {
     if (!(await behaviorPage.locator(".recent-table").innerText()).includes("Smoke today")) failures.push({ route: "home", controls: "live calendar recent file" });
     if ((await behaviorPage.locator(".day-card").innerText()).includes("Smoke Friday")) failures.push({ route: "home", controls: "future event excluded from My day" });
     if (!(await behaviorPage.locator(".day-card").innerText()).includes("Smoke today") || !(await behaviorPage.locator(".day-card").innerText()).includes("5:00 PM")) failures.push({ route: "home", controls: "local calendar time in My day" });
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Smoke focus edited");
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
+    await behaviorPage.waitForSelector(".calendar-local-card.selected");
+    if (behaviorPage.url().split("#")[1] !== "calendar" || !(await behaviorPage.locator(".calendar-local-card.selected").innerText()).includes("Smoke focus edited")) failures.push({ route: "search", controls: "open exact Calendar event result", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/tasks`, { waitUntil: "networkidle" });
     const dueBefore = await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).innerText();
     await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).click();

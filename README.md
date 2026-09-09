@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.0.8 — Exact task destinations**
+**v1.0.9 — Exact Calendar and Drive destinations**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -37,6 +37,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Search results now open the exact local note or slide selected instead of only opening the containing app
 - Search context now applies once per destination so later local editing and manual selection stay stable
 - Search results now open the matching task with its existing Project filter selected
+- Search results now highlight the matching local Calendar event or Drive folder in its destination surface
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

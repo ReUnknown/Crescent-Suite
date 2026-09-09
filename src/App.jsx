@@ -600,14 +600,24 @@ function TasksView({ workspace, update, onNavigate, initialTaskTitle }) {
   </div>;
 }
 
-function CalendarView({ workspace, update, onNavigate }) {
+function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
   const [mode, setMode] = useState("week");
   const [weekOffset, setWeekOffset] = useState(0);
   const [monthOffset, setMonthOffset] = useState(0);
   const [editingEvent, setEditingEvent] = useState(null);
   const [editingEventTitle, setEditingEventTitle] = useState("");
   const [editingEventWhen, setEditingEventWhen] = useState("");
-  const localEvents = workspace.calendarEvents ?? [];
+  const [highlightedEvent, setHighlightedEvent] = useState(null);
+  const appliedEventNavigation = useRef(null);
+  const localEvents = useMemo(() => workspace.calendarEvents ?? [], [workspace.calendarEvents]);
+  useEffect(() => {
+    if (!initialEventTitle || initialEventTitle === appliedEventNavigation.current) return;
+    appliedEventNavigation.current = initialEventTitle;
+    const targetEvent = localEvents.find((event) => event.title === initialEventTitle);
+    if (!targetEvent) return;
+    setHighlightedEvent(targetEvent.id);
+    window.setTimeout(() => [...document.querySelectorAll(".calendar-local-card")].find((card) => card.dataset.eventTitle === initialEventTitle)?.scrollIntoView({ block: "center" }), 0);
+  }, [initialEventTitle, localEvents]);
   const addEvent = () => {
     const title = window.prompt("Event title", "New focus block");
     if (!title?.trim()) return;
@@ -697,7 +707,7 @@ function CalendarView({ workspace, update, onNavigate }) {
       </div>
       {localEvents.length > 0 && <section className="calendar-local-events" aria-label="Saved local events">
         <div className="calendar-local-heading"><div><span className="utility-kicker"><CalendarCheck2 size={14} />Saved locally</span><h2>Your Crescent events</h2></div><small>{localEvents.length} event{localEvents.length === 1 ? "" : "s"}</small></div>
-        <div className="calendar-local-list">{localEvents.map((event) => <div className="calendar-local-card" key={event.id}>
+        <div className="calendar-local-list">{localEvents.map((event) => <div className={`calendar-local-card ${highlightedEvent === event.id ? "selected" : ""}`} data-event-title={event.title} key={event.id}>
           <span className="calendar-local-dot" />
           {editingEvent === event.id ? <div className="calendar-event-edit-fields">
             <input value={editingEventTitle} onChange={(inputEvent) => setEditingEventTitle(inputEvent.target.value)} onKeyDown={(inputEvent) => { if (inputEvent.key === "Enter") saveEventEdit(event.id); if (inputEvent.key === "Escape") cancelEventEdit(); }} aria-label="Edit event title" autoFocus />
@@ -716,16 +726,23 @@ function _DriveViewLegacy({ onNavigate }) {
   return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button"><FolderPlus size={16} />New folder</button><button className="primary-button"><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>Everything in one place.</h1><p>Organize your work without losing the thread.</p></div><div className="drive-view"><button className="selected"><Grid2X2 size={16} /></button><button><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>4 folders</small></div><div className="folder-grid">{folders.map((folder, index) => <button className="folder-card" key={folder}><span className={`folder-icon folder-${index}`}><FolderOpen size={21} /></span><strong>{folder}</strong><small>{[12, 8, 14, 5][index]} items</small><MoreHorizontal size={17} /></button>)}</div></div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link">See all <ArrowRight size={14} /></button></div><div className="drive-file-grid">{RECENT_FILES.slice(0, 6).map((file) => <button className="drive-file" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
 }
 
-function DriveView({ workspace, update, onNavigate }) {
+function DriveView({ workspace, update, onNavigate, initialFolderName }) {
   const [view, setView] = useState("grid");
   const [selectedFolder, setSelectedFolder] = useState(null);
+  const appliedFolderNavigation = useRef(null);
   const recentFiles = getLiveRecentFiles(workspace);
-  const folders = workspace.driveFolders ?? [
+  const folders = useMemo(() => workspace.driveFolders ?? [
     { name: "Product", items: 12, color: 0 },
     { name: "Marketing", items: 8, color: 1 },
     { name: "Design", items: 14, color: 2 },
     { name: "Operations", items: 5, color: 3 },
-  ];
+  ], [workspace.driveFolders]);
+  useEffect(() => {
+    if (!initialFolderName || initialFolderName === appliedFolderNavigation.current) return;
+    appliedFolderNavigation.current = initialFolderName;
+    const targetFolder = folders.find((folder) => folder.name.toLowerCase() === initialFolderName.toLowerCase());
+    if (targetFolder) setSelectedFolder(targetFolder.name);
+  }, [folders, initialFolderName]);
   const createFolder = () => {
     const name = window.prompt("Folder name", "New workspace");
     if (!name?.trim()) return;
@@ -740,7 +757,7 @@ function DriveView({ workspace, update, onNavigate }) {
   const activeFolder = folders.find((folder) => folder.name === selectedFolder);
   const selectFolder = (folder) => { setSelectedFolder((current) => current === folder.name ? null : folder.name); emitNotice(`${folder.name} folder selected locally.`); };
   const createFile = () => { const requestedTitle = window.prompt("Document name", "Untitled document"); if (!requestedTitle?.trim()) return; const title = requestedTitle.trim(); const previousDoc = workspace.docs; const starredTitles = getStarredTitles(workspace); const deletedDoc = { id: `doc-${Date.now()}`, title: previousDoc.title, body: previousDoc.body, updatedAt: previousDoc.updatedAt, type: "Docs", appId: "docs", opened: "just now", owner: "Me", starred: starredTitles.has(previousDoc.title) }; starredTitles.delete(previousDoc.title); update({ docs: { title, body: `<h1>${escapeHtml(title)}</h1><p>Start writing your next idea here.</p>`, updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles: [deletedDoc, ...(workspace.deletedFiles ?? [])] }); onNavigate("docs"); };
-  return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={createFolder}><FolderPlus size={16} />New folder</button><button className="primary-button" onClick={createFile}><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>{activeFolder ? activeFolder.name : "Everything in one place."}</h1><p>{activeFolder ? "A local folder ready for the work you want to keep together." : "Organize your work without losing the thread."}</p></div><div className="drive-view"><button className={view === "grid" ? "selected" : ""} onClick={() => setView("grid")} aria-label="Grid view"><Grid2X2 size={16} /></button><button className={view === "list" ? "selected" : ""} onClick={() => setView("list")} aria-label="List view"><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>{folders.length} folders</small></div><div className={`folder-grid ${view === "list" ? "folder-list-view" : ""}`}>{folders.map((folder) => <button className={`folder-card ${selectedFolder === folder.name ? "selected" : ""}`} key={folder.name} onClick={() => selectFolder(folder)} aria-pressed={selectedFolder === folder.name}><span className={`folder-icon folder-${folder.color}`}><FolderOpen size={21} /></span><strong>{folder.name}</strong><small>{folder.items} items</small><MoreHorizontal size={17} /></button>)}</div>{activeFolder && <div className="drive-folder-detail"><span className={`folder-icon folder-${activeFolder.color}`}><FolderOpen size={18} /></span><div><strong>{activeFolder.name} selected</strong><small>{activeFolder.items} items · saved in this browser</small></div><button className="text-link" onClick={() => setSelectedFolder(null)}>Clear selection</button></div>}</div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link" onClick={() => onNavigate("recent")}>See all <ArrowRight size={14} /></button></div><div className={`drive-file-grid ${view === "list" ? "drive-list-view" : ""}`}>{recentFiles.slice(0, 6).map((file) => <button className="drive-file" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
+  return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={createFolder}><FolderPlus size={16} />New folder</button><button className="primary-button" onClick={createFile}><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>{activeFolder ? activeFolder.name : "Everything in one place."}</h1><p>{activeFolder ? "A local folder ready for the work you want to keep together." : "Organize your work without losing the thread."}</p></div><div className="drive-view"><button className={view === "grid" ? "selected" : ""} onClick={() => setView("grid")} aria-label="Grid view"><Grid2X2 size={16} /></button><button className={view === "list" ? "selected" : ""} onClick={() => setView("list")} aria-label="List view"><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>{folders.length} folders</small></div><div className={`folder-grid ${view === "list" ? "folder-list-view" : ""}`}>{folders.map((folder) => <button className={`folder-card ${selectedFolder === folder.name ? "selected" : ""}`} data-folder-name={folder.name} key={folder.name} onClick={() => selectFolder(folder)} aria-pressed={selectedFolder === folder.name}><span className={`folder-icon folder-${folder.color}`}><FolderOpen size={21} /></span><strong>{folder.name}</strong><small>{folder.items} items</small><MoreHorizontal size={17} /></button>)}</div>{activeFolder && <div className="drive-folder-detail"><span className={`folder-icon folder-${activeFolder.color}`}><FolderOpen size={18} /></span><div><strong>{activeFolder.name} selected</strong><small>{activeFolder.items} items · saved in this browser</small></div><button className="text-link" onClick={() => setSelectedFolder(null)}>Clear selection</button></div>}</div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link" onClick={() => onNavigate("recent")}>See all <ArrowRight size={14} /></button></div><div className={`drive-file-grid ${view === "list" ? "drive-list-view" : ""}`}>{recentFiles.slice(0, 6).map((file) => <button className="drive-file" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
 }
 
 function _FormsViewLegacy({ workspace, update, onNavigate }) {
@@ -956,8 +973,8 @@ export default function App() {
     if (activeApp === "slides") return <SlidesView workspace={workspace} update={update} onNavigate={navigate} initialSlideTitle={navigationContext?.title} />;
     if (activeApp === "notes") return <NotesView workspace={workspace} update={update} onNavigate={navigate} initialNoteTitle={navigationContext?.title} />;
     if (activeApp === "tasks") return <TasksView workspace={workspace} update={update} onNavigate={navigate} initialTaskTitle={navigationContext?.title} />;
-    if (activeApp === "calendar") return <CalendarView workspace={workspace} update={update} onNavigate={navigate} />;
-    if (activeApp === "drive") return <DriveView workspace={workspace} update={update} onNavigate={navigate} />;
+    if (activeApp === "calendar") return <CalendarView workspace={workspace} update={update} onNavigate={navigate} initialEventTitle={navigationContext?.title} />;
+    if (activeApp === "drive") return <DriveView workspace={workspace} update={update} onNavigate={navigate} initialFolderName={navigationContext?.title} />;
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} />;
     return <UtilityView id={activeApp} workspace={workspace} update={update} onNavigate={navigate} />;
   }, [activeApp, navigationContext, workspace, update]);
