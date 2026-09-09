@@ -28,6 +28,9 @@ async function waitForServer() {
 
 try {
   await waitForServer();
+  const manifestResponse = await fetch(`${baseUrl}/site.webmanifest`);
+  const manifest = await manifestResponse.json();
+  if (manifest.start_url !== "./" || manifest.scope !== "./" || manifest.icons?.[0]?.src !== "./favicon.svg") throw new Error("PWA manifest is not subpath-safe");
   const browser = await chromium.launch({ headless: true });
   const failures = [];
 

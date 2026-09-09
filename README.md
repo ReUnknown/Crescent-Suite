@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.115 — Calendar Week copy matches its grid**
+**v0.1.116 — GitHub Pages install paths are safe**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -59,6 +59,8 @@ The first release establishes the Crescent product shell and a local-first suite
 - Calendar Day remains anchored to the displayed date after the seven-day Week refactor; smoke now checks the visible one-column state
 - Calendar Week headings and subheadings now use the same Sunday-start anchor as the seven visible day columns
 - Refreshed the committed Calendar preview after the heading alignment
+- PWA manifest start, scope, and icon paths are now relative so installs remain correct under the GitHub Pages `/Crescent-Suite/` subpath
+- CI smoke checks the relative manifest, and the Pages-base build is verified against the repository asset prefix
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

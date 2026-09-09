@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.116 — GitHub Pages install paths are safe
+
+Published September 9, 2026.
+
+### Changed
+
+- PWA manifest `start_url`, `scope`, and icon paths are relative for repository-subpath hosting.
+- Smoke now checks the manifest, and a Pages-base build verifies `/Crescent-Suite/` asset paths.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- `CRESCENT_PAGES_BUILD=true npm run build` passes the Pages base/manifest check.
+
 ## v0.1.115 — Calendar Week copy matches its grid
 
 Published September 9, 2026.
