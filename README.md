@@ -8,6 +8,8 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
+Public preview: [reunknown.github.io/Crescent-Suite](https://reunknown.github.io/Crescent-Suite/)
+
 The first major release establishes a usable Crescent product shell and a local-first suite experience:
 
 - Home dashboard with app launcher, recent work, activity, and a daily focus rail

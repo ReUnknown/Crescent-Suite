@@ -1,5 +1,18 @@
 # Changelog
 
+## v4.0.3 — Public GitHub Pages
+
+Published September 9, 2026.
+
+### Added
+
+- Enabled the public GitHub Pages deployment at [reunknown.github.io/Crescent-Suite](https://reunknown.github.io/Crescent-Suite/).
+- Added a manual workflow trigger so the Pages build can be redeployed without requiring a code change.
+
+### Verification
+
+- Pages configuration reports `build_type: workflow`, public visibility, and HTTPS enforcement.
+
 ## v4.0.2 — Verified local-only feedback
 
 Published September 9, 2026.
