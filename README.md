@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.72 — Forms questions can switch Required/Optional**
+**v0.1.73 — Forms Required state has a visual archive preview**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -72,6 +72,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Forms now export their questions, response settings, and saved local response as JSON
 - Help, Profile, workspace-add, project-add, and More projects shell controls now explain their local-only or not-yet-connected state
 - Forms creators can toggle each question between Required and Optional, with the state saved locally and reflected in Preview
+- The committed visual archive now captures that Required state in the Forms builder
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
