@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.152 — Release metadata aligned
+
+Published September 9, 2026.
+
+### Documentation
+
+- README’s Current release label now matches the package version, changelog, and preview index.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass on the aligned release metadata.
+
 ## v0.1.151 — Preview archive link cleanup
 
 Published September 9, 2026.

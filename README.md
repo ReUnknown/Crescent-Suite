@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.150 — Legacy folder names preserved**
+**v0.1.152 — Release metadata aligned**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
