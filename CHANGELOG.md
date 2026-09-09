@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.133 — Recent files reflect local Calendar events
+
+Published September 9, 2026.
+
+### Changed
+
+- The live Recent/Home model now includes the newest locally saved Calendar event and its timing text.
+
+### Verification
+
+- Smoke coverage creates a local Calendar event and confirms it appears in Home Recent.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.132 — Shared Starred recovery across live Tasks
 
 Published September 9, 2026.

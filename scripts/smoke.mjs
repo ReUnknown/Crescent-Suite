@@ -79,6 +79,8 @@ try {
     const expectedTomorrow = await behaviorPage.evaluate(() => { const date = new Date(); date.setDate(date.getDate() + 1); return date.toISOString().slice(0, 10); });
     if (storedCalendarDate !== expectedTomorrow) failures.push({ route: "calendar", controls: "natural language event date", storedCalendarDate, expectedTomorrow });
     behaviorPage.off("dialog", acceptCalendarPrompts);
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    if (!(await behaviorPage.locator(".recent-table").innerText()).includes("Smoke focus block")) failures.push({ route: "home", controls: "live calendar recent file" });
     await behaviorPage.goto(`${baseUrl}/tasks`, { waitUntil: "networkidle" });
     const dueBefore = await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).innerText();
     await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).click();
@@ -172,7 +174,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed and natural-language local events; Month has 42 cells; editable task due dates; Forms response controls including Long answer; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed and natural-language local events; live Calendar Recent; Month has 42 cells; editable task due dates; Forms response controls including Long answer; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

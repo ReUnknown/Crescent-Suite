@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.132 — Shared Starred recovery across live Tasks**
+**v0.1.133 — Recent files reflect local Calendar events**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -55,6 +55,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Added a committed Tasks preview showing the interactive Tomorrow state
 - Forms Long answer questions now render a resizable textarea in Preview mode
 - The live Recent/Starred surfaces now reflect the current task, and task Starred state survives Trash recovery
+- Home/Recent now includes the latest locally saved Calendar event with its entered timing text
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges
