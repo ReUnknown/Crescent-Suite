@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.23 — A complete Recent shelf
+
+Published September 8, 2026.
+
+### Changed
+
+- Home Recent filters now include Calendar and Drive, matching every seeded file type shown in the table.
+
+### Verification
+
+- Selected Calendar in Home Recent and confirmed exactly one Calendar row and an active filter state in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.22 — Navigation that tells the truth
 
 Published September 8, 2026.
