@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.43 — Trash can restore tasks
+
+Published September 9, 2026.
+
+### Changed
+
+- Added a Restore action to deleted task rows in Trash.
+- Restoring a task returns it to Tasks with its original id and removes the deleted record.
+
+### Verification
+
+- Deleted “Review the launch brief,” opened Trash, restored it, confirmed Trash emptied, and confirmed the task returned to Tasks.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.42 — Forms response preview refreshed
 
 Published September 9, 2026.
