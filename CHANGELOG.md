@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.118 — All local exports use safe filenames
+
+Published September 9, 2026.
+
+### Changed
+
+- Notes, Slides, and Forms exports now sanitize title-derived filenames using the shared helper.
+
+### Verification
+
+- Browser check confirms a Forms title containing `/` downloads with a safe hyphenated filename.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.117 — CI guards partial backup restore
 
 Published September 9, 2026.

@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.117 — CI guards partial backup restore**
+**v0.1.118 — All local exports use safe filenames**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -62,6 +62,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - PWA manifest start, scope, and icon paths are now relative so installs remain correct under the GitHub Pages `/Crescent-Suite/` subpath
 - CI smoke checks the relative manifest, and the Pages-base build is verified against the repository asset prefix
 - CI smoke now imports a partial Settings backup and verifies schema defaults plus persisted Form settings
+- Notes, Slides, and Forms exports now sanitize titles with the same safe filename helper as Docs and Sheets
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header
