@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.69 — Slides support self-contained HTML export**
+**v0.1.70 — Forms support JSON export**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -69,6 +69,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - The Pages artifact includes a `404.html` app fallback and base-aware favicon/manifest links for direct URL loads
 - Notes now export the selected note as a plain-text `.txt` file alongside Docs HTML and Sheets CSV export
 - Slides now export the full deck as a self-contained HTML document with escaped title/body content
+- Forms now export their questions, response settings, and saved local response as JSON
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
