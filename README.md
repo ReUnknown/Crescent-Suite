@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.118 — All local exports use safe filenames**
+**v0.1.119 — CI guards safe export filenames**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -63,6 +63,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - CI smoke checks the relative manifest, and the Pages-base build is verified against the repository asset prefix
 - CI smoke now imports a partial Settings backup and verifies schema defaults plus persisted Form settings
 - Notes, Slides, and Forms exports now sanitize titles with the same safe filename helper as Docs and Sheets
+- CI smoke now exports a slash-containing Form title and verifies the downloaded filename stays filesystem-safe
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

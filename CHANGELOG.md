@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.119 — CI guards safe export filenames
+
+Published September 9, 2026.
+
+### Changed
+
+- CI smoke now exercises a slash-containing Forms title and checks that the downloaded filename is sanitized.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.118 — All local exports use safe filenames
 
 Published September 9, 2026.

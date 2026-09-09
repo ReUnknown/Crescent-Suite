@@ -95,6 +95,12 @@ try {
     await behaviorPage.getByRole("combobox", { name: "Text style" }).selectOption("blockquote");
     const styleValue = await behaviorPage.getByRole("combobox", { name: "Text style" }).inputValue();
     if (styleValue !== "blockquote") failures.push({ route: "docs", controls: "text style", styleValue });
+    await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("textbox", { name: "File title" }).fill("Smoke / export");
+    const exportDownloadPromise = behaviorPage.waitForEvent("download");
+    await behaviorPage.getByRole("button", { name: "Export" }).click();
+    const exportFilename = (await exportDownloadPromise).suggestedFilename();
+    if (exportFilename.includes("/")) failures.push({ route: "forms", controls: "safe export filename", exportFilename });
     await behaviorPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
     await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "partial-backup.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Smoke restore" }, sheets: { title: "Smoke sheet" }, forms: null, formSettings: { collectEmail: true } })) });
     await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
