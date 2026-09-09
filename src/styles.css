@@ -240,3 +240,4 @@ input, textarea { color: var(--text); }
 .drive-folder-detail { display: flex; align-items: center; gap: 11px; margin-top: 13px; padding: 12px 14px; border: 1px solid rgba(176, 164, 242, .20); border-radius: 9px; background: rgba(40, 34, 71, .24); }
 .drive-folder-detail > div { display: grid; gap: 3px; flex: 1; min-width: 0; }.drive-folder-detail strong { color: #e9e7f6; font-size: 12px; }.drive-folder-detail small { color: #8d96ad; font-size: 10px; }
 .toolbar-select { min-width: 82px; padding: 3px 2px; border: 0; outline: 0; color: #a7aec3; background: transparent; font: inherit; font-size: 12px; }.toolbar-select option { color: #26283a; background: #fff; }
+.task-due { border: 0; cursor: pointer; }.task-due:hover { color: white; background: rgba(148, 158, 192, .18); }

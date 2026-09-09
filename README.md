@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.128 — Trash recovery preserves Starred state across apps**
+**v0.1.129 — Tasks support editable due dates**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -51,6 +51,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Forms response history can be exported as a clean CSV with question labels, answers, timestamps, and optional email addresses
 - Drive → Trash → Restore now preserves whether the recovered Docs record was starred
 - Notes and Tasks now use the same Starred metadata preservation when items move through local Trash and return
+- Tasks due chips now cycle through Today, Tomorrow, Friday, and No date with local persistence
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges

@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.129 — Tasks support editable due dates
+
+Published September 9, 2026.
+
+### Changed
+
+- Task due chips are now interactive and cycle through Today, Tomorrow, Friday, and No date.
+- Due-date changes persist in the local workspace and remain included in task exports.
+
+### Verification
+
+- Smoke coverage checks that a task due chip changes state locally.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.128 — Trash recovery preserves Starred state across apps
 
 Published September 9, 2026.

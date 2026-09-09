@@ -79,6 +79,11 @@ try {
     const expectedTomorrow = await behaviorPage.evaluate(() => { const date = new Date(); date.setDate(date.getDate() + 1); return date.toISOString().slice(0, 10); });
     if (storedCalendarDate !== expectedTomorrow) failures.push({ route: "calendar", controls: "natural language event date", storedCalendarDate, expectedTomorrow });
     behaviorPage.off("dialog", acceptCalendarPrompts);
+    await behaviorPage.goto(`${baseUrl}/tasks`, { waitUntil: "networkidle" });
+    const dueBefore = await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).innerText();
+    await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).click();
+    const dueAfter = await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).innerText();
+    if (dueBefore === dueAfter) failures.push({ route: "tasks", controls: "due date cycle", dueBefore, dueAfter });
     await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("textbox", { name: "Cell B9" }).fill("=AVERAGE(B2:B4)");
     const averageValue = await behaviorPage.evaluate(() => document.querySelector('[aria-label="Cell B9"]')?.parentElement?.querySelector(".sheet-display")?.textContent);
@@ -154,7 +159,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed and natural-language local events; Month has 42 cells; content search, local formulas (including COUNT), Forms controls, response history and CSV export, Starred continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed and natural-language local events; Month has 42 cells; editable task due dates; content search, local formulas (including COUNT), Forms controls, response history and CSV export, Starred continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
