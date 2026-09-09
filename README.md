@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.54 — Form and Slides themes are interactive**
+**v0.1.56 — Drive folders have a visible local selection state**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -53,6 +53,8 @@ The first release establishes the Crescent product shell and a local-first suite
 - Shared editor breadcrumb home buttons now expose an accessible “Back to Home” name across Docs, Sheets, Slides, Calendar, Drive, and Forms
 - Forms theme swatches now change and persist the cover treatment, with a selected state and respondent-facing color variants
 - Slides theme swatches now expose selected state and labels, and the speaker-note plus button focuses the note editor
+- Drive folder cards now select locally, update the page context, and show a clear folder-selection panel
+- Drive’s Recent files “See all” action now routes to the shared Recent surface
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
