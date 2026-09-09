@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.33 — Visual checkpoint refreshed
+
+Published September 8, 2026.
+
+### Changed
+
+- Refreshed `docs/preview/home.png` with the current app launcher, live Recent shelf, and Forms filter.
+- Refreshed `docs/preview/forms.png` with the current editable Forms builder surface.
+
+### Verification
+
+- Captured both screenshots from the running Vite app at desktop viewport size and visually reviewed them.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.32 — Slides decks have a saved identity
 
 Published September 8, 2026.
