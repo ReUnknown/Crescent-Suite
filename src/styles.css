@@ -187,6 +187,7 @@ input, textarea { color: var(--text); }
 .calendar-month-cell { min-height: 130px; padding: 12px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(19, 24, 36, .45); }
 .calendar-month-cell:nth-child(7n) { border-right: 0; }
 .calendar-month-cell.today { background: rgba(106, 91, 178, .13); }
+.calendar-month-cell.muted { opacity: .48; }
 .calendar-month-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #7e879d; font-size: 10px; }
 .calendar-month-head strong { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; color: #aeb5c9; background: transparent; font-size: 11px; }
 .calendar-month-cell.today .calendar-month-head { color: #d7d2fa; }
