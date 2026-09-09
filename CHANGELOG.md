@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.134 — Forms multi-response state stays clear
+
+Published September 9, 2026.
+
+### Changed
+
+- Forms now labels the submission action as “Submit response” whenever multiple responses are allowed, even after an earlier response was saved.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.133 — Recent files reflect local Calendar events
 
 Published September 9, 2026.
