@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.47 — Preview index catches up**
+**v0.1.48 — Trash preview clarified**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -47,6 +47,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Updated the committed visual preview index to the current release and documented the latest Sheets and Forms captures
 - Added a committed Trash screenshot showing a recoverable deleted task
 - Updated the visual archive header to match the latest committed preview set
+- Re-captured the Trash preview after the page animation settled for a clearer GitHub review image
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device

@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.48 — Trash preview clarified
+
+Published September 9, 2026.
+
+### Changed
+
+- Re-captured `docs/preview/trash.png` after the page-enter animation settled, improving readability of the Restore state.
+- Updated the visual preview index to v0.1.48.
+
+### Verification
+
+- Visually reviewed the clearer Trash screenshot with its Restore action and local toast.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.47 — Preview index catches up
 
 Published September 9, 2026.
