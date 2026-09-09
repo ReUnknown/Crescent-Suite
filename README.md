@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.11 — Search that knows your work**
+**v0.1.12 — Tasks with a point of view**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -18,6 +18,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Calendar events can be created, saved, reviewed, and removed in the local workspace
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
+- Tasks now filters between All, Today, Open, and Done from the shared editor header
 
 Everything is stored in this browser under a versioned local workspace key. No external account connection is required for this release.
 

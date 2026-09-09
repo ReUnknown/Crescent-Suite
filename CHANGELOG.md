@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.12 — Tasks with a point of view
+
+Published September 8, 2026.
+
+### Added
+
+- Tasks' Filter control cycles through All, Today, Open, and Done views.
+- Task list headings and counts update with the active filter.
+
+### Verification
+
+- Confirmed the filter changes visible rows and labels in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.11 — Search that knows your work
 
 Published September 8, 2026.
