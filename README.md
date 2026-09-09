@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.143 — Recent keyboard navigation coverage**
+**v0.1.144 — Normalized custom folder colors**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -66,6 +66,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Creating a Workspace also creates an empty local Drive folder with the same name
 - Added a committed preview showing a custom workspace in the sidebar and its matching Drive folder
 - CI now verifies that a focused Home Recent row opens with Enter, alongside the independent Starred action
+- Custom Workspace colors now map safely to the four available Drive folder treatments, including imported values
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges

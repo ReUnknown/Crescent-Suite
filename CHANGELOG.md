@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.144 — Normalized custom folder colors
+
+Published September 9, 2026.
+
+### Fixed
+
+- New Workspace folders now use a defined Drive color even when the sidebar color cycle reaches its fifth variant.
+- Imported workspace and folder colors are clamped to the supported visual ranges before rendering.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.143 — Recent keyboard navigation coverage
 
 Published September 9, 2026.

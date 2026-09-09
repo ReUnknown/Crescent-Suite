@@ -172,7 +172,7 @@ function normalizeWorkspace(source) {
   const workspaces = Array.isArray(source?.workspaces) && source.workspaces.length
     ? source.workspaces.map((item, index) => typeof item === "string"
       ? { name: item, color: index % 5 }
-      : { ...item, name: String(item?.name ?? `Workspace ${index + 1}`), color: Number.isFinite(item?.color) ? item.color : index % 5 })
+      : { ...item, name: String(item?.name ?? `Workspace ${index + 1}`), color: Number.isFinite(item?.color) ? Math.abs(Math.trunc(item.color)) % 5 : index % 5 })
     : INITIAL_WORKSPACE.workspaces;
   const projects = Array.isArray(source?.projects)
     ? source.projects.map((item) => typeof item === "string" ? item : String(item?.name ?? "")).filter(Boolean)
@@ -185,7 +185,7 @@ function normalizeWorkspace(source) {
     notes: Array.isArray(source?.notes) && source.notes.length ? source.notes : INITIAL_WORKSPACE.notes,
     tasks: Array.isArray(source?.tasks) ? source.tasks : INITIAL_WORKSPACE.tasks,
     forms: Array.isArray(source?.forms) ? source.forms : INITIAL_WORKSPACE.forms,
-    driveFolders: Array.isArray(source?.driveFolders) ? source.driveFolders : INITIAL_WORKSPACE.driveFolders,
+    driveFolders: Array.isArray(source?.driveFolders) ? source.driveFolders.map((folder, index) => ({ ...folder, color: Number.isFinite(folder?.color) ? Math.abs(Math.trunc(folder.color)) % 4 : index % 4 })) : INITIAL_WORKSPACE.driveFolders,
     workspaces,
     projects,
     calendarEvents: Array.isArray(source?.calendarEvents) ? source.calendarEvents : [],
@@ -246,9 +246,10 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
       return;
     }
     const color = workspaces.length % 5;
+    const folderColor = workspaces.length % 4;
     const driveFolders = workspace.driveFolders ?? [];
     const hasFolder = driveFolders.some((folder) => folder.name.toLowerCase() === name.toLowerCase());
-    update({ workspaces: [...workspaces, { name, color }], driveFolders: hasFolder ? driveFolders : [...driveFolders, { name, items: 0, color }] });
+    update({ workspaces: [...workspaces, { name, color }], driveFolders: hasFolder ? driveFolders : [...driveFolders, { name, items: 0, color: folderColor }] });
     emitNotice(`${name} workspace added locally.`);
   };
   const addProject = () => {
