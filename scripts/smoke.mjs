@@ -246,15 +246,17 @@ try {
     await behaviorPage.getByRole("button", { name: "Delete Untitled note" }).click();
     await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
     const permanentlyDeletedNote = behaviorPage.locator(".utility-file-row").filter({ hasText: "Untitled note" });
-    behaviorPage.once("dialog", (dialog) => dialog.accept());
     await permanentlyDeletedNote.getByRole("button", { name: "Delete forever" }).click();
+    const deleteForeverDialog = behaviorPage.getByRole("dialog", { name: "Delete this file forever?" });
+    await deleteForeverDialog.getByRole("button", { name: "Delete forever", exact: true }).click();
     if (await behaviorPage.locator(".utility-file-row").filter({ hasText: "Untitled note" }).count()) failures.push({ route: "trash", controls: "permanent item deletion" });
     await behaviorPage.goto(`${baseUrl}/notes`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: "New note" }).click();
     await behaviorPage.getByRole("button", { name: "Delete Untitled note" }).click();
     await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
-    behaviorPage.once("dialog", (dialog) => dialog.accept());
     await behaviorPage.getByRole("button", { name: "Empty Trash" }).click();
+    const emptyTrashDialog = behaviorPage.getByRole("dialog", { name: "Empty Trash for good?" });
+    await emptyTrashDialog.getByRole("button", { name: "Empty Trash", exact: true }).click();
     if (!(await behaviorPage.locator(".utility-panel").innerText()).includes("Trash is empty.")) failures.push({ route: "trash", controls: "empty Trash" });
     await behaviorPage.goto(`${baseUrl}/tasks`, { waitUntil: "networkidle" });
     if (await behaviorPage.getByRole("textbox", { name: "File title" }).isEditable()) failures.push({ route: "tasks", controls: "fixed container title is read-only" });
@@ -485,7 +487,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

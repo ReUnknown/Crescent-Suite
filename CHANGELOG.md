@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.8.0 — Guided Trash cleanup
+
+Published September 9, 2026.
+
+### Improved
+
+- Replaced native browser confirmations in Trash with accessible Crescent dialogs for permanent file deletion and Empty Trash.
+- Added clear irreversible-action language, focused destructive actions, Escape dismissal, and backdrop dismissal.
+- Added desktop and mobile visual previews for the confirmation state.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v3.7.0 — Linked document polish
 
 Published September 9, 2026.

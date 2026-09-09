@@ -1059,19 +1059,34 @@ function UtilityView({ id, workspace, update, onNavigate }) {
   const emptyCopy = { recent: ["No recent files yet.", "Open an app and your work will appear here."], starred: ["Nothing starred yet.", "Star a file from Home or Recent to keep it close."], shared: ["Nothing shared yet.", "Shared work will appear here when Crescent Cloud is connected."], trash: ["Trash is empty.", "Deleted local files will stay here until you restore them."], settings: ["Nothing here yet.", ""] };
   const [title, description] = labels[id] ?? labels.recent;
   const [emptyTitle, emptyDescription] = emptyCopy[id] ?? emptyCopy.recent;
+  const [confirmAction, setConfirmAction] = useState(null);
+  useEffect(() => {
+    if (!confirmAction) return undefined;
+    const closeOnEscape = (event) => { if (event.key === "Escape") setConfirmAction(null); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [confirmAction]);
   const files = id === "starred" ? getLiveRecentFiles(workspace).filter((file) => file.starred) : id === "shared" ? RECENT_FILES.filter((file) => file.owner !== "Me") : id === "trash" ? (workspace.deletedFiles ?? []).map((file) => ({ ...(APP_META.find((app) => app.id === file.appId) ?? {}), ...file })) : getLiveRecentFiles(workspace);
   const backupInputRef = useRef(null);
   const exportWorkspace = () => { downloadText("crescent-workspace-backup.json", JSON.stringify({ format: "crescent-suite-workspace", version: 1, exportedAt: new Date().toISOString(), workspace }, null, 2), "application/json"); emitNotice("Workspace backup downloaded."); };
   const importWorkspace = (event) => { const file = event.target.files?.[0]; if (!file) return; const reader = new window.FileReader(); reader.onload = () => { try { const parsed = JSON.parse(reader.result); const imported = parsed?.workspace ?? parsed; if (!imported || imported.version !== 1 || !imported.docs || !imported.sheets) throw new Error("Invalid Crescent backup"); update(normalizeWorkspace(imported)); emitNotice("Workspace backup restored locally."); } catch { emitNotice("That backup could not be restored."); } }; reader.readAsText(file); event.target.value = ""; };
-  const deleteForever = (file) => {
-    if (!window.confirm(`Permanently delete “${file.title}”?`)) return;
-    update({ deletedFiles: (workspace.deletedFiles ?? []).filter((item) => item.id !== file.id) });
-    emitNotice(`${file.title} permanently deleted from this browser.`);
-  };
-  const emptyTrash = () => {
+  const requestDeleteForever = (file) => setConfirmAction({ kind: "delete", file });
+  const requestEmptyTrash = () => {
     const count = workspace.deletedFiles?.length ?? 0;
-    if (!count || !window.confirm(`Permanently delete ${count} item${count === 1 ? "" : "s"} from Trash?`)) return;
+    if (!count) return;
+    setConfirmAction({ kind: "empty", count });
+  };
+  const confirmDestructiveAction = () => {
+    if (!confirmAction) return;
+    if (confirmAction.kind === "delete") {
+      const file = confirmAction.file;
+      update({ deletedFiles: (workspace.deletedFiles ?? []).filter((item) => item.id !== file.id) });
+      setConfirmAction(null);
+      emitNotice(`${file.title} permanently deleted from this browser.`);
+      return;
+    }
     update({ deletedFiles: [] });
+    setConfirmAction(null);
     emitNotice("Local Trash emptied.");
   };
   const restoreFile = (file) => {
@@ -1143,8 +1158,9 @@ function UtilityView({ id, workspace, update, onNavigate }) {
       emitNotice("Form restored to Forms.");
     }
   };
-  const fileRows = files.map((file) => id === "trash" ? <div className="utility-file-row" key={file.id ?? file.title}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} /><div><strong>{file.title}</strong><small>{file.type} · {file.opened} · {file.owner}</small></div><button className="secondary-button" onClick={() => restoreFile(file)}>Restore</button><button className="secondary-button" onClick={() => deleteForever(file)}>Delete forever</button></div> : <button className="utility-file-row" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), fileNavigationContext(file))}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} /><div><strong>{file.title}</strong><small>{file.type} · {file.opened} · {file.owner}</small></div><ArrowRight size={16} /></button>);
-  return <div className="utility-page page-enter"><div className="utility-heading"><div><span className="utility-kicker"><Sparkles size={14} />Crescent workspace</span><h1>{title}</h1><p>{description}</p></div>{id === "trash" && files.length > 0 && <button className="secondary-button" onClick={emptyTrash}><Trash2 size={16} />Empty Trash</button>}<button className="primary-button" onClick={() => onNavigate("home")}><Home size={16} />Back home</button></div><div className="utility-panel">{id === "settings" ? <><div className="settings-row"><div><strong>Appearance</strong><small>Keep Crescent quiet after dark.</small></div><button className="theme-toggle"><MoonIcon /><span>Night</span><Check size={15} /></button></div><div className="settings-row"><div><strong>Local workspace</strong><small>Your work is saved in this browser. No account connection required.</small></div><span className="local-status"><span />Active</span></div><div className="settings-row"><div><strong>Workspace backup</strong><small>Export your local work or restore it on this device later.</small></div><div className="settings-actions"><button className="secondary-button" onClick={exportWorkspace}><Download size={15} />Download</button><button className="secondary-button" onClick={() => backupInputRef.current?.click()}><FolderOpen size={15} />Import</button><input ref={backupInputRef} className="backup-input" type="file" accept="application/json,.json" aria-label="Import workspace backup" onChange={importWorkspace} /></div></div><div className="settings-row"><div><strong>Keyboard shortcuts</strong><small>Open search with Command + K, then type any file or app.</small></div><kbd><Command size={13} />K</kbd></div></> : files.length ? fileRows : <div className="utility-empty"><Trash2 size={19} /><strong>{emptyTitle}</strong><small>{emptyDescription}</small></div>}</div></div>;
+  const destructiveDialog = confirmAction && <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setConfirmAction(null); }}><section className="file-create-dialog confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title"><div className="file-create-heading"><div><span className="utility-kicker"><Trash2 size={14} />{confirmAction.kind === "delete" ? "Permanent deletion" : "Empty local Trash"}</span><h2 id="confirm-title">{confirmAction.kind === "delete" ? "Delete this file forever?" : "Empty Trash for good?"}</h2><p>{confirmAction.kind === "delete" ? `“${confirmAction.file.title}” cannot be restored after this step.` : `${confirmAction.count} item${confirmAction.count === 1 ? "" : "s"} will be permanently removed from this browser.`}</p></div><button className="icon-button muted" onClick={() => setConfirmAction(null)} aria-label="Close confirmation dialog"><X size={18} /></button></div><div className="file-create-footer"><span><Trash2 size={14} />This action cannot be undone</span><div><button className="secondary-button" onClick={() => setConfirmAction(null)}>Cancel</button><button className="danger-button" onClick={confirmDestructiveAction}>{confirmAction.kind === "delete" ? "Delete forever" : "Empty Trash"}</button></div></div></section></div>;
+  const fileRows = files.map((file) => id === "trash" ? <div className="utility-file-row" key={file.id ?? file.title}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} /><div><strong>{file.title}</strong><small>{file.type} · {file.opened} · {file.owner}</small></div><button className="secondary-button" onClick={() => restoreFile(file)}>Restore</button><button className="secondary-button" onClick={() => requestDeleteForever(file)}>Delete forever</button></div> : <button className="utility-file-row" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), fileNavigationContext(file))}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} /><div><strong>{file.title}</strong><small>{file.type} · {file.opened} · {file.owner}</small></div><ArrowRight size={16} /></button>);
+  return <div className="utility-page page-enter"><div className="utility-heading"><div><span className="utility-kicker"><Sparkles size={14} />Crescent workspace</span><h1>{title}</h1><p>{description}</p></div>{id === "trash" && files.length > 0 && <button className="secondary-button" onClick={requestEmptyTrash}><Trash2 size={16} />Empty Trash</button>}<button className="primary-button" onClick={() => onNavigate("home")}><Home size={16} />Back home</button></div><div className="utility-panel">{id === "settings" ? <><div className="settings-row"><div><strong>Appearance</strong><small>Keep Crescent quiet after dark.</small></div><button className="theme-toggle"><MoonIcon /><span>Night</span><Check size={15} /></button></div><div className="settings-row"><div><strong>Local workspace</strong><small>Your work is saved in this browser. No account connection required.</small></div><span className="local-status"><span />Active</span></div><div className="settings-row"><div><strong>Workspace backup</strong><small>Export your local work or restore it on this device later.</small></div><div className="settings-actions"><button className="secondary-button" onClick={exportWorkspace}><Download size={15} />Download</button><button className="secondary-button" onClick={() => backupInputRef.current?.click()}><FolderOpen size={15} />Import</button><input ref={backupInputRef} className="backup-input" type="file" accept="application/json,.json" aria-label="Import workspace backup" onChange={importWorkspace} /></div></div><div className="settings-row"><div><strong>Keyboard shortcuts</strong><small>Open search with Command + K, then type any file or app.</small></div><kbd><Command size={13} />K</kbd></div></> : files.length ? fileRows : <div className="utility-empty"><Trash2 size={19} /><strong>{emptyTitle}</strong><small>{emptyDescription}</small></div>}</div>{destructiveDialog}</div>;
 }
 
 function MoonIcon() { return <span className="moon-icon" />; }
