@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.109 — Sheets formula output is presentation-ready**
+**v0.1.110 — Docs text styles are actionable**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -51,6 +51,8 @@ The first release establishes the Crescent product shell and a local-first suite
 - CI smoke now verifies that a renamed starred Docs record appears under its new title in Starred
 - Slides presentation mode now advances with ArrowRight/Space, moves back with ArrowLeft, and exits with Escape; CI smoke covers the interaction
 - Sheets AVERAGE results now display to two decimals for readable local analysis output
+- Docs’ Body toolbar control is now a real local style selector for Body, Heading, and Quote blocks
+- Refreshed the committed Docs preview after the editor toolbar polish
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header
