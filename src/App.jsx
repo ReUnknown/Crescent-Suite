@@ -196,14 +196,14 @@ function Sidebar({ activeApp, onNavigate, open, onClose }) {
         {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={`sidebar-link ${activeApp === id ? "active" : ""}`} onClick={() => onNavigate(id)}><Icon size={18} /><span>{label}</span></button>)}
       </nav>
       <div className="sidebar-divider" />
-      <div className="sidebar-section-head"><span>Workspaces</span><button className="icon-button muted" aria-label="Add workspace"><Plus size={17} /></button></div>
+      <div className="sidebar-section-head"><span>Workspaces</span><button className="icon-button muted" onClick={() => emitNotice("Workspace creation is coming soon.")} aria-label="Add workspace"><Plus size={17} /></button></div>
       <div className="workspace-list">
         {["Product", "Marketing", "Design", "Operations", "Personal"].map((workspace, index) => <button className="workspace-link" key={workspace} onClick={() => onNavigate("drive")}><span className={`workspace-dot dot-${index}`} />{workspace}</button>)}
       </div>
-      <div className="sidebar-section-head projects-head"><span>Projects</span><button className="icon-button muted" aria-label="Add project"><Plus size={17} /></button></div>
+      <div className="sidebar-section-head projects-head"><span>Projects</span><button className="icon-button muted" onClick={() => emitNotice("Project creation is coming soon.")} aria-label="Add project"><Plus size={17} /></button></div>
       <div className="project-list">
         {["Q3 Planning", "Website Redesign", "Product Launch", "Team Offsite"].map((project) => <button className="project-link" key={project} onClick={() => onNavigate("drive")}><FileText size={16} />{project}</button>)}
-        <button className="project-link project-more"><MoreHorizontal size={16} />More projects...</button>
+        <button className="project-link project-more" onClick={() => emitNotice("More projects will be available when the workspace connects to a team.")}><MoreHorizontal size={16} />More projects...</button>
       </div>
       <div className="sidebar-quote"><div className="quote-orbit"><span className="quote-moon" /></div><p>A more focused way to work</p></div>
     </aside>
@@ -216,7 +216,7 @@ function Header({ activeApp, onOpenSidebar, query, onQueryChange, onNavigate, wo
     <button className="mobile-menu icon-button" onClick={onOpenSidebar} aria-label="Open navigation"><Menu size={20} /></button>
     <div className="mobile-title"><BrandMark small /><span>{title}</span></div>
     <div className="global-search"><Search size={19} /><input value={query} onChange={(event) => onQueryChange(event.target.value)} placeholder="Search across Crescent..." aria-label="Search across Crescent" /><kbd><Command size={13} />K</kbd></div>
-    <div className="topbar-actions"><button className="icon-button" aria-label="Help"><CircleHelp size={19} /></button><button className="icon-button" aria-label="Settings" onClick={() => onNavigate("settings")}><Settings2 size={19} /></button><div className="topbar-divider" /><button className="profile-button" aria-label="Open profile"><span>A</span><ChevronDown size={15} /></button></div>
+    <div className="topbar-actions"><button className="icon-button" aria-label="Help" onClick={() => emitNotice("Help center is coming soon to this local workspace.")}><CircleHelp size={19} /></button><button className="icon-button" aria-label="Settings" onClick={() => onNavigate("settings")}><Settings2 size={19} /></button><div className="topbar-divider" /><button className="profile-button" aria-label="Open profile" onClick={() => emitNotice("Crescent is running locally in this browser.")}><span>A</span><ChevronDown size={15} /></button></div>
     {query && <SearchResults query={query} onNavigate={onNavigate} workspace={workspace} />}
   </header>;
 }
