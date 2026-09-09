@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.50 — Forms enforce required answers
+
+Published September 9, 2026.
+
+### Changed
+
+- Forms validates every required short/long answer and required scale question before saving.
+- Incomplete responses show a local toast explaining the missing required work.
+
+### Verification
+
+- Confirmed an empty form is blocked with “Complete all required questions before submitting.”, then filled the required answer and scale and confirmed the response saved.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.49 — Forms validate collected email
 
 Published September 9, 2026.
