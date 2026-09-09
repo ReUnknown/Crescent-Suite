@@ -121,12 +121,13 @@ const RECENT_FILES = [
 ];
 
 function getLiveRecentFiles(workspace) {
-  const sourceFor = (type) => RECENT_FILES.find((file) => file.type === type);
+  const sourceFor = (type, fallback) => RECENT_FILES.find((file) => file.type === type) ?? fallback;
   const liveFiles = [
     workspace.docs?.title && { ...sourceFor("Docs"), title: workspace.docs.title, opened: workspace.docs.updatedAt ?? "just now", owner: "Me" },
     workspace.sheets?.title && { ...sourceFor("Sheets"), title: workspace.sheets.title, opened: workspace.sheets.updatedAt ?? "just now", owner: "Me" },
     workspace.slides?.[0]?.title && { ...sourceFor("Slides"), title: workspace.slides[0].title, opened: "just now", owner: "Me" },
     workspace.notes?.[0]?.title && { ...sourceFor("Notes"), title: workspace.notes[0].title, opened: workspace.notes[0].updatedAt ?? "just now", owner: "Me" },
+    workspace.formTitle && { ...sourceFor("Forms", { type: "Forms", icon: FormInput, color: "peach", owner: "Me", starred: false }), title: workspace.formTitle, opened: "just now", owner: "Me" },
   ].filter(Boolean);
   const liveTypes = new Set(liveFiles.map((file) => file.type));
   return [...liveFiles, ...RECENT_FILES.filter((file) => !liveTypes.has(file.type))];
@@ -250,7 +251,7 @@ function HomeView({ workspace, onNavigate }) {
         <div className="continue-row">{recentFiles.slice(0, 4).map((file) => <button className="continue-card" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div className="file-meta"><span><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={14} />{file.type}</span><MoreHorizontal size={15} /></div><strong>{file.title}</strong><small>Edited {file.opened}</small></button>)}</div>
       </section>
       <section className="workspace-section recent-section">
-        <div className="section-heading"><div><h2>Recent</h2><p>The latest files across your workspaces.</p></div><div className="filter-row">{["All", "Docs", "Sheets", "Slides", "Notes", "Tasks", "Calendar", "Drive"].map((item) => <button className={filter === item ? "filter-button selected" : "filter-button"} key={item} onClick={() => setFilter(item)}>{item}</button>)}</div></div>
+        <div className="section-heading"><div><h2>Recent</h2><p>The latest files across your workspaces.</p></div><div className="filter-row">{["All", "Docs", "Sheets", "Slides", "Notes", "Tasks", "Calendar", "Drive", "Forms"].map((item) => <button className={filter === item ? "filter-button selected" : "filter-button"} key={item} onClick={() => setFilter(item)}>{item}</button>)}</div></div>
         <div className="recent-table"><div className="recent-table-head"><span>Name</span><span>Type</span><span>Last opened</span><span>Owner</span><span aria-label="Actions" /></div>{files.map((file) => <button className="recent-row" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><span className="file-name"><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={18} /><strong>{file.title}</strong></span><span>{file.type}</span><span>{file.opened}</span><span>{file.owner}</span><span className="row-actions">{file.starred ? <Star size={16} fill="currentColor" /> : <Star size={16} />}<MoreHorizontal size={17} /></span></button>)}</div>
       </section>
     </main>
@@ -435,7 +436,7 @@ function EyeIcon() { return <span className="eye-icon">◉</span>; }
 function UtilityView({ id, workspace, update, onNavigate }) {
   const labels = { recent: ["Recent files", "Everything you touched lately, in one quiet list."], starred: ["Starred", "The files you want close at hand."], shared: ["Shared with me", "Work that has arrived from the people around you."], trash: ["Trash", "Files stay here until you are ready to let them go."], settings: ["Settings", "Shape Crescent around the way you work."] };
   const [title, description] = labels[id] ?? labels.recent;
-  const files = id === "starred" ? RECENT_FILES.filter((file) => file.starred) : id === "shared" ? RECENT_FILES.filter((file) => file.owner !== "Me") : id === "trash" ? [] : RECENT_FILES;
+  const files = id === "starred" ? RECENT_FILES.filter((file) => file.starred) : id === "shared" ? RECENT_FILES.filter((file) => file.owner !== "Me") : id === "trash" ? [] : getLiveRecentFiles(workspace);
   const backupInputRef = useRef(null);
   const exportWorkspace = () => { downloadText("crescent-workspace-backup.json", JSON.stringify({ format: "crescent-suite-workspace", version: 1, exportedAt: new Date().toISOString(), workspace }, null, 2), "application/json"); emitNotice("Workspace backup downloaded."); };
   const importWorkspace = (event) => { const file = event.target.files?.[0]; if (!file) return; const reader = new window.FileReader(); reader.onload = () => { try { const parsed = JSON.parse(reader.result); const imported = parsed?.workspace ?? parsed; if (!imported || imported.version !== 1 || !imported.docs || !imported.sheets) throw new Error("Invalid Crescent backup"); update({ ...INITIAL_WORKSPACE, ...imported, version: 1 }); emitNotice("Workspace backup restored locally."); } catch { emitNotice("That backup could not be restored."); } }; reader.readAsText(file); event.target.value = ""; };

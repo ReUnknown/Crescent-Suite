@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.1.31 — Forms appear in Recent work
+
+Published September 8, 2026.
+
+### Changed
+
+- Extended live recent records with the saved Forms title.
+- Added Forms to Home’s Recent filter row.
+- Recent utility navigation now uses the same live workspace records as Home and Drive.
+
+### Verification
+
+- Selected the Home Forms filter and confirmed “Launch feedback” was the only matching row.
+- Opened Recent and confirmed the same Forms file appeared alongside the live core workspace files.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.30 — Forms titles are workspace files
 
 Published September 8, 2026.
