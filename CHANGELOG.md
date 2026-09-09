@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.47 — Preview index catches up
+
+Published September 9, 2026.
+
+### Changed
+
+- Updated `docs/preview/README.md` to identify the v0.1.46 visual preview set, including Trash.
+
+### Verification
+
+- Confirmed the preview index header and listed screenshots match the committed archive.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.46 — Trash visual checkpoint refreshed
 
 Published September 9, 2026.
