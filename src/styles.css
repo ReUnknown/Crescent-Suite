@@ -136,6 +136,12 @@ input, textarea { color: var(--text); }
 .task-edit-save { color: #172119; background: var(--green); }
 .task-edit-cancel { color: #b8bfd2; background: rgba(135, 145, 175, .13); }
 .task-edit-button { width: 27px; height: 27px; }
+.calendar-event-edit-fields { min-width: 0; display: grid; gap: 5px; flex: 1; }
+.calendar-event-edit-fields input { width: 100%; min-width: 0; padding: 5px 6px; border: 1px solid rgba(175, 160, 255, .34); border-radius: 5px; outline: 0; color: #e8e7f4; background: rgba(28, 32, 49, .90); font: inherit; font-size: 11px; }
+.calendar-event-edit-actions { display: inline-flex; align-items: center; gap: 3px; }
+.calendar-event-edit-actions button { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 6px; }
+.calendar-event-save { color: #172119; background: var(--green); }
+.calendar-event-cancel { color: #b8bfd2; background: rgba(135, 145, 175, .13); }
 
 /* Grid cell positioning keeps spreadsheet values anchored to their own cells. */
 .sheet-grid > .sheet-row > div { min-height: 42px; position: relative; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }

@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.0.2 — Editable calendar events
+
+Published September 9, 2026.
+
+### Added
+
+- Added inline editing for saved local calendar event titles and times.
+- Added Enter to save and Escape to cancel while editing an event.
+- Recalculate the saved local event day whenever its edited time text includes a new natural-language date.
+- Added a committed visual preview for the calendar editing state.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage now verifies event creation, inline editing, reload persistence, local-day placement, and ICS export.
+
 ## v1.0.1 — Editable task titles
 
 Published September 9, 2026.

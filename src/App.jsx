@@ -553,6 +553,9 @@ function CalendarView({ workspace, update, onNavigate }) {
   const [mode, setMode] = useState("week");
   const [weekOffset, setWeekOffset] = useState(0);
   const [monthOffset, setMonthOffset] = useState(0);
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [editingEventTitle, setEditingEventTitle] = useState("");
+  const [editingEventWhen, setEditingEventWhen] = useState("");
   const localEvents = workspace.calendarEvents ?? [];
   const addEvent = () => {
     const title = window.prompt("Event title", "New focus block");
@@ -564,6 +567,17 @@ function CalendarView({ workspace, update, onNavigate }) {
     emitNotice("Event saved in this local workspace.");
   };
   const removeEvent = (id) => update({ calendarEvents: localEvents.filter((event) => event.id !== id) });
+  const startEventEdit = (event) => { setEditingEvent(event.id); setEditingEventTitle(event.title); setEditingEventWhen(event.when); };
+  const cancelEventEdit = () => { setEditingEvent(null); setEditingEventTitle(""); setEditingEventWhen(""); };
+  const saveEventEdit = (id) => {
+    const title = editingEventTitle.trim();
+    const when = editingEventWhen.trim();
+    if (!title || !when) { emitNotice("Add an event title and time before saving."); return; }
+    const eventDate = resolveNaturalDate(when, displayDate);
+    update({ calendarEvents: localEvents.map((event) => event.id === id ? { ...event, title, when, date: localDateKey(eventDate) } : event) });
+    cancelEventEdit();
+    emitNotice("Event updated locally.");
+  };
   const exportCalendar = () => {
     const events = localEvents.map((event, index) => {
       const date = (event.date ?? localDateKey(displayDate)).replaceAll("-", "");
@@ -617,7 +631,33 @@ function CalendarView({ workspace, update, onNavigate }) {
   const monthDays = Array.from({ length: 42 }, (_, index) => { const date = new Date(monthStart); date.setDate(index - monthStart.getDay() + 1); const dateKey = localDateKey(date); return { label: new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date), date: date.getDate(), dateKey, currentMonth: date.getMonth() === displayDate.getMonth(), events: [...(seededMonthEvents.get(dateKey) ?? []), ...localEventsForDate(date)] }; });
   const monthCalendar = <div className="calendar-month-grid">{monthDays.map((day) => <div className={`calendar-month-cell ${day.currentMonth ? "" : "muted"} ${day.dateKey === todayKey ? "today" : ""}`} key={day.dateKey}><div className="calendar-month-head"><span>{day.label}</span><strong>{day.date}</strong></div><div className="calendar-month-events">{day.events.map((event, index) => <span className={`calendar-month-event month-event-${index % 4}`} key={`${day.dateKey}-${event}`}>{event}</span>)}</div></div>)}</div>;
   const weekCalendar = <div className={"calendar-grid " + (mode === "day" ? "calendar-grid-day" : "")}><div className="calendar-axis"><span /><span>9 AM</span><span>10 AM</span><span>11 AM</span><span>12 PM</span><span>1 PM</span><span>2 PM</span><span>3 PM</span><span>4 PM</span><span>5 PM</span></div>{weekDates.map((day, index) => <div className={"calendar-day " + (mode === "day" && index > 0 ? "muted-day" : "")} key={day.dateKey}><div className="calendar-day-head"><span>{day.dateKey === todayKey ? "Today" : day.label}</span><strong>{day.date}</strong></div><div className="calendar-lines">{Array.from({ length: 9 }, (_, lineIndex) => <span key={lineIndex} />)}{index === 0 && <><div className="calendar-event event-one"><strong>Product sync</strong><small>Team · 9:00–9:45</small></div><div className="calendar-event event-two"><strong>Design review</strong><small>Design · 10:00–11:00</small></div><div className="calendar-event event-three"><strong>Focus time</strong><small>Personal · 1:00–3:00</small></div><div className="calendar-event event-four"><strong>Marketing check-in</strong><small>Marketing · 4:00–4:30</small></div></>}{index === 1 && <div className="calendar-event event-five"><strong>Customer interview</strong><small>Research · 11:00–12:00</small></div>}{index === 2 && <div className="calendar-event event-six"><strong>Launch review</strong><small>Product · 2:00–3:00</small></div>}{localEventsForDay(day.dateKey).map((event, eventIndex) => <div className="calendar-event calendar-event-local" style={{ top: `${localEventTop(event.when, eventIndex)}px` }} key={`local-${event.id ?? event.title}`}><strong>{event.title}</strong><small>{event.when}</small></div>)}</div></div>)}</div>;
-  return <div className="calendar-page page-enter"><EditorHeader title="Calendar" icon={APP_META.find((app) => app.id === "calendar")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={exportCalendar} disabled={!localEvents.length}><Download size={16} />Export ICS</button><button className="secondary-button" onClick={() => mode === "month" ? setMonthOffset((current) => current - 1) : setWeekOffset((current) => current - 1)}><ChevronLeft size={16} />Previous</button><button className="secondary-button" onClick={() => { setWeekOffset(0); setMonthOffset(0); }}>Today</button><button className="secondary-button" onClick={() => mode === "month" ? setMonthOffset((current) => current + 1) : setWeekOffset((current) => current + 1)}><ChevronRight size={16} />Next</button><button className="primary-button" onClick={addEvent}><Plus size={16} />Event</button></EditorHeader><div className="calendar-content"><div className="calendar-heading"><div><h1>{mode === "month" ? displayMonth : mode === "week" ? weekHeading : displayHeading}</h1><p>{mode === "month" ? `${displayMonth} · Product workspace` : mode === "day" ? `${shortDisplayDay} · Product workspace` : `Week of ${weekHeading} · Product workspace`}</p></div><div className="calendar-switch"><button className={mode === "day" ? "selected" : ""} onClick={() => setMode("day")} aria-pressed={mode === "day"}>Day</button><button className={mode === "week" ? "selected" : ""} onClick={() => setMode("week")} aria-pressed={mode === "week"}>Week</button><button className={mode === "month" ? "selected" : ""} onClick={() => setMode("month")} aria-pressed={mode === "month"}>Month</button></div></div>{localEvents.length > 0 && <section className="calendar-local-events" aria-label="Saved local events"><div className="calendar-local-heading"><div><span className="utility-kicker"><CalendarCheck2 size={14} />Saved locally</span><h2>Your Crescent events</h2></div><small>{localEvents.length} event{localEvents.length === 1 ? "" : "s"}</small></div><div className="calendar-local-list">{localEvents.map((event) => <div className="calendar-local-card" key={event.id}><span className="calendar-local-dot" /><div><strong>{event.title}</strong><small>{event.when}</small></div><button className="icon-button muted" onClick={() => removeEvent(event.id)} aria-label={`Remove ${event.title}`}><Trash2 size={15} /></button></div>)}</div></section>}{mode === "month" ? monthCalendar : weekCalendar}</div></div>;
+  return <div className="calendar-page page-enter">
+    <EditorHeader title="Calendar" icon={APP_META.find((app) => app.id === "calendar")} onChangeTitle={() => {}} onNavigate={onNavigate}>
+      <button className="secondary-button" onClick={exportCalendar} disabled={!localEvents.length}><Download size={16} />Export ICS</button>
+      <button className="secondary-button" onClick={() => mode === "month" ? setMonthOffset((current) => current - 1) : setWeekOffset((current) => current - 1)}><ChevronLeft size={16} />Previous</button>
+      <button className="secondary-button" onClick={() => { setWeekOffset(0); setMonthOffset(0); }}>Today</button>
+      <button className="secondary-button" onClick={() => mode === "month" ? setMonthOffset((current) => current + 1) : setWeekOffset((current) => current + 1)}><ChevronRight size={16} />Next</button>
+      <button className="primary-button" onClick={addEvent}><Plus size={16} />Event</button>
+    </EditorHeader>
+    <div className="calendar-content">
+      <div className="calendar-heading">
+        <div><h1>{mode === "month" ? displayMonth : mode === "week" ? weekHeading : displayHeading}</h1><p>{mode === "month" ? `${displayMonth} · Product workspace` : mode === "day" ? `${shortDisplayDay} · Product workspace` : `Week of ${weekHeading} · Product workspace`}</p></div>
+        <div className="calendar-switch"><button className={mode === "day" ? "selected" : ""} onClick={() => setMode("day")} aria-pressed={mode === "day"}>Day</button><button className={mode === "week" ? "selected" : ""} onClick={() => setMode("week")} aria-pressed={mode === "week"}>Week</button><button className={mode === "month" ? "selected" : ""} onClick={() => setMode("month")} aria-pressed={mode === "month"}>Month</button></div>
+      </div>
+      {localEvents.length > 0 && <section className="calendar-local-events" aria-label="Saved local events">
+        <div className="calendar-local-heading"><div><span className="utility-kicker"><CalendarCheck2 size={14} />Saved locally</span><h2>Your Crescent events</h2></div><small>{localEvents.length} event{localEvents.length === 1 ? "" : "s"}</small></div>
+        <div className="calendar-local-list">{localEvents.map((event) => <div className="calendar-local-card" key={event.id}>
+          <span className="calendar-local-dot" />
+          {editingEvent === event.id ? <div className="calendar-event-edit-fields">
+            <input value={editingEventTitle} onChange={(inputEvent) => setEditingEventTitle(inputEvent.target.value)} onKeyDown={(inputEvent) => { if (inputEvent.key === "Enter") saveEventEdit(event.id); if (inputEvent.key === "Escape") cancelEventEdit(); }} aria-label="Edit event title" autoFocus />
+            <input value={editingEventWhen} onChange={(inputEvent) => setEditingEventWhen(inputEvent.target.value)} onKeyDown={(inputEvent) => { if (inputEvent.key === "Enter") saveEventEdit(event.id); if (inputEvent.key === "Escape") cancelEventEdit(); }} aria-label="Edit event time" />
+          </div> : <div><strong>{event.title}</strong><small>{event.when}</small></div>}
+          {editingEvent === event.id ? <div className="calendar-event-edit-actions"><button className="calendar-event-save" onClick={() => saveEventEdit(event.id)} aria-label="Save event"><Check size={15} /></button><button className="calendar-event-cancel" onClick={cancelEventEdit} aria-label="Cancel event edit"><X size={15} /></button></div> : <><button className="icon-button muted" onClick={() => startEventEdit(event)} aria-label={`Edit ${event.title}`}><Pencil size={15} /></button><button className="icon-button muted" onClick={() => removeEvent(event.id)} aria-label={`Remove ${event.title}`}><Trash2 size={15} /></button></>}
+        </div>)}</div>
+      </section>}
+      {mode === "month" ? monthCalendar : weekCalendar}
+    </div>
+  </div>;
 }
 
 function _DriveViewLegacy({ onNavigate }) {

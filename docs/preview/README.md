@@ -1,4 +1,4 @@
-# v1.0.1 visual preview
+# v1.0.2 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -10,6 +10,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `tasks-project-filter.png` — Tasks narrowed to one local Project while preserving due dates and completion state
 - `tasks-empty-filter.png` — Tasks explaining an empty Project filter with a clear next step
 - `tasks-edit.png` — Tasks with an inline title edit in progress and explicit save/cancel controls
+- `calendar-edit.png` — Calendar with a saved local event title and time being edited in place
 - `sheets.png` — editable Sheets surface with formula bar, populated grid, and persistent tabs
 - `sheets-formatting.png` — Sheets with persistent Bold and Italic state on the selected cell
 - `sheets-insights.png` — Sheets Insights view calculated from the grid

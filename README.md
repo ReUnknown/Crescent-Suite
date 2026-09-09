@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.0.1 — Editable task titles**
+**v1.0.2 — Editable calendar events**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -30,6 +30,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Settings’ hidden workspace-backup input now has an explicit accessible name for assistive technology
 - `v1.0.0` marks the first major, reviewable Crescent baseline with the full suite shell, eight working apps, committed visual previews, and green CI smoke coverage
 - Tasks now support inline title editing with Enter/Escape keyboard controls, explicit save/cancel actions, and local persistence
+- Calendar events now support inline title and time editing with natural-language date recalculation and local persistence
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

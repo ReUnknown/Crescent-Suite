@@ -107,6 +107,13 @@ try {
     const localEvent = behaviorPage.locator(".calendar-event-local");
     const localEventStyle = await localEvent.getAttribute("style");
     if (await localEvent.count() !== 1 || !localEventStyle?.includes("top: 384px")) failures.push({ route: "calendar", controls: "timed local event", localEventStyle });
+    await behaviorPage.getByRole("button", { name: "Edit Smoke focus block" }).click();
+    await behaviorPage.getByRole("textbox", { name: "Edit event title" }).fill("Smoke focus edited");
+    await behaviorPage.getByRole("textbox", { name: "Edit event time" }).fill("Tomorrow · 4:00 PM");
+    await behaviorPage.getByRole("button", { name: "Save event" }).click();
+    if (!(await behaviorPage.locator(".calendar-local-list").innerText()).includes("Smoke focus edited")) failures.push({ route: "calendar", controls: "inline event edit" });
+    await behaviorPage.reload({ waitUntil: "networkidle" });
+    if (!(await behaviorPage.locator(".calendar-local-list").innerText()).includes("Smoke focus edited")) failures.push({ route: "calendar", controls: "event edit persistence" });
     const storedCalendarDate = await behaviorPage.evaluate(() => JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").calendarEvents?.[0]?.date);
     const expectedTomorrow = await behaviorPage.evaluate(() => { const date = new Date(); date.setDate(date.getDate() + 1); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; });
     if (storedCalendarDate !== expectedTomorrow) failures.push({ route: "calendar", controls: "natural language event date", storedCalendarDate, expectedTomorrow });
@@ -116,7 +123,7 @@ try {
     const icsChunks = [];
     for await (const chunk of icsStream) icsChunks.push(chunk);
     const icsText = Buffer.concat(icsChunks).toString();
-    if (!icsText.includes(`DTSTART:${expectedTomorrow.replaceAll("-", "")}T150000`)) failures.push({ route: "calendar", controls: "timed ICS export" });
+    if (!icsText.includes(`DTSTART:${expectedTomorrow.replaceAll("-", "")}T160000`)) failures.push({ route: "calendar", controls: "timed ICS export" });
     await behaviorPage.getByRole("button", { name: "Event" }).click();
     const expectedFriday = await behaviorPage.evaluate(() => { const date = new Date(); date.setHours(0, 0, 0, 0); const daysAhead = (5 - date.getDay() + 7) % 7 || 7; date.setDate(date.getDate() + daysAhead); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; });
     const storedFriday = await behaviorPage.evaluate(() => JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").calendarEvents?.[0]?.date);
@@ -244,7 +251,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; timed local events, natural-language dates, live Recent, and timed ICS export; Month has 42 cells; editable task due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; timed local events with inline editing, natural-language dates, live Recent, and timed ICS export; Month has 42 cells; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
