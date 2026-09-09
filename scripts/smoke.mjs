@@ -100,7 +100,7 @@ try {
     if (await behaviorPage.locator(".folder-card").filter({ hasText: "Smoke folder" }).count() !== 1) failures.push({ route: "drive", controls: "folder persistence" });
     await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
     let calendarPrompt = 0;
-    const calendarAnswers = ["Smoke focus block", "Tomorrow · 3:00 PM", "Smoke Friday", "Friday · 9:00 AM"];
+    const calendarAnswers = ["Smoke focus block", "Tomorrow · 3:00 PM", "Smoke Friday", "Friday · 9:00 AM", "Smoke today", "Today · 5:00 PM"];
     const acceptCalendarPrompts = async (dialog) => { calendarPrompt += 1; await dialog.accept(calendarAnswers[calendarPrompt - 1] ?? "Smoke event"); };
     behaviorPage.on("dialog", acceptCalendarPrompts);
     await behaviorPage.getByRole("button", { name: "Event" }).click();
@@ -128,10 +128,12 @@ try {
     const expectedFriday = await behaviorPage.evaluate(() => { const date = new Date(); date.setHours(0, 0, 0, 0); const daysAhead = (5 - date.getDay() + 7) % 7 || 7; date.setDate(date.getDate() + daysAhead); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; });
     const storedFriday = await behaviorPage.evaluate(() => JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").calendarEvents?.[0]?.date);
     if (storedFriday !== expectedFriday) failures.push({ route: "calendar", controls: "natural language weekday date", storedFriday, expectedFriday });
+    await behaviorPage.getByRole("button", { name: "Event" }).click();
     behaviorPage.off("dialog", acceptCalendarPrompts);
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
-    if (!(await behaviorPage.locator(".recent-table").innerText()).includes("Smoke Friday")) failures.push({ route: "home", controls: "live calendar recent file" });
+    if (!(await behaviorPage.locator(".recent-table").innerText()).includes("Smoke today")) failures.push({ route: "home", controls: "live calendar recent file" });
     if ((await behaviorPage.locator(".day-card").innerText()).includes("Smoke Friday")) failures.push({ route: "home", controls: "future event excluded from My day" });
+    if (!(await behaviorPage.locator(".day-card").innerText()).includes("Smoke today") || !(await behaviorPage.locator(".day-card").innerText()).includes("5:00 PM")) failures.push({ route: "home", controls: "local calendar time in My day" });
     await behaviorPage.goto(`${baseUrl}/tasks`, { waitUntil: "networkidle" });
     const dueBefore = await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).innerText();
     await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).click();

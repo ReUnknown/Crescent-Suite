@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.0.4 — Calendar time across Home
+
+Published September 9, 2026.
+
+### Fixed
+
+- Home’s My day rail now shows the time parsed from saved local calendar events instead of a generic Saved/Local label.
+- Added a committed visual preview of a local event flowing from Calendar into Home.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage verifies same-day local calendar events appear in Home with their saved time while future events remain excluded.
+
 ## v1.0.3 — Responsive task editing
 
 Published September 9, 2026.

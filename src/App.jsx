@@ -342,7 +342,7 @@ function HomeView({ workspace, update, onNavigate, onFocusSearch }) {
   const greeting = currentHour < 12 ? "Good morning" : currentHour < 18 ? "Good afternoon" : "Good evening";
   const files = filter === "All" ? recentFiles : recentFiles.filter((file) => file.type === filter);
   const todayKey = localDateKey(new Date());
-  const localSchedule = (workspace.calendarEvents ?? []).filter((event) => !event.date || event.date === todayKey).slice(0, 2).map((event) => ({ ...event, time: "Saved", end: "Local", color: "periwinkle" }));
+  const localSchedule = (workspace.calendarEvents ?? []).filter((event) => !event.date || event.date === todayKey).slice(0, 2).map((event) => ({ ...event, time: scheduleTimeLabel(event.when), end: "Local", color: "periwinkle" }));
   const toggleStar = (event, file) => { event.stopPropagation(); const starredTitles = getStarredTitles(workspace); if (starredTitles.has(file.title)) starredTitles.delete(file.title); else starredTitles.add(file.title); update({ starredFiles: [...starredTitles] }); emitNotice(starredTitles.has(file.title) ? `${file.title} added to Starred.` : `${file.title} removed from Starred.`); };
   return <div className="home-layout page-enter">
     <main className="home-main">
@@ -792,6 +792,10 @@ function localDateKey(date) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function scheduleTimeLabel(value) {
+  return String(value ?? "").match(/\b\d{1,2}(?::\d{2})?\s*(?:AM|PM)\b/i)?.[0] ?? "Saved";
 }
 
 function resolveNaturalDate(input, baseDate) {
