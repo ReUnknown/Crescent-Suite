@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.38 — Forms response settings persist**
+**v0.1.39 — Docs outline links are live**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -38,6 +38,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Sheets Undo and Redo now track recent workbook edits, including cell edits and tab creation
 - Updated the committed Sheets preview with the new Sheet 2 tab and independent cell surface
 - Forms response settings for collecting emails and allowing one response now have real, persisted toggle states
+- Docs outline buttons now scroll to the matching saved heading in the document
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device

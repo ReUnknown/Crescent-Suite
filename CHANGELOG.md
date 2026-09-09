@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.39 — Docs outline links are live
+
+Published September 9, 2026.
+
+### Changed
+
+- Docs outline entries now locate and scroll to matching `h1`, `h2`, or `h3` elements in the editor.
+- Generated outline content remains derived from the saved document, so navigation follows renamed and edited drafts.
+
+### Verification
+
+- Clicked the “North star” outline entry and confirmed the page scrolled while the heading remained visible.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.38 — Forms response settings persist
 
 Published September 9, 2026.
