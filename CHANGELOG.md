@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.2.0 — Search overlay polish
+
+Published September 9, 2026.
+
+### Improved
+
+- Universal Search now dismisses when the user clicks outside the search field or result controls.
+- Search result buttons remain interactive while open panel space lets clicks reach the workspace dismissal handler.
+- Added production smoke coverage for outside-click dismissal alongside Escape, arrow navigation, and Enter-to-open.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.1.5 — Editor header semantics
 
 Published September 9, 2026.

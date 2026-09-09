@@ -265,3 +265,5 @@ input, textarea { color: var(--text); }
 .task-due { border: 0; cursor: pointer; }.task-due:hover { color: white; background: rgba(148, 158, 192, .18); }
 .form-textarea { min-height: 96px; resize: vertical; }
 .editor-breadcrumb input[readonly] { cursor: default; color: #b6bed5; }
+.search-results { pointer-events: none; }
+.search-result { pointer-events: auto; }
