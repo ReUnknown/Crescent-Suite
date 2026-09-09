@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.143 — Recent keyboard navigation coverage
+
+Published September 9, 2026.
+
+### Testing
+
+- Playwright smoke coverage now focuses the first Home Recent row, opens it with Enter, and verifies that navigation reaches Docs.
+- The existing favorite action remains separately covered by the task Starred recovery path.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.142 — Workspace-to-Drive preview
 
 Published September 9, 2026.

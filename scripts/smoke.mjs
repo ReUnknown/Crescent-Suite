@@ -74,6 +74,10 @@ try {
     behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke project"));
     await behaviorPage.getByRole("button", { name: "Add project" }).click();
     if (!(await behaviorPage.locator(".project-list").innerText()).includes("Smoke project")) failures.push({ route: "home", controls: "local project creation" });
+    await behaviorPage.locator(".recent-row").first().focus();
+    await behaviorPage.locator(".recent-row").first().press("Enter");
+    if (!behaviorPage.url().endsWith("#docs")) failures.push({ route: "home", controls: "keyboard Recent row navigation", url: behaviorPage.url() });
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     await behaviorPage.reload({ waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".workspace-list").innerText()).includes("Smoke workspace") || !(await behaviorPage.locator(".project-list").innerText()).includes("Smoke project")) failures.push({ route: "home", controls: "workspace/project persistence" });
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
