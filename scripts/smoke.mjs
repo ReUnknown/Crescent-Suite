@@ -326,6 +326,19 @@ try {
     const liveDriveTitle = "Smoke restore";
     await behaviorPage.locator(".drive-file").filter({ hasText: liveDriveTitle }).click();
     if (behaviorPage.url().split("#")[1] !== "docs" || await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== liveDriveTitle) failures.push({ route: "drive", controls: "exact recent-file destination", url: behaviorPage.url() });
+    await behaviorPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
+    await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "malformed-records.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Safe import" }, sheets: { title: "Safe sheet" }, slides: [null], notes: [null], tasks: [null], forms: [null], calendarEvents: [null], driveFolders: [null] })) });
+    await behaviorPage.getByRole("status").filter({ hasText: "Workspace backup restored locally." }).waitFor({ state: "visible" });
+    await behaviorPage.goto(`${baseUrl}/slides`, { waitUntil: "networkidle" });
+    if (await behaviorPage.locator(".slide-thumb").count() !== 1) failures.push({ route: "settings", controls: "malformed slide backup normalization" });
+    await behaviorPage.goto(`${baseUrl}/notes`, { waitUntil: "networkidle" });
+    if (await behaviorPage.locator(".note-list-item").count() !== 1) failures.push({ route: "settings", controls: "malformed note backup normalization" });
+    await behaviorPage.goto(`${baseUrl}/tasks`, { waitUntil: "networkidle" });
+    if (await behaviorPage.locator(".task-row").count() !== 1) failures.push({ route: "settings", controls: "malformed task backup normalization" });
+    await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
+    if (await behaviorPage.locator(".question-label-input").count() !== 1) failures.push({ route: "settings", controls: "malformed form backup normalization" });
+    await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
+    if (await behaviorPage.locator(".calendar-local-card").count() !== 1) failures.push({ route: "settings", controls: "malformed calendar backup normalization" });
   } finally {
     await behaviorPage.close();
   }

@@ -197,18 +197,50 @@ function normalizeWorkspace(source) {
       };
     })
     : INITIAL_WORKSPACE.driveFolders;
+  const slides = Array.isArray(source?.slides) && source.slides.length
+    ? source.slides.map((slide, index) => {
+      const record = slide && typeof slide === "object" ? slide : {};
+      const seed = INITIAL_WORKSPACE.slides[index % INITIAL_WORKSPACE.slides.length];
+      return { ...seed, ...record, title: String(record.title ?? seed.title ?? `Slide ${index + 1}`), body: String(record.body ?? seed.body ?? ""), accent: ["lilac", "blue", "gold"].includes(record.accent) ? record.accent : seed.accent, notes: String(record.notes ?? ""), layout: record.layout === "statement" ? "statement" : "title-body" };
+    })
+    : INITIAL_WORKSPACE.slides;
+  const notes = Array.isArray(source?.notes) && source.notes.length
+    ? source.notes.map((note, index) => {
+      const record = note && typeof note === "object" ? note : {};
+      const seed = INITIAL_WORKSPACE.notes[index % INITIAL_WORKSPACE.notes.length];
+      return { ...seed, ...record, id: record.id ?? index + 1, title: String(record.title ?? seed.title ?? `Note ${index + 1}`), body: String(record.body ?? ""), color: ["lilac", "blue", "gold"].includes(record.color) ? record.color : seed.color, updatedAt: String(record.updatedAt ?? "Just now") };
+    })
+    : INITIAL_WORKSPACE.notes;
+  const tasks = Array.isArray(source?.tasks)
+    ? source.tasks.map((task, index) => {
+      const record = task && typeof task === "object" ? task : {};
+      return { ...record, id: record.id ?? index + 1, title: String(record.title ?? `Task ${index + 1}`), project: String(record.project ?? "Personal"), due: String(record.due ?? "No date"), complete: Boolean(record.complete) };
+    })
+    : INITIAL_WORKSPACE.tasks;
+  const forms = Array.isArray(source?.forms)
+    ? source.forms.map((question, index) => {
+      const record = question && typeof question === "object" ? question : {};
+      return { ...record, id: record.id ?? index + 1, label: String(record.label ?? `Question ${index + 1}`), type: ["Short answer", "Long answer", "Scale"].includes(record.type) ? record.type : "Short answer", required: Boolean(record.required) };
+    })
+    : INITIAL_WORKSPACE.forms;
+  const calendarEvents = Array.isArray(source?.calendarEvents)
+    ? source.calendarEvents.map((event, index) => {
+      const record = event && typeof event === "object" ? event : {};
+      return { ...record, id: record.id ?? index + 1, title: String(record.title ?? `Event ${index + 1}`), when: String(record.when ?? "No time"), ...(record.date ? { date: String(record.date) } : {}) };
+    })
+    : [];
   return {
     ...merged,
     docs: { ...INITIAL_WORKSPACE.docs, ...(source?.docs ?? {}) },
     sheets: { ...INITIAL_WORKSPACE.sheets, ...(source?.sheets ?? {}) },
-    slides: Array.isArray(source?.slides) && source.slides.length ? source.slides : INITIAL_WORKSPACE.slides,
-    notes: Array.isArray(source?.notes) && source.notes.length ? source.notes : INITIAL_WORKSPACE.notes,
-    tasks: Array.isArray(source?.tasks) ? source.tasks : INITIAL_WORKSPACE.tasks,
-    forms: Array.isArray(source?.forms) ? source.forms : INITIAL_WORKSPACE.forms,
+    slides,
+    notes,
+    tasks,
+    forms,
     driveFolders,
     workspaces,
     projects,
-    calendarEvents: Array.isArray(source?.calendarEvents) ? source.calendarEvents : [],
+    calendarEvents,
     deletedFiles: Array.isArray(source?.deletedFiles) ? source.deletedFiles : [],
     formSettings: { ...INITIAL_WORKSPACE.formSettings, ...(source?.formSettings ?? {}) },
     formResponses: Array.isArray(source?.formResponses) ? source.formResponses : source?.lastFormResponse?.saved ? [source.lastFormResponse] : [],

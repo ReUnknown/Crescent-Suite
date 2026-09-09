@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.5.0 — Safe imported workspace records
+
+Published September 9, 2026.
+
+### Fixed
+
+- Workspace backup import now normalizes malformed Slides, Notes, Tasks, Forms, Calendar, and Drive records.
+- Valid v1 backups containing incomplete or null list entries now recover to safe local starter records instead of crashing a surface later.
+- Preserved intentional empty task, form, and calendar collections while repairing malformed entries that are present.
+- Added production smoke coverage for malformed-record backup recovery across the suite.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.4.1 — Exact Drive file destinations
 
 Published September 9, 2026.
