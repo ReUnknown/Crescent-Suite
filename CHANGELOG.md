@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.11 — Search that knows your work
+
+Published September 8, 2026.
+
+### Changed
+
+- Global Search now indexes local tasks, Drive folders, and Calendar events alongside seeded files.
+- Local search results carry the correct Crescent app icon and route back into the owning surface.
+
+### Verification
+
+- Injected a local task, found it through Search, and opened its Tasks surface in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.10 — Workspace continuity
 
 Published September 8, 2026.

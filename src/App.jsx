@@ -188,20 +188,25 @@ function Sidebar({ activeApp, onNavigate, open, onClose }) {
   </>;
 }
 
-function Header({ activeApp, onOpenSidebar, query, onQueryChange, onNavigate }) {
+function Header({ activeApp, onOpenSidebar, query, onQueryChange, onNavigate, workspace }) {
   const title = activeApp === "home" ? "Home" : APP_META.find((app) => app.id === activeApp)?.label ?? "Crescent";
   return <header className="topbar">
     <button className="mobile-menu icon-button" onClick={onOpenSidebar} aria-label="Open navigation"><Menu size={20} /></button>
     <div className="mobile-title"><BrandMark small /><span>{title}</span></div>
     <div className="global-search"><Search size={19} /><input value={query} onChange={(event) => onQueryChange(event.target.value)} placeholder="Search across Crescent..." aria-label="Search across Crescent" /><kbd><Command size={13} />K</kbd></div>
     <div className="topbar-actions"><button className="icon-button" aria-label="Help"><CircleHelp size={19} /></button><button className="icon-button" aria-label="Settings" onClick={() => onNavigate("settings")}><Settings2 size={19} /></button><div className="topbar-divider" /><button className="profile-button" aria-label="Open profile"><span>A</span><ChevronDown size={15} /></button></div>
-    {query && <SearchResults query={query} onNavigate={onNavigate} />}
+    {query && <SearchResults query={query} onNavigate={onNavigate} workspace={workspace} />}
   </header>;
 }
 
-function SearchResults({ query, onNavigate }) {
-  const results = RECENT_FILES.filter((file) => `${file.title} ${file.type}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
-  return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={file.title} className="search-result" onClick={() => onNavigate(file.type.toLowerCase())}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
+function SearchResults({ query, onNavigate, workspace }) {
+  const localResults = [
+    ...(workspace.tasks ?? []).map((task) => ({ title: task.title, type: "Tasks", opened: task.due, owner: "Me", icon: ListChecks, color: "violet" })),
+    ...(workspace.driveFolders ?? []).map((folder) => ({ title: folder.name, type: "Drive", opened: `${folder.items} items`, owner: "Me", icon: HardDrive, color: "rainbow" })),
+    ...(workspace.calendarEvents ?? []).map((event) => ({ title: event.title, type: "Calendar", opened: event.when, owner: "Me", icon: CalendarDays, color: "periwinkle" })),
+  ];
+  const results = [...RECENT_FILES, ...localResults].filter((file) => `${file.title} ${file.type} ${file.opened}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
+  return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.type.toLowerCase())}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
 function HomeView({ workspace, onNavigate }) {
@@ -435,5 +440,5 @@ export default function App() {
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} />;
     return <UtilityView id={activeApp} onNavigate={navigate} />;
   }, [activeApp, workspace, update]);
-  return <div className="app-shell"><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} query={query} onQueryChange={setQuery} onNavigate={navigate} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div></div>;
+  return <div className="app-shell"><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} query={query} onQueryChange={setQuery} onNavigate={navigate} workspace={workspace} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div></div>;
 }
