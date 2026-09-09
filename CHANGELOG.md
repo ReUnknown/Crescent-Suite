@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.51 — Editor breadcrumbs are accessible
+
+Published September 9, 2026.
+
+### Changed
+
+- Added an accessible `Back to Home` label to the shared editor breadcrumb home control.
+- The label now applies consistently across all editor-style app surfaces.
+
+### Verification
+
+- Confirmed lint/build pass after the shared component change.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.50 — Forms enforce required answers
 
 Published September 9, 2026.
