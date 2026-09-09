@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.165 — Clear Tasks empty states**
+**v0.1.166 — Settings accessibility polish**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -27,6 +27,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Home’s My day rail now includes only saved events on the current local day; future events remain available in Calendar and Recent
 - The committed preview archive header and Home screenshot description now match the current published shell
 - Tasks now explain when a status or Project filter has no matches, with a clear next-step message instead of an empty list
+- Settings’ hidden workspace-backup input now has an explicit accessible name for assistive technology
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.166 — Settings accessibility polish
+
+Published September 9, 2026.
+
+### Fixed
+
+- The hidden Settings workspace-backup file input now exposes the accessible name “Import workspace backup.”
+- A browser accessibility check confirms the backup control is labeled while remaining visually hidden behind the Import action.
+
+### Verification
+
+- `npm run lint` and `npm run build` pass; the full 30-route smoke suite remains green on the underlying v0.1.165 implementation.
+
 ## v0.1.165 — Clear Tasks empty states
 
 Published September 9, 2026.
