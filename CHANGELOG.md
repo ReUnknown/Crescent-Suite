@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.127 — Drive restores Starred metadata
+
+Published September 9, 2026.
+
+### Changed
+
+- Drive file creation now records whether the archived Docs record was starred.
+- Restoring that record brings its Starred state back with the document.
+
+### Verification
+
+- Smoke coverage now checks Drive → Trash → Restore → Starred continuity.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.126 — Form responses export to CSV
 
 Published September 9, 2026.
