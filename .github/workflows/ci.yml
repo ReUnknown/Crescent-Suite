@@ -21,3 +21,5 @@ jobs:
         run: npm ci
       - name: Build production bundle
         run: npm run build
+      - name: Lint source
+        run: npm run lint

@@ -15,7 +15,6 @@ import {
   CircleHelp,
   Clock3,
   Command,
-  Copy,
   Download,
   FilePlus2,
   FileSpreadsheet,
@@ -26,28 +25,21 @@ import {
   Grid2X2,
   HardDrive,
   Home,
-  Image,
   Italic,
   LayoutDashboard,
-  LayoutGrid,
   Link,
   List,
   ListChecks,
   Menu,
-  MessageCircle,
   MoreHorizontal,
   NotebookPen,
-  PanelLeft,
-  PencilLine,
   Play,
   Plus,
   Presentation,
   Redo2,
-  Save,
   Search,
   Settings2,
   Share2,
-  Sheet,
   Sparkles,
   Star,
   StickyNote,
@@ -212,7 +204,7 @@ function SearchResults({ query, onNavigate }) {
   return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={file.title} className="search-result" onClick={() => onNavigate(file.type.toLowerCase())}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
-function HomeView({ workspace, onNavigate }) {
+function HomeView({ onNavigate }) {
   const [filter, setFilter] = useState("All");
   const files = filter === "All" ? RECENT_FILES : RECENT_FILES.filter((file) => file.type === filter);
   return <div className="home-layout page-enter">
@@ -256,7 +248,7 @@ function DocsView({ workspace, update, onNavigate }) {
   const [title, setTitle] = useState(workspace.docs.title);
   const editorRef = useRef(null);
   const icon = APP_META.find((app) => app.id === "docs");
-  useEffect(() => { if (editorRef.current && editorRef.current.innerHTML !== workspace.docs.body) editorRef.current.innerHTML = workspace.docs.body; }, []);
+  useEffect(() => { if (editorRef.current && editorRef.current.innerHTML !== workspace.docs.body) editorRef.current.innerHTML = workspace.docs.body; }, [workspace.docs.body]);
   const updateDoc = (nextBody = editorRef.current?.innerHTML ?? workspace.docs.body) => update({ docs: { ...workspace.docs, title, body: nextBody, updatedAt: "just now" } });
   const exec = (command, value = undefined) => { editorRef.current?.focus(); document.execCommand(command, false, value); updateDoc(); };
   return <div className="editor-page page-enter docs-page"><EditorHeader title={title} icon={icon} onChangeTitle={(value) => { setTitle(value); update({ docs: { ...workspace.docs, title: value, updatedAt: "just now" } }); }} onNavigate={onNavigate}><button className="secondary-button" onClick={() => downloadText(`${title || "crescent-doc"}.html`, editorRef.current?.innerHTML ?? "", "text/html")}><Download size={16} />Export</button><button className="primary-button"><Share2 size={16} />Share</button></EditorHeader><div className="editor-subbar"><div className="toolbar-group"><button onClick={() => exec("undo")} aria-label="Undo"><Undo2 size={16} /></button><button onClick={() => exec("redo")} aria-label="Redo"><Redo2 size={16} /></button></div><div className="toolbar-divider" /><div className="toolbar-group"><button onClick={() => exec("bold")} aria-label="Bold"><Bold size={16} /></button><button onClick={() => exec("italic")} aria-label="Italic"><Italic size={16} /></button><button onClick={() => exec("formatBlock", "h2")} aria-label="Heading"><span className="toolbar-text">H2</span></button><button onClick={() => exec("insertUnorderedList")} aria-label="Bullet list"><List size={16} /></button><button onClick={() => exec("justifyLeft")} aria-label="Align left"><AlignLeft size={16} /></button><button onClick={() => exec("justifyCenter")} aria-label="Align center"><AlignCenter size={16} /></button><button onClick={() => exec("justifyRight")} aria-label="Align right"><AlignRight size={16} /></button><button onClick={() => exec("createLink", window.prompt("Link URL") || "")} aria-label="Add link"><Link size={16} /></button></div><div className="toolbar-divider" /><button className="toolbar-select">Body <ChevronDown size={14} /></button><div className="editor-zoom">100% <ChevronDown size={14} /></div></div><div className="doc-workspace"><aside className="doc-outline"><div className="outline-heading"><span>Outline</span><button className="icon-button muted"><Plus size={15} /></button></div><button className="outline-link active">Product strategy Q3 2024</button><button className="outline-link">North star</button><button className="outline-link">Three moves</button><button className="outline-link">Next review</button><div className="outline-footer"><span>Words</span><strong>{(editorRef.current?.innerText ?? "").trim().split(/\s+/).filter(Boolean).length || 72}</strong></div></aside><article className="document-paper"><div className="document-inner" ref={editorRef} contentEditable suppressContentEditableWarning onInput={() => updateDoc()} onBlur={() => updateDoc()} /></article><aside className="doc-inspector"><div className="inspector-heading"><span>Details</span><button className="icon-button muted"><X size={15} /></button></div><div className="inspector-section"><span className="inspector-label">Cover</span><div className="cover-preview"><div className="cover-moon" /><strong>Product strategy<br />Q3 2024</strong><small>CRESCENT / PRODUCT</small></div></div><div className="inspector-section"><span className="inspector-label">People</span><div className="person-row"><span className="avatar avatar-lilac">A</span><div><strong>Alex Morgan</strong><small>Owner</small></div><ChevronDown size={15} /></div><button className="add-person"><Plus size={15} />Invite someone</button></div></aside></div></div>;
@@ -322,7 +314,7 @@ function CalendarView({ onNavigate }) {
   return <div className="calendar-page page-enter"><EditorHeader title="Calendar" icon={APP_META.find((app) => app.id === "calendar")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button"><ChevronLeft size={16} />Previous</button><button className="secondary-button">Today</button><button className="primary-button"><Plus size={16} />Event</button></EditorHeader><div className="calendar-content"><div className="calendar-heading"><div><h1>Tuesday, April 23</h1><p>Week 17 · Product workspace</p></div><div className="calendar-switch"><button>Day</button><button className="selected">Week</button><button>Month</button></div></div><div className="calendar-grid"><div className="calendar-axis"><span /><span>9 AM</span><span>10 AM</span><span>11 AM</span><span>12 PM</span><span>1 PM</span><span>2 PM</span><span>3 PM</span><span>4 PM</span><span>5 PM</span></div><div className="calendar-day"><div className="calendar-day-head"><span>Today</span><strong>23</strong></div><div className="calendar-lines">{Array.from({ length: 9 }, (_, index) => <span key={index} />)}<div className="calendar-event event-one"><strong>Product sync</strong><small>Team · 9:00–9:45</small></div><div className="calendar-event event-two"><strong>Design review</strong><small>Design · 10:00–11:00</small></div><div className="calendar-event event-three"><strong>Focus time</strong><small>Personal · 1:00–3:00</small></div><div className="calendar-event event-four"><strong>Marketing check-in</strong><small>Marketing · 4:00–4:30</small></div></div></div><div className="calendar-day muted-day"><div className="calendar-day-head"><span>Wed</span><strong>24</strong></div><div className="calendar-lines">{Array.from({ length: 9 }, (_, index) => <span key={index} />)}<div className="calendar-event event-five"><strong>Customer interview</strong><small>Research · 11:00–12:00</small></div></div></div><div className="calendar-day muted-day"><div className="calendar-day-head"><span>Thu</span><strong>25</strong></div><div className="calendar-lines">{Array.from({ length: 9 }, (_, index) => <span key={index} />)}<div className="calendar-event event-six"><strong>Launch review</strong><small>Product · 2:00–3:00</small></div></div></div></div></div></div>;
 }
 
-function DriveViewLegacy({ onNavigate }) {
+function _DriveViewLegacy({ onNavigate }) {
   const folders = ["Product", "Marketing", "Design", "Operations"];
   return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button"><FolderPlus size={16} />New folder</button><button className="primary-button"><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>Everything in one place.</h1><p>Organize your work without losing the thread.</p></div><div className="drive-view"><button className="selected"><Grid2X2 size={16} /></button><button><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>4 folders</small></div><div className="folder-grid">{folders.map((folder, index) => <button className="folder-card" key={folder}><span className={`folder-icon folder-${index}`}><FolderOpen size={21} /></span><strong>{folder}</strong><small>{[12, 8, 14, 5][index]} items</small><MoreHorizontal size={17} /></button>)}</div></div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link">See all <ArrowRight size={14} /></button></div><div className="drive-file-grid">{RECENT_FILES.slice(0, 6).map((file) => <button className="drive-file" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
 }
@@ -342,7 +334,7 @@ function DriveView({ workspace, update, onNavigate }) {
   return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={createFolder}><FolderPlus size={16} />New folder</button><button className="primary-button" onClick={() => onNavigate("docs")}><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>Everything in one place.</h1><p>Organize your work without losing the thread.</p></div><div className="drive-view"><button className="selected"><Grid2X2 size={16} /></button><button><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>{folders.length} folders</small></div><div className="folder-grid">{folders.map((folder) => <button className="folder-card" key={folder.name}><span className={`folder-icon folder-${folder.color}`}><FolderOpen size={21} /></span><strong>{folder.name}</strong><small>{folder.items} items</small><MoreHorizontal size={17} /></button>)}</div></div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link">See all <ArrowRight size={14} /></button></div><div className="drive-file-grid">{RECENT_FILES.slice(0, 6).map((file) => <button className="drive-file" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
 }
 
-function FormsViewLegacy({ workspace, update, onNavigate }) {
+function _FormsViewLegacy({ workspace, update, onNavigate }) {
   const [published, setPublished] = useState(false);
   const addQuestion = () => update({ forms: [...workspace.forms, { id: Date.now(), label: "New question", type: "Short answer", required: false }] });
   return <div className="forms-page page-enter"><EditorHeader title="Launch feedback" icon={APP_META.find((app) => app.id === "forms")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button"><EyeIcon />Preview</button><button className="primary-button" onClick={() => setPublished(true)}><Share2 size={16} />{published ? "Published" : "Publish"}</button></EditorHeader><div className="forms-content"><div className="forms-heading"><div><h1>Launch feedback</h1><p>Ask the questions that help the next move become obvious.</p></div><span className={`publish-status ${published ? "is-published" : ""}`}><span />{published ? "Live" : "Draft"}</span></div><div className="form-builder"><div className="form-preview"><div className="form-cover"><div className="form-cover-orbit" /><span>CRESCENT / FEEDBACK</span><h2>Help us make the next release better.</h2><p>A two-minute check-in for the people who use the work.</p></div><div className="form-questions">{workspace.forms.map((question, index) => <div className="form-question" key={question.id}><span>{index + 1}</span><div><strong>{question.label}</strong><small>{question.type} {question.required && "· Required"}</small><div className="fake-input">{question.type === "Scale" ? <>{[1, 2, 3, 4, 5].map((value) => <button key={value}>{value}</button>)}</> : "Your answer..."}</div></div></div>)}<button className="add-question" onClick={addQuestion}><Plus size={16} />Add question</button></div></div><aside className="form-settings"><div className="inspector-heading"><span>Form settings</span><Settings2 size={16} /></div><div className="inspector-section"><span className="inspector-label">Responses</span><div className="setting-row"><span>Collect email addresses</span><button className="toggle" aria-label="Collect email addresses"><i /></button></div><div className="setting-row"><span>Allow one response</span><button className="toggle active" aria-label="Allow one response"><i /></button></div></div><div className="inspector-section"><span className="inspector-label">Theme</span><div className="form-theme"><button className="theme-swatch swatch-lilac" /><button className="theme-swatch swatch-blue" /><button className="theme-swatch swatch-gold" /></div></div></aside></div></div></div>;
@@ -431,6 +423,6 @@ export default function App() {
     if (activeApp === "drive") return <DriveView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} />;
     return <UtilityView id={activeApp} onNavigate={navigate} />;
-  }, [activeApp, workspace]);
+  }, [activeApp, workspace, update]);
   return <div className="app-shell"><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} query={query} onQueryChange={setQuery} onNavigate={navigate} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div></div>;
 }

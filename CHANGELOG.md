@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.7 — A cleaner build loop
+
+Published September 8, 2026.
+
+### Added
+
+- Flat ESLint configuration for the React/Vite source.
+- GitHub CI now runs both `npm run build` and `npm run lint` on every push and pull request.
+- Removed unused imports and resolved the initial React hook hygiene warnings.
+
+### Verification
+
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.6 — Forms that listen
 
 Published September 8, 2026.
