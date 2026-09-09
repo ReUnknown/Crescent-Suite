@@ -33,6 +33,7 @@ import {
   Menu,
   MoreHorizontal,
   NotebookPen,
+  Pencil,
   Play,
   Plus,
   Presentation,
@@ -505,6 +506,8 @@ function TasksView({ workspace, update, onNavigate }) {
   const [newProject, setNewProject] = useState("Personal");
   const [projectFilter, setProjectFilter] = useState("all");
   const [filter, setFilter] = useState("all");
+  const [editingTask, setEditingTask] = useState(null);
+  const [editingTitle, setEditingTitle] = useState("");
   const projectOptions = [];
   ["Personal", ...(workspace.projects ?? []), ...workspace.tasks.map((task) => task.project).filter(Boolean)].forEach((project) => {
     const label = String(project);
@@ -516,6 +519,17 @@ function TasksView({ workspace, update, onNavigate }) {
   const filterLabels = { all: "All", today: "Today", open: "Open", done: "Done" };
   const toggle = (id) => update({ tasks: workspace.tasks.map((task) => task.id === id ? { ...task, complete: !task.complete } : task) });
   const addTask = (event) => { event.preventDefault(); if (!newTask.trim()) return; update({ tasks: [{ id: Date.now(), title: newTask.trim(), project: activeProject, due: "Today", complete: false }, ...workspace.tasks] }); setNewTask(""); };
+  const startTaskEdit = (task) => { setEditingTask(task.id); setEditingTitle(task.title); };
+  const cancelTaskEdit = () => { setEditingTask(null); setEditingTitle(""); };
+  const saveTaskEdit = (id) => {
+    const nextTitle = editingTitle.trim();
+    if (!nextTitle) { emitNotice("Give the task a title before saving."); return; }
+    const task = workspace.tasks.find((item) => item.id === id);
+    if (!task) return;
+    update({ tasks: workspace.tasks.map((item) => item.id === id ? { ...item, title: nextTitle } : item), starredFiles: renameStarredFile(workspace, task.title, nextTitle) });
+    cancelTaskEdit();
+    emitNotice("Task title updated locally.");
+  };
   const cycleDue = (id) => update({ tasks: workspace.tasks.map((task) => { if (task.id !== id) return task; const currentIndex = Math.max(0, dueOrder.indexOf(task.due)); return { ...task, due: dueOrder[(currentIndex + 1) % dueOrder.length] }; }) });
   const removeTask = (id) => { const task = workspace.tasks.find((item) => item.id === id); if (!task) return; const starredTitles = getStarredTitles(workspace); const deletedTask = { id: `task-${id}`, taskId: id, title: task.title, project: task.project, due: task.due, complete: task.complete, type: "Tasks", appId: "tasks", opened: "just now", owner: "Me", starred: starredTitles.has(task.title) }; starredTitles.delete(task.title); update({ tasks: workspace.tasks.filter((item) => item.id !== id), starredFiles: [...starredTitles], deletedFiles: [deletedTask, ...(workspace.deletedFiles ?? [])] }); emitNotice("Task moved to local Trash."); };
   const openCount = workspace.tasks.filter((task) => !task.complete).length;
@@ -530,7 +544,7 @@ function TasksView({ workspace, update, onNavigate }) {
     <EditorHeader title="Tasks" icon={APP_META.find((app) => app.id === "tasks")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={exportTasks}><Download size={16} />Export</button><button className="secondary-button" onClick={cycleFilter}><SlidersIcon />{filterLabels[filter]}</button><button className="primary-button" onClick={() => document.querySelector(".new-task-input")?.focus()}><Plus size={16} />New task</button></EditorHeader>
     <div className="tasks-content"><div className="tasks-heading"><div><h1>Make room for momentum.</h1><p>{openCount} open tasks across your workspace.</p></div><div className="task-progress"><span><i style={{ width: `${Math.max(8, ((workspace.tasks.length - openCount) / Math.max(workspace.tasks.length, 1)) * 100)}%` }} /></span><small>{workspace.tasks.length - openCount} completed</small></div></div>
       <form className="new-task" onSubmit={addTask}><Plus size={19} /><input className="new-task-input" value={newTask} onChange={(event) => setNewTask(event.target.value)} placeholder="Add a task and press enter..." aria-label="New task" /><select className="new-task-project" value={activeProject} onChange={(event) => setNewProject(event.target.value)} aria-label="New task project">{projectOptions.map((project) => <option value={project} key={project}>{project}</option>)}</select></form>
-      <section className="task-list"><div className="task-list-heading"><div className="task-list-label"><span>{filterLabels[filter]}</span><small>{visibleTasks.length} task{visibleTasks.length === 1 ? "" : "s"}</small></div><select className="task-project-filter" value={projectFilter} onChange={(event) => setProjectFilter(event.target.value)} aria-label="Filter tasks by project"><option value="all">All projects</option>{projectOptions.map((project) => <option value={project} key={project}>{project}</option>)}</select></div>{visibleTasks.length ? visibleTasks.map((task) => <div className={`task-row ${task.complete ? "complete" : ""}`} key={task.id}><button className="task-check" onClick={() => toggle(task.id)} aria-label={`Mark ${task.title} ${task.complete ? "open" : "complete"}`}>{task.complete && <Check size={14} />}</button><div className="task-copy"><strong>{task.title}</strong><span>{task.project}</span></div><button className={`task-due ${task.due === "Today" ? "due-today" : ""}`} onClick={() => cycleDue(task.id)} aria-label={`Change due date for ${task.title}`}>{task.due}</button><button className="icon-button muted" onClick={() => removeTask(task.id)} aria-label={`Delete ${task.title}`}><Trash2 size={17} /></button></div>) : <div className="task-empty"><ListChecks size={20} /><strong>No tasks in this view.</strong><small>Try a different status or project, or add a new task above.</small></div>}</section>
+      <section className="task-list"><div className="task-list-heading"><div className="task-list-label"><span>{filterLabels[filter]}</span><small>{visibleTasks.length} task{visibleTasks.length === 1 ? "" : "s"}</small></div><select className="task-project-filter" value={projectFilter} onChange={(event) => setProjectFilter(event.target.value)} aria-label="Filter tasks by project"><option value="all">All projects</option>{projectOptions.map((project) => <option value={project} key={project}>{project}</option>)}</select></div>{visibleTasks.length ? visibleTasks.map((task) => <div className={`task-row ${task.complete ? "complete" : ""}`} key={task.id}><button className="task-check" onClick={() => toggle(task.id)} aria-label={`Mark ${task.title} ${task.complete ? "open" : "complete"}`}>{task.complete && <Check size={14} />}</button><div className="task-copy">{editingTask === task.id ? <input className="task-title-edit" value={editingTitle} onChange={(event) => setEditingTitle(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveTaskEdit(task.id); if (event.key === "Escape") cancelTaskEdit(); }} aria-label="Edit task title" autoFocus /> : <strong>{task.title}</strong>}<span>{task.project}</span></div>{editingTask === task.id ? <div className="task-edit-actions"><button className="task-edit-save" onClick={() => saveTaskEdit(task.id)} aria-label="Save task title"><Check size={15} /></button><button className="task-edit-cancel" onClick={cancelTaskEdit} aria-label="Cancel task title edit"><X size={15} /></button></div> : <button className="icon-button muted task-edit-button" onClick={() => startTaskEdit(task)} aria-label={`Edit ${task.title}`}><Pencil size={15} /></button>}<button className={`task-due ${task.due === "Today" ? "due-today" : ""}`} onClick={() => cycleDue(task.id)} aria-label={`Change due date for ${task.title}`}>{task.due}</button><button className="icon-button muted" onClick={() => removeTask(task.id)} aria-label={`Delete ${task.title}`}><Trash2 size={17} /></button></div>) : <div className="task-empty"><ListChecks size={20} /><strong>No tasks in this view.</strong><small>Try a different status or project, or add a new task above.</small></div>}</section>
     </div>
   </div>;
 }

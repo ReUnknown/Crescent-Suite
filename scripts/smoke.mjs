@@ -146,6 +146,12 @@ try {
     await behaviorPage.getByRole("textbox", { name: "New task" }).fill("Smoke project task");
     await behaviorPage.getByRole("textbox", { name: "New task" }).press("Enter");
     if (!(await behaviorPage.locator(".task-row").filter({ hasText: "Smoke project task" }).innerText()).includes("Smoke project")) failures.push({ route: "tasks", controls: "project-linked task creation" });
+    await behaviorPage.getByRole("button", { name: "Edit Smoke project task" }).click();
+    await behaviorPage.getByRole("textbox", { name: "Edit task title" }).fill("Smoke edited task");
+    await behaviorPage.getByRole("textbox", { name: "Edit task title" }).press("Enter");
+    if (!(await behaviorPage.locator(".task-row").filter({ hasText: "Smoke edited task" }).count())) failures.push({ route: "tasks", controls: "inline task title edit" });
+    await behaviorPage.reload({ waitUntil: "networkidle" });
+    if (!(await behaviorPage.locator(".task-row").filter({ hasText: "Smoke edited task" }).count())) failures.push({ route: "tasks", controls: "task title persistence" });
     await behaviorPage.getByRole("combobox", { name: "Filter tasks by project" }).selectOption({ label: "Team Offsite" });
     if (await behaviorPage.locator(".task-empty").count() !== 1) failures.push({ route: "tasks", controls: "empty project task state" });
     await behaviorPage.getByRole("combobox", { name: "Filter tasks by project" }).selectOption({ label: "Smoke project" });

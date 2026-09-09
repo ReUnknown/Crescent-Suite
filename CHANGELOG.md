@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.0.1 — Editable task titles
+
+Published September 9, 2026.
+
+### Added
+
+- Added inline task title editing with explicit save and cancel controls.
+- Added Enter to save and Escape to cancel while editing a task title.
+- Renamed starred task titles safely when a task is edited.
+- Added a committed visual preview for the editing state.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage now verifies task title creation, editing, and reload persistence.
+
 ## v1.0.0 — First big Crescent release
 
 Published September 9, 2026.
