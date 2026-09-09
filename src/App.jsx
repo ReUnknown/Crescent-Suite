@@ -502,7 +502,11 @@ function TasksView({ workspace, update, onNavigate }) {
   const [newTask, setNewTask] = useState("");
   const [newProject, setNewProject] = useState("Personal");
   const [filter, setFilter] = useState("all");
-  const projectOptions = [...new Set(["Personal", ...(workspace.projects ?? []), ...workspace.tasks.map((task) => task.project).filter(Boolean)])];
+  const projectOptions = [];
+  ["Personal", ...(workspace.projects ?? []), ...workspace.tasks.map((task) => task.project).filter(Boolean)].forEach((project) => {
+    const label = String(project);
+    if (label && !projectOptions.some((option) => option.toLowerCase() === label.toLowerCase())) projectOptions.push(label);
+  });
   const activeProject = projectOptions.includes(newProject) ? newProject : projectOptions[0] ?? "Personal";
   const filterOrder = ["all", "today", "open", "done"];
   const dueOrder = ["Today", "Tomorrow", "Friday", "No date"];

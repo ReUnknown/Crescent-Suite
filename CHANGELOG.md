@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.156 — Consistent Task project choices
+
+Published September 9, 2026.
+
+### Fixed
+
+- New Task project choices now deduplicate case-insensitively across persistent Projects and existing task labels.
+- The first readable label wins, so seeded variations such as “Product launch” and “Product Launch” do not create duplicate options.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.155 — Project-linked Tasks preview
 
 Published September 9, 2026.

@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.155 — Project-linked Tasks preview**
+**v0.1.156 — Consistent Task project choices**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -76,6 +76,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Home Recent no longer resurrects the seeded Task card after every local Task has been deleted
 - New Tasks can be assigned to any local Project from the same persistent Project list
 - Added a committed Tasks preview showing the Project selector alongside local due dates and progress
+- Task creation deduplicates project choices case-insensitively, keeping seeded and custom labels consistent
 - The sidebar now scrolls safely as local Workspaces and Projects grow beyond the initial shell
 - Backup migration preserves string-style Drive folder names while still filling missing metadata safely
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
