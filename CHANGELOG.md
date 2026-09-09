@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.5.0 — Required Form semantics
+
+Published September 9, 2026.
+
+### Improved
+
+- Required Form text inputs and long-answer fields now expose `aria-required` when the builder marks them Required.
+- Required Scale choices now expose the same semantic requirement while preserving their per-question selection state.
+- Added production smoke coverage for required text and Scale control semantics.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v2.4.0 — Independent Form Scale answers
 
 Published September 9, 2026.
