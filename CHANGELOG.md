@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.1.112 — Overnight progress recorded
+
+Published September 9, 2026.
+
+### Changed
+
+- Added safe local backup normalization, including empty Slides/Notes fallback records and verified restore behavior.
+- Added standalone responsive Docs HTML export, full-range Sheets CSV export, and local SUM/AVERAGE/MIN/MAX formulas.
+- Expanded Forms editing with question deletion, type cycling, and committed builder controls preview.
+- Connected Home’s Ask Crescent card to global search, made the greeting follow local time, and preserved Starred state across file renames.
+- Added keyboard navigation for Slides presentation mode and actionable Docs Body/Heading/Quote styles.
+- Expanded CI smoke coverage to formulas, Forms controls, favorite continuity, presentation navigation, and Docs styles across desktop/mobile routes.
+
+### Verification
+
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+- `npm run test:smoke` passes 22 desktop/mobile routes plus the interaction checks above.
+- GitHub CI and Pages Preview run for the preceding v0.1.111 milestone.
+
 ## v0.1.51 — Editor breadcrumbs are accessible
 
 Published September 9, 2026.
