@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.160 — Search keyboard polish**
+**v0.1.161 — Utility surface consistency**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -22,6 +22,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Calendar event dates now use the browser’s local calendar day, recognize weekday names and explicit numeric dates, and keep ICS exports aligned with the saved day
 - Tasks can now be filtered to a persistent local Project while retaining the existing status and due-date controls
 - Command+K search can now be dismissed with Escape without leaving the current route
+- Recent, Starred, Shared, Trash, and Settings now keep their correct mobile page titles and contextual empty-state copy
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.161 — Utility surface consistency
+
+Published September 9, 2026.
+
+### Fixed
+
+- Mobile utility pages now show their actual page title instead of the generic Crescent label.
+- Empty Recent, Starred, Shared, and Trash surfaces now explain the relevant next step instead of reusing Trash-only copy.
+- Smoke coverage now exercises all utility routes across desktop and mobile, expanding the route matrix to 30 checks.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.160 — Search keyboard polish
 
 Published September 9, 2026.

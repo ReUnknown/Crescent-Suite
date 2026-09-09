@@ -5,7 +5,7 @@ import { chromium } from "playwright";
 
 const port = 4173;
 const baseUrl = process.env.SMOKE_URL ?? `http://127.0.0.1:${port}`;
-const routes = ["home", "docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "settings", "Crescent-Suite/forms"];
+const routes = ["home", "recent", "starred", "shared", "trash", "docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "settings", "Crescent-Suite/forms"];
 const viewports = [
   { name: "desktop", width: 1440, height: 1000 },
   { name: "mobile", width: 390, height: 844 },
@@ -54,6 +54,7 @@ try {
           const monthCells = await page.locator(".calendar-month-cell").count();
           if (monthCells !== 42) failures.push({ viewport: viewport.name, route, monthCells });
         }
+        if (route === "trash" && !(await page.locator(".utility-panel").innerText()).includes("Trash is empty.")) failures.push({ viewport: viewport.name, route, emptyState: "Trash is empty." });
         if (route === "home" && viewport.name === "desktop") {
           await page.getByRole("textbox", { name: "Search across Crescent" }).fill("North star");
           const searchHits = await page.locator(".search-results .search-result").count();
