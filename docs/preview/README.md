@@ -1,4 +1,4 @@
-# v0.1.123 visual preview
+# v0.1.124 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -21,6 +21,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `forms-builder-controls.png` — Forms builder with editable type chips and local delete controls
 - `forms-responses.png` — Forms response history with locally saved answers
 - `calendar.png` — full seven-day Calendar Week timeline
+- `calendar-local-event.png` — Calendar with a locally saved event positioned at its entered time
 - `calendar-month.png` — Calendar Month mode with event pills
 - `calendar-ics.png` — Calendar with the standard ICS export control and saved event state
 - `tasks-export.png` — Tasks with portable JSON export alongside filters and local progress

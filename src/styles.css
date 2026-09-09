@@ -210,6 +210,7 @@ input, textarea { color: var(--text); }
 .form-theme-gold .form-cover { background: linear-gradient(145deg, #604833, #211c25); }
 .form-theme-gold .form-cover-orbit { background: rgba(255, 211, 139, .76); box-shadow: 0 0 50px rgba(255, 211, 139, .22); }
 .form-theme-gold .form-cover span { color: #f8d9a4; }
+.calendar-event-local { height: 42px; padding: 7px 9px; border-color: #7692ea; background: rgba(105, 133, 224, .18); }
 .form-responses-panel { max-width: 820px; margin: 36px auto 0; }
 .response-panel-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; padding: 22px; border: 1px solid var(--line); border-radius: 13px; background: rgba(26, 31, 47, .68); }
 .response-panel-heading h2 { margin: 7px 0 0; color: #eeeafb; font-family: "Space Grotesk", sans-serif; font-size: 25px; letter-spacing: -.035em; }

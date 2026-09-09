@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.124 — Calendar local events land on the timeline
+
+Published September 9, 2026.
+
+### Changed
+
+- Locally saved Calendar events now appear in the Week/Day timeline instead of only in the saved-events list.
+- Event times are parsed from the prompt so entries such as `Today · 3:00 PM` land in the corresponding hour slot.
+
+### Verification
+
+- Refreshed the committed Calendar local-event preview and added smoke coverage for the 3 PM position.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.123 — Sheets add COUNT and COUNTA formulas
 
 Published September 9, 2026.

@@ -67,6 +67,15 @@ try {
 
   const behaviorPage = await browser.newPage({ viewport: viewports[0] });
   try {
+    await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
+    let calendarPrompt = 0;
+    const acceptCalendarPrompts = async (dialog) => { calendarPrompt += 1; await dialog.accept(calendarPrompt === 1 ? "Smoke focus block" : "Today · 3:00 PM"); };
+    behaviorPage.on("dialog", acceptCalendarPrompts);
+    await behaviorPage.getByRole("button", { name: "Event" }).click();
+    const localEvent = behaviorPage.locator(".calendar-event-local");
+    const localEventStyle = await localEvent.getAttribute("style");
+    if (await localEvent.count() !== 1 || !localEventStyle?.includes("top: 384px")) failures.push({ route: "calendar", controls: "timed local event", localEventStyle });
+    behaviorPage.off("dialog", acceptCalendarPrompts);
     await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("textbox", { name: "Cell B9" }).fill("=AVERAGE(B2:B4)");
     const averageValue = await behaviorPage.evaluate(() => document.querySelector('[aria-label="Cell B9"]')?.parentElement?.querySelector(".sheet-display")?.textContent);
@@ -136,7 +145,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; Month has 42 cells; content search, local formulas (including COUNT), Forms controls, response history, favorite continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed local events; Month has 42 cells; content search, local formulas (including COUNT), Forms controls, response history, favorite continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
