@@ -156,8 +156,10 @@ function getLiveRecentFiles(workspace) {
     workspace.formTitle && { ...sourceFor("Forms", { type: "Forms", icon: FormInput, color: "peach", owner: "Me", starred: false }), title: workspace.formTitle, opened: "just now", owner: "Me" },
   ].filter(Boolean);
   const liveTypes = new Set(liveFiles.map((file) => file.type));
+  const suppressedTypes = new Set();
+  if (Array.isArray(workspace.tasks) && workspace.tasks.length === 0) suppressedTypes.add("Tasks");
   const starredTitles = getStarredTitles(workspace);
-  return [...liveFiles, ...RECENT_FILES.filter((file) => !liveTypes.has(file.type))].map((file) => ({ ...file, starred: starredTitles.has(file.title) }));
+  return [...liveFiles, ...RECENT_FILES.filter((file) => !liveTypes.has(file.type) && !suppressedTypes.has(file.type))].map((file) => ({ ...file, starred: starredTitles.has(file.title) }));
 }
 
 const SCHEDULE = [

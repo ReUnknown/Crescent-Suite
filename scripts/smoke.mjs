@@ -127,6 +127,9 @@ try {
     else await deletedTask.getByRole("button", { name: "Restore" }).click();
     await behaviorPage.goto(`${baseUrl}/starred`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".utility-panel").innerText()).includes("Review the launch brief")) failures.push({ route: "starred", controls: "restored task favorite" });
+    await behaviorPage.evaluate(() => { const key = "crescent-suite:workspace:v1"; const workspace = JSON.parse(localStorage.getItem(key) ?? "{}"); workspace.tasks = []; localStorage.setItem(key, JSON.stringify(workspace)); });
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    if ((await behaviorPage.locator(".recent-table").innerText()).includes("Review the launch brief")) failures.push({ route: "home", controls: "empty task collection stays empty" });
     await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("textbox", { name: "Cell B9" }).fill("=AVERAGE(B2:B4)");
     const averageValue = await behaviorPage.evaluate(() => document.querySelector('[aria-label="Cell B9"]')?.parentElement?.querySelector(".sheet-display")?.textContent);

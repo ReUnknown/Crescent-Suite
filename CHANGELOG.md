@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.153 — Empty Tasks stay empty
+
+Published September 9, 2026.
+
+### Fixed
+
+- Home Recent now suppresses the seeded Tasks fallback when the local Task collection is intentionally empty.
+- Deleting the last local Task no longer makes the demo “Review the launch brief” reappear.
+
+### Verification
+
+- Smoke coverage empties the local Task collection and verifies the seeded Task is absent from Home Recent.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.152 — Release metadata aligned
 
 Published September 9, 2026.
