@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.6.0 — Universal Search accessibility**
+**v1.6.1 — Safe response timestamps**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -72,6 +72,8 @@ The first major release establishes a usable Crescent product shell and a local-
 - Added production smoke coverage proving Project search routes to Tasks with the matching Project filter
 - Universal Search now exposes list autocomplete, a live listbox result region, and option semantics for assistive technology
 - Extended production smoke coverage for the search result region alongside the existing keyboard navigation contract
+- Imported Form responses now normalize invalid timestamps to the safe local-history fallback instead of throwing during rendering
+- Added malformed-timestamp coverage to the backup recovery smoke path
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

@@ -237,7 +237,9 @@ function normalizeWorkspace(source) {
     : [];
   const normalizeResponse = (response, index) => {
     const record = response && typeof response === "object" ? response : {};
-    return { ...record, id: record.id ?? index + 1, saved: true, submittedAt: record.submittedAt ? String(record.submittedAt) : undefined, scale: record.scale ?? null, answers: record.answers && typeof record.answers === "object" ? record.answers : {} };
+    const submittedDate = record.submittedAt ? new Date(record.submittedAt) : null;
+    const submittedAt = submittedDate && Number.isFinite(submittedDate.getTime()) ? submittedDate.toISOString() : undefined;
+    return { ...record, id: record.id ?? index + 1, saved: true, submittedAt, scale: record.scale ?? null, answers: record.answers && typeof record.answers === "object" ? record.answers : {} };
   };
   const formResponses = Array.isArray(source?.formResponses)
     ? source.formResponses.map(normalizeResponse)

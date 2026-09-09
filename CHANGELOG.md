@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.6.1 — Safe response timestamps
+
+Published September 9, 2026.
+
+### Fixed
+
+- Imported Form response timestamps are now validated before Responses formats them.
+- Invalid dates fall back to the existing “Saved locally” presentation instead of crashing the response history view.
+- Added malformed-timestamp coverage to the backup recovery smoke path.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.6.0 — Universal Search accessibility
 
 Published September 9, 2026.
