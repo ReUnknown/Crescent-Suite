@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.10 — Workspace continuity
+
+Published September 8, 2026.
+
+### Changed
+
+- Home's My day rail now reflects saved local calendar events.
+- Forms persists its published state and latest saved response in the local workspace.
+- Returning to Forms after visiting another app restores the visible Live and response-saved states.
+
+### Verification
+
+- Created a calendar event, confirmed it appeared on Home, then published and submitted Forms before navigating away and back.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.9 — Calendar that remembers
 
 Published September 8, 2026.
