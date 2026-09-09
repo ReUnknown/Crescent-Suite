@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.3.7 — Exact Drive recent-file destinations
+
+Published September 9, 2026.
+
+### Improved
+
+- Drive Recent files cards now preserve the clicked file title when routing into the suite.
+- A Drive card now opens the exact live local record instead of only the containing app.
+- Added production smoke coverage for the Drive Recent files destination contract.
+- Added a committed visual capture of the Drive-to-Docs handoff.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.3.6 — Clean Docs search markers
 
 Published September 9, 2026.

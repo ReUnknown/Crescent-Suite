@@ -305,6 +305,10 @@ try {
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
     const migratedFolders = await behaviorPage.locator(".folder-grid").innerText();
     if (!migratedFolders.includes("Folder 1") || !migratedFolders.includes("Archive")) failures.push({ route: "settings", controls: "legacy folder backup normalization" });
+    await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
+    const liveDriveTitle = "Smoke restore";
+    await behaviorPage.locator(".drive-file").filter({ hasText: liveDriveTitle }).click();
+    if (behaviorPage.url().split("#")[1] !== "docs" || await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== liveDriveTitle) failures.push({ route: "drive", controls: "exact recent-file destination", url: behaviorPage.url() });
   } finally {
     await behaviorPage.close();
   }
