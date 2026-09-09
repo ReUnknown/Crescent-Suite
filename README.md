@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.0.7 — Stable exact search destinations**
+**v1.0.8 — Exact task destinations**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -36,6 +36,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Global Search now supports ArrowDown/ArrowUp focus movement and Enter-to-open navigation
 - Search results now open the exact local note or slide selected instead of only opening the containing app
 - Search context now applies once per destination so later local editing and manual selection stay stable
+- Search results now open the matching task with its existing Project filter selected
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

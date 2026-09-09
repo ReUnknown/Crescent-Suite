@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.0.8 — Exact task destinations
+
+Published September 9, 2026.
+
+### Added
+
+- Search results now carry local navigation context into Tasks.
+- Selecting a task opens the Tasks surface with the matching Project filter selected, including case-insensitive matches from imported workspace backups.
+- Added a committed visual preview of an exact task search destination.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage verifies exact task result routing and Project selection after backup normalization.
+
 ## v1.0.7 — Stable exact search destinations
 
 Published September 9, 2026.

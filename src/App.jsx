@@ -539,18 +539,22 @@ function NotesView({ workspace, update, onNavigate, initialNoteTitle }) {
   return <div className="notes-page page-enter"><EditorHeader title="Notes" icon={APP_META.find((app) => app.id === "notes")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={() => downloadText(`${safeFileName(note.title || "crescent-note")}.txt`, note.body, "text/plain")}><Download size={16} />Export</button><button className="primary-button" onClick={addNote}><Plus size={16} />New note</button></EditorHeader><div className="notes-workspace"><aside className="notes-list"><div className="notes-list-head"><span>All notes</span><button className="icon-button muted" onClick={addNote} aria-label="Add note"><FolderPlus size={16} /></button></div>{workspace.notes.map((item) => <button className={`note-list-item ${item.id === selected ? "selected" : ""}`} key={item.id} onClick={() => setSelected(item.id)}><span className={`note-dot note-dot-${item.color}`} /><span><strong>{item.title}</strong><small>{item.body}</small><em>{item.updatedAt}</em></span></button>)}</aside><main className="note-editor"><div className="note-editor-top"><span className={`note-dot note-dot-${note.color}`} /> <input value={note.title} onChange={(event) => updateNote({ title: event.target.value })} aria-label="Note title" /><span className="saved-status"><Check size={14} />Saved</span><button className="icon-button muted" onClick={removeNote} aria-label={`Delete ${note.title}`}><Trash2 size={16} /></button></div><textarea value={note.body} onChange={(event) => updateNote({ body: event.target.value })} aria-label="Note body" /><div className="note-footer"><span><NotebookPen size={15} />Plain text note</span><span>{note.body.length} characters</span></div></main></div></div>;
 }
 
-function TasksView({ workspace, update, onNavigate }) {
+function TasksView({ workspace, update, onNavigate, initialTaskTitle }) {
   const [newTask, setNewTask] = useState("");
   const [newProject, setNewProject] = useState("Personal");
   const [projectFilter, setProjectFilter] = useState("all");
   const [filter, setFilter] = useState("all");
   const [editingTask, setEditingTask] = useState(null);
   const [editingTitle, setEditingTitle] = useState("");
-  const projectOptions = [];
-  ["Personal", ...(workspace.projects ?? []), ...workspace.tasks.map((task) => task.project).filter(Boolean)].forEach((project) => {
-    const label = String(project);
-    if (label && !projectOptions.some((option) => option.toLowerCase() === label.toLowerCase())) projectOptions.push(label);
-  });
+  const appliedTaskNavigation = useRef(null);
+  const projectOptions = useMemo(() => {
+    const options = [];
+    ["Personal", ...(workspace.projects ?? []), ...workspace.tasks.map((task) => task.project).filter(Boolean)].forEach((project) => {
+      const label = String(project);
+      if (label && !options.some((option) => option.toLowerCase() === label.toLowerCase())) options.push(label);
+    });
+    return options;
+  }, [workspace.projects, workspace.tasks]);
   const activeProject = projectOptions.includes(newProject) ? newProject : projectOptions[0] ?? "Personal";
   const filterOrder = ["all", "today", "open", "done"];
   const dueOrder = ["Today", "Tomorrow", "Friday", "No date"];
@@ -576,13 +580,22 @@ function TasksView({ workspace, update, onNavigate }) {
     const matchesProject = projectFilter === "all" || String(task.project ?? "").toLowerCase() === projectFilter.toLowerCase();
     return matchesStatus && matchesProject;
   });
+  useEffect(() => {
+    if (!initialTaskTitle || initialTaskTitle === appliedTaskNavigation.current) return;
+    appliedTaskNavigation.current = initialTaskTitle;
+    const targetTask = workspace.tasks.find((task) => task.title === initialTaskTitle);
+    if (!targetTask) return;
+    setFilter("all");
+    setProjectFilter(projectOptions.find((project) => project.toLowerCase() === String(targetTask.project ?? "").toLowerCase()) ?? "all");
+    window.setTimeout(() => [...document.querySelectorAll(".task-row")].find((row) => row.dataset.taskTitle === initialTaskTitle)?.scrollIntoView({ block: "center" }), 0);
+  }, [initialTaskTitle, projectOptions, workspace.tasks]);
   const cycleFilter = () => setFilter((current) => filterOrder[(filterOrder.indexOf(current) + 1) % filterOrder.length]);
   const exportTasks = () => { downloadText("crescent-tasks.json", JSON.stringify({ format: "crescent-suite-tasks", version: 1, exportedAt: new Date().toISOString(), tasks: workspace.tasks }, null, 2), "application/json"); emitNotice(`${workspace.tasks.length} task${workspace.tasks.length === 1 ? "" : "s"} exported.`); };
   return <div className="tasks-page page-enter">
     <EditorHeader title="Tasks" icon={APP_META.find((app) => app.id === "tasks")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={exportTasks}><Download size={16} />Export</button><button className="secondary-button" onClick={cycleFilter}><SlidersIcon />{filterLabels[filter]}</button><button className="primary-button" onClick={() => document.querySelector(".new-task-input")?.focus()}><Plus size={16} />New task</button></EditorHeader>
     <div className="tasks-content"><div className="tasks-heading"><div><h1>Make room for momentum.</h1><p>{openCount} open tasks across your workspace.</p></div><div className="task-progress"><span><i style={{ width: `${Math.max(8, ((workspace.tasks.length - openCount) / Math.max(workspace.tasks.length, 1)) * 100)}%` }} /></span><small>{workspace.tasks.length - openCount} completed</small></div></div>
       <form className="new-task" onSubmit={addTask}><Plus size={19} /><input className="new-task-input" value={newTask} onChange={(event) => setNewTask(event.target.value)} placeholder="Add a task and press enter..." aria-label="New task" /><select className="new-task-project" value={activeProject} onChange={(event) => setNewProject(event.target.value)} aria-label="New task project">{projectOptions.map((project) => <option value={project} key={project}>{project}</option>)}</select></form>
-      <section className="task-list"><div className="task-list-heading"><div className="task-list-label"><span>{filterLabels[filter]}</span><small>{visibleTasks.length} task{visibleTasks.length === 1 ? "" : "s"}</small></div><select className="task-project-filter" value={projectFilter} onChange={(event) => setProjectFilter(event.target.value)} aria-label="Filter tasks by project"><option value="all">All projects</option>{projectOptions.map((project) => <option value={project} key={project}>{project}</option>)}</select></div>{visibleTasks.length ? visibleTasks.map((task) => <div className={`task-row ${task.complete ? "complete" : ""}`} key={task.id}><button className="task-check" onClick={() => toggle(task.id)} aria-label={`Mark ${task.title} ${task.complete ? "open" : "complete"}`}>{task.complete && <Check size={14} />}</button><div className="task-copy">{editingTask === task.id ? <input className="task-title-edit" value={editingTitle} onChange={(event) => setEditingTitle(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveTaskEdit(task.id); if (event.key === "Escape") cancelTaskEdit(); }} aria-label="Edit task title" autoFocus /> : <strong>{task.title}</strong>}<span>{task.project}</span></div>{editingTask === task.id ? <div className="task-edit-actions"><button className="task-edit-save" onClick={() => saveTaskEdit(task.id)} aria-label="Save task title"><Check size={15} /></button><button className="task-edit-cancel" onClick={cancelTaskEdit} aria-label="Cancel task title edit"><X size={15} /></button></div> : <button className="icon-button muted task-edit-button" onClick={() => startTaskEdit(task)} aria-label={`Edit ${task.title}`}><Pencil size={15} /></button>}<button className={`task-due ${task.due === "Today" ? "due-today" : ""}`} onClick={() => cycleDue(task.id)} aria-label={`Change due date for ${task.title}`}>{task.due}</button><button className="icon-button muted" onClick={() => removeTask(task.id)} aria-label={`Delete ${task.title}`}><Trash2 size={17} /></button></div>) : <div className="task-empty"><ListChecks size={20} /><strong>No tasks in this view.</strong><small>Try a different status or project, or add a new task above.</small></div>}</section>
+      <section className="task-list"><div className="task-list-heading"><div className="task-list-label"><span>{filterLabels[filter]}</span><small>{visibleTasks.length} task{visibleTasks.length === 1 ? "" : "s"}</small></div><select className="task-project-filter" value={projectFilter} onChange={(event) => setProjectFilter(event.target.value)} aria-label="Filter tasks by project"><option value="all">All projects</option>{projectOptions.map((project) => <option value={project} key={project}>{project}</option>)}</select></div>{visibleTasks.length ? visibleTasks.map((task) => <div className={`task-row ${task.complete ? "complete" : ""}`} key={task.id} data-task-title={task.title}><button className="task-check" onClick={() => toggle(task.id)} aria-label={`Mark ${task.title} ${task.complete ? "open" : "complete"}`}>{task.complete && <Check size={14} />}</button><div className="task-copy">{editingTask === task.id ? <input className="task-title-edit" value={editingTitle} onChange={(event) => setEditingTitle(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveTaskEdit(task.id); if (event.key === "Escape") cancelTaskEdit(); }} aria-label="Edit task title" autoFocus /> : <strong>{task.title}</strong>}<span>{task.project}</span></div>{editingTask === task.id ? <div className="task-edit-actions"><button className="task-edit-save" onClick={() => saveTaskEdit(task.id)} aria-label="Save task title"><Check size={15} /></button><button className="task-edit-cancel" onClick={cancelTaskEdit} aria-label="Cancel task title edit"><X size={15} /></button></div> : <button className="icon-button muted task-edit-button" onClick={() => startTaskEdit(task)} aria-label={`Edit ${task.title}`}><Pencil size={15} /></button>}<button className={`task-due ${task.due === "Today" ? "due-today" : ""}`} onClick={() => cycleDue(task.id)} aria-label={`Change due date for ${task.title}`}>{task.due}</button><button className="icon-button muted" onClick={() => removeTask(task.id)} aria-label={`Delete ${task.title}`}><Trash2 size={17} /></button></div>) : <div className="task-empty"><ListChecks size={20} /><strong>No tasks in this view.</strong><small>Try a different status or project, or add a new task above.</small></div>}</section>
     </div>
   </div>;
 }
@@ -942,7 +955,7 @@ export default function App() {
     if (activeApp === "sheets") return <SheetsView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "slides") return <SlidesView workspace={workspace} update={update} onNavigate={navigate} initialSlideTitle={navigationContext?.title} />;
     if (activeApp === "notes") return <NotesView workspace={workspace} update={update} onNavigate={navigate} initialNoteTitle={navigationContext?.title} />;
-    if (activeApp === "tasks") return <TasksView workspace={workspace} update={update} onNavigate={navigate} />;
+    if (activeApp === "tasks") return <TasksView workspace={workspace} update={update} onNavigate={navigate} initialTaskTitle={navigationContext?.title} />;
     if (activeApp === "calendar") return <CalendarView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "drive") return <DriveView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} />;

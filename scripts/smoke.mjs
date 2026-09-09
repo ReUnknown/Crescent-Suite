@@ -254,6 +254,11 @@ try {
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("ArrowDown");
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     if (behaviorPage.url().split("#")[1] !== "slides" || await behaviorPage.locator(".presentation-canvas h1").innerText() !== "One calm workspace") failures.push({ route: "search", controls: "open exact slide result", url: behaviorPage.url() });
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Review the launch brief");
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
+    await behaviorPage.waitForFunction(() => document.querySelector(".task-project-filter")?.value?.toLowerCase() === "product launch");
+    if (behaviorPage.url().split("#")[1] !== "tasks" || await behaviorPage.locator('[data-task-title="Review the launch brief"]').count() !== 1 || (await behaviorPage.getByRole("combobox", { name: "Filter tasks by project" }).inputValue()).toLowerCase() !== "product launch") failures.push({ route: "search", controls: "open exact task result", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
     const migratedFolders = await behaviorPage.locator(".folder-grid").innerText();
     if (!migratedFolders.includes("Folder 1") || !migratedFolders.includes("Archive")) failures.push({ route: "settings", controls: "legacy folder backup normalization" });
