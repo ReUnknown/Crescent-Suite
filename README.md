@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.89 — Smoke coverage includes Pages-style direct routes**
+**v0.1.90 — Global Search indexes current content**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -32,6 +32,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Pages subpath builds now opt in explicitly, so local and CI smoke previews test root-mounted assets reliably
 - CI installs Playwright Chromium before running the route and layout smoke suite
 - Smoke coverage now includes a repository-prefixed `/Crescent-Suite/forms` direct route
+- Global Search now matches current Docs body text, Notes body text, and Forms question labels
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header
