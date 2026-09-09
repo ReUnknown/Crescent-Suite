@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.0.0 — Cross-app file creation
+
+Published September 9, 2026.
+
+### Added
+
+- Drive’s New file action now supports Docs, Sheets, Slides, Notes, and Forms with a named local file flow.
+- New Docs, Sheets, Slides, and Forms files preserve the previous active record in local Trash so work can be restored.
+- Added smoke coverage for creating and restoring each Drive-backed editor file type.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v2.8.0 — Complete mobile editor actions
 
 Published September 9, 2026.

@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v2.8.0 — Complete mobile editor actions**
+**v3.0.0 — Cross-app file creation**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -17,6 +17,8 @@ The first major release establishes a usable Crescent product shell and a local-
 - Notes, Tasks, Calendar, Drive, and Forms surfaces with working local interactions
 - Shared navigation, command-style search, responsive layouts, and a night-sky design system
 - Pages-ready workflow builds a visual preview on every `main` milestone and deploys when repository Pages is enabled
+- Drive’s New file action now creates named Docs, Sheets, Slides, Notes, or Forms records and opens the selected editor
+- Starting a new Docs, Sheets, Slides, or Forms file safely archives the active record in local Trash for recovery
 - Calendar events can be created, saved, reviewed, and removed in the local workspace
 - Calendar events can be exported as a standard `.ics` calendar file for use in other calendar apps
 - Calendar event dates now use the browser’s local calendar day, recognize weekday names and explicit numeric dates, and keep ICS exports aligned with the saved day
