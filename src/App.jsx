@@ -351,6 +351,11 @@ function SearchResults({ query, onNavigate, workspace }) {
   const results = [...mergedResults.values()].filter((file) => `${file.title} ${file.type} ${file.opened} ${searchTextFor(file)}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
   const navigationFor = (file) => {
     if (file.appId) return null;
+    if (file.type === "Docs") {
+      const parsed = new window.DOMParser().parseFromString(workspace.docs?.body ?? "", "text/html");
+      const matchedHeading = [...parsed.querySelectorAll("h1, h2, h3")].find((heading) => heading.textContent.toLowerCase().includes(query.toLowerCase()));
+      return { title: file.title, ...(matchedHeading ? { heading: matchedHeading.textContent.trim() } : {}) };
+    }
     if (file.type === "Forms") {
       const matchedQuestion = workspace.forms?.find((question) => String(question.label).toLowerCase().includes(query.toLowerCase()));
       return { title: file.title, ...(matchedQuestion ? { questionId: matchedQuestion.id } : {}) };
@@ -418,10 +423,11 @@ function EditorHeader({ title, icon, onChangeTitle, children, onNavigate }) {
   return <div className="editor-header"><div className="editor-breadcrumb"><button onClick={() => onNavigate("home")} className="crumb-home" aria-label="Back to Home"><Home size={15} /></button><ChevronRight size={14} /><span className="editor-app-label"><AppIcon app={icon} size={15} />{icon.label}</span><ChevronRight size={14} /><input value={title} onChange={(event) => onChangeTitle(event.target.value)} readOnly={!titleEditable} aria-label="File title" aria-readonly={!titleEditable} /></div><div className="editor-actions"><span className="saved-status"><Check size={14} />Saved locally</span>{children}</div></div>;
 }
 
-function DocsView({ workspace, update, onNavigate }) {
+function DocsView({ workspace, update, onNavigate, initialHeading }) {
   const [title, setTitle] = useState(workspace.docs.title);
   const [blockStyle, setBlockStyle] = useState("p");
   const editorRef = useRef(null);
+  const appliedHeadingNavigation = useRef(null);
   const icon = APP_META.find((app) => app.id === "docs");
   const outline = useMemo(() => {
     const parser = new window.DOMParser();
@@ -431,6 +437,15 @@ function DocsView({ workspace, update, onNavigate }) {
   const jumpToOutline = (item) => { const target = Array.from(editorRef.current?.querySelectorAll("h1, h2, h3") ?? []).find((heading) => heading.textContent.trim() === item); target?.scrollIntoView({ behavior: "smooth", block: "center" }); };
   const addSection = () => { const nextBody = `${workspace.docs.body}<h2>New section</h2><p>Start writing the next idea here.</p>`; update({ docs: { ...workspace.docs, title, body: nextBody, updatedAt: "just now" } }); emitNotice("New section added to the document."); };
   useEffect(() => { if (editorRef.current && editorRef.current.innerHTML !== workspace.docs.body) editorRef.current.innerHTML = workspace.docs.body; }, [workspace.docs.body]);
+  useEffect(() => {
+    if (!initialHeading || initialHeading === appliedHeadingNavigation.current) return;
+    appliedHeadingNavigation.current = initialHeading;
+    window.setTimeout(() => {
+      const targetHeading = [...(editorRef.current?.querySelectorAll("h1, h2, h3") ?? [])].find((heading) => heading.textContent.trim() === initialHeading);
+      targetHeading?.classList.add("search-target");
+      targetHeading?.scrollIntoView({ block: "center" });
+    }, 0);
+  }, [initialHeading, workspace.docs.body]);
   const updateDoc = (nextBody = editorRef.current?.innerHTML ?? workspace.docs.body) => update({ docs: { ...workspace.docs, title, body: nextBody, updatedAt: "just now" } });
   const exec = (command, value = undefined) => { editorRef.current?.focus(); document.execCommand(command, false, value); if (command === "formatBlock") setBlockStyle(String(value)); updateDoc(); };
   const exportDocument = () => {
@@ -1016,7 +1031,7 @@ export default function App() {
   const focusSearch = () => { setQuery(""); window.setTimeout(() => document.querySelector(".global-search input")?.focus(), 0); };
   const currentView = useMemo(() => {
     if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} onFocusSearch={focusSearch} />;
-    if (activeApp === "docs") return <DocsView workspace={workspace} update={update} onNavigate={navigate} />;
+    if (activeApp === "docs") return <DocsView workspace={workspace} update={update} onNavigate={navigate} initialHeading={navigationContext?.heading} />;
     if (activeApp === "sheets") return <SheetsView workspace={workspace} update={update} onNavigate={navigate} initialCell={navigationContext?.cell} />;
     if (activeApp === "slides") return <SlidesView workspace={workspace} update={update} onNavigate={navigate} initialSlideTitle={navigationContext?.title} />;
     if (activeApp === "notes") return <NotesView workspace={workspace} update={update} onNavigate={navigate} initialNoteTitle={navigationContext?.title} />;

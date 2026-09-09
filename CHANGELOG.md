@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.3.2 — Exact Docs heading destinations
+
+Published September 9, 2026.
+
+### Added
+
+- Universal Search now carries matching Docs heading context into the editor.
+- Searching for a heading such as “North star” scrolls to that heading and highlights it with document-safe contrast.
+- Added a committed preview of the exact Docs heading destination.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage verifies that searching for “North star” selects the matching document heading.
+
 ## v1.3.1 — Exact Forms question destinations
 
 Published September 9, 2026.
