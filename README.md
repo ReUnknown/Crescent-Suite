@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v3.8.0 — Guided Trash cleanup**
+**v3.9.0 — Actionable empty states**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -26,6 +26,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Restoring a trashed editor file now archives the displaced active Docs, Sheets, Slides, or Forms record back into local Trash
 - Linked text in Docs now has a clear document-paper treatment with visible underline and hover contrast
 - Trash cleanup now uses accessible Crescent confirmation dialogs for permanent deletion and Empty Trash, with Escape/backdrop dismissal and clear irreversible-action language
+- Empty Recent, Starred, Shared, and Trash surfaces now offer a direct next step instead of leaving the workspace at a dead end
 - Starting a new Docs, Sheets, Slides, or Forms file safely archives the active record in local Trash for recovery
 - Calendar events can be created, saved, reviewed, and removed in the local workspace
 - Calendar events can be exported as a standard `.ics` calendar file for use in other calendar apps

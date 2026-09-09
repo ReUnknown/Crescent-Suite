@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.9.0 — Actionable empty states
+
+Published September 9, 2026.
+
+### Improved
+
+- Added contextual next-step links to empty Recent, Starred, Shared, and Trash surfaces.
+- Added a committed Trash empty-state preview and smoke coverage for its navigation action.
+- Kept the empty-state action visually quiet and consistent with Crescent’s local-first language.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v3.8.0 — Guided Trash cleanup
 
 Published September 9, 2026.

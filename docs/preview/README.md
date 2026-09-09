@@ -1,4 +1,4 @@
-# v3.8.0 visual preview
+# v3.9.0 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -50,6 +50,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `docs-linked-text.png` — Docs after insertion with linked text styled for the document-paper surface
 - `trash-confirmation-modal.png` — Trash permanent deletion confirmation with explicit irreversible-action language
 - `trash-confirmation-modal-mobile.png` — Compact mobile Trash confirmation with full-width actions
+- `trash-empty-cta.png` — Empty Trash state with a quiet link back to Recent files
 - Recovery behavior is covered in the committed Trash and editor previews above; displaced active files remain recoverable after restore
 - `forms-preview.png` — Forms respondent-facing Preview mode with email collection enabled
 - `forms-theme-blue.png` — Forms with a persisted blue theme selected from the inspector
