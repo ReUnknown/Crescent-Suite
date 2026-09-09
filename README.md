@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.92 — Smoke checks protect content search**
+**v0.1.93 — Search follows renamed live files**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -34,6 +34,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Smoke coverage now includes a repository-prefixed `/Crescent-Suite/forms` direct route
 - Global Search now matches current Docs, Sheets cell values, Slides body text, Notes body text, and Forms question labels
 - CI smoke checks now exercise a seeded Docs body search in addition to route, layout, and Month-grid coverage
+- SearchResults now deduplicates against live workspace records so renamed files do not leave stale seeded entries
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

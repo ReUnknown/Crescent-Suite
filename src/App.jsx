@@ -236,9 +236,9 @@ function SearchResults({ query, onNavigate, workspace }) {
     ...(workspace.driveFolders ?? []).map((folder) => ({ title: folder.name, type: "Drive", opened: `${folder.items} items`, owner: "Me", icon: HardDrive, color: "rainbow" })),
     ...(workspace.calendarEvents ?? []).map((event) => ({ title: event.title, type: "Calendar", opened: event.when, owner: "Me", icon: CalendarDays, color: "periwinkle" })),
   ];
-  const seededKeys = new Set(RECENT_FILES.map((file) => `${file.type}-${file.title}`));
   const searchTextFor = (file) => file.type === "Docs" ? workspace.docs?.body?.replace(/<[^>]+>/g, " ") ?? "" : file.type === "Sheets" ? Object.values(workspace.sheets?.cells ?? {}).join(" ") : file.type === "Slides" ? (workspace.slides ?? []).map((slide) => `${slide.title} ${slide.body}`).join(" ") : file.type === "Notes" ? workspace.notes?.find((note) => note.title === file.title)?.body ?? "" : file.type === "Forms" ? (workspace.forms ?? []).map((question) => question.label).join(" ") : "";
-  const results = [...RECENT_FILES, ...localResults.filter((file) => !seededKeys.has(`${file.type}-${file.title}`))].filter((file) => `${file.title} ${file.type} ${file.opened} ${searchTextFor(file)}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
+  const mergedResults = new Map([...getLiveRecentFiles(workspace), ...localResults].map((file) => [`${file.type}-${file.title}`, file]));
+  const results = [...mergedResults.values()].filter((file) => `${file.title} ${file.type} ${file.opened} ${searchTextFor(file)}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
   return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.type.toLowerCase())}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
