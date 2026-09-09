@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.130 — Tasks due-date interaction preview
+
+Published September 9, 2026.
+
+### Changed
+
+- Added a committed visual preview of the editable Tasks due-date interaction.
+
+### Verification
+
+- Preview was captured after cycling “Review the launch brief” from Today to Tomorrow.
+
 ## v0.1.129 — Tasks support editable due dates
 
 Published September 9, 2026.
