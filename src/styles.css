@@ -199,3 +199,4 @@ input, textarea { color: var(--text); }
 .presentation-canvas.canvas-layout-statement h1, .presentation-stage.canvas-layout-statement h1 { max-width: 760px; font-size: clamp(40px, 5.5vw, 78px); }
 .presentation-canvas.canvas-layout-statement p, .presentation-stage.canvas-layout-statement p { display: none; }
 .presentation-canvas .canvas-kicker, .presentation-stage .canvas-kicker { position: absolute; }
+.utility-empty { min-height: 180px; display: grid; place-items: center; align-content: center; gap: 9px; color: #7e899f; text-align: center; }.utility-empty svg { color: #9b8de8; }.utility-empty strong { color: #d9daea; font-size: 14px; }.utility-empty small { color: #7e899f; font-size: 11px; }

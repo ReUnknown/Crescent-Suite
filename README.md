@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.21 — Slides with a stronger voice**
+**v0.1.22 — Navigation that tells the truth**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -28,6 +28,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Pages deployment is gated until the repository explicitly enables Pages, while the preview artifact still builds on every milestone
 - Calendar’s Day, Week, and Month controls now switch between real timeline and month-grid views
 - Slides’ Big statement layout now changes the canvas, persists per slide, and remains available in presentation mode
+- Starred, Shared with me, and Trash now show filtered or empty states instead of duplicating Recent files
 
 Everything is stored in this browser under a versioned local workspace key. No external account connection is required for this release.
 

@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.22 — Navigation that tells the truth
+
+Published September 8, 2026.
+
+### Changed
+
+- Starred now filters to starred files.
+- Shared with me now filters to files owned by someone else.
+- Trash now shows a clear empty state until deleted-file support is added.
+
+### Verification
+
+- Confirmed Starred shows 3 files, Shared shows 2, and Trash shows its empty state in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.21 — Slides with a stronger voice
 
 Published September 8, 2026.
