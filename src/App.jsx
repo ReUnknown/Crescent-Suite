@@ -828,10 +828,11 @@ export default function App() {
         event.preventDefault();
         document.querySelector(".global-search input")?.focus();
       }
+      if (event.key === "Escape" && query) setQuery("");
     };
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
-  }, []);
+  }, [query]);
   const navigate = (id) => { setActiveApp(id); setQuery(""); setSidebarOpen(false); if (window.location.hash !== `#${id}`) window.history.pushState({ app: id }, "", `#${id}`); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const focusSearch = () => { setQuery(""); window.setTimeout(() => document.querySelector(".global-search input")?.focus(), 0); };
   const currentView = useMemo(() => {

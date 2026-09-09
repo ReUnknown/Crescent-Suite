@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.160 — Search keyboard polish
+
+Published September 9, 2026.
+
+### Added
+
+- Global Search now clears its query and closes its result panel on Escape, keeping keyboard navigation within the current Crescent surface.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.159 — Project-filtered Tasks
 
 Published September 9, 2026.

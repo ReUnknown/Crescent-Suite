@@ -58,6 +58,8 @@ try {
           await page.getByRole("textbox", { name: "Search across Crescent" }).fill("North star");
           const searchHits = await page.locator(".search-results .search-result").count();
           if (!searchHits) failures.push({ viewport: viewport.name, route, search: "North star" });
+          await page.keyboard.press("Escape");
+          if (await page.locator(".search-results").count()) failures.push({ viewport: viewport.name, route, search: "Escape dismiss" });
         }
       } finally {
         await page.close();
