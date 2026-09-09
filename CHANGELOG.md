@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.165 — Clear Tasks empty states
+
+Published September 9, 2026.
+
+### Added
+
+- Tasks now shows a contextual empty state when a status or Project filter has no matching work.
+- Added a committed preview of the filtered empty state so the behavior is reviewable in the visual archive.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 30 desktop/mobile route checks.
+
 ## v0.1.164 — Preview archive alignment
 
 Published September 9, 2026.

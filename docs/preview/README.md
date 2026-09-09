@@ -1,4 +1,4 @@
-# v0.1.163 visual preview
+# v0.1.165 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -8,6 +8,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `search-local-navigation.png` — Global Search finding a locally created Workspace
 - `tasks-project-selector.png` — Tasks with the local Project selector and shared sidebar vocabulary
 - `tasks-project-filter.png` — Tasks narrowed to one local Project while preserving due dates and completion state
+- `tasks-empty-filter.png` — Tasks explaining an empty Project filter with a clear next step
 - `sheets.png` — editable Sheets surface with formula bar, populated grid, and persistent tabs
 - `sheets-formatting.png` — Sheets with persistent Bold and Italic state on the selected cell
 - `sheets-insights.png` — Sheets Insights view calculated from the grid
