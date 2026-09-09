@@ -334,7 +334,17 @@ function SearchResults({ query, onNavigate, workspace }) {
     ...(workspace.projects ?? []).map((project) => ({ title: project, type: "Drive", opened: "project", owner: "Me", icon: HardDrive, color: "rainbow" })),
     ...(workspace.calendarEvents ?? []).map((event) => ({ title: event.title, type: "Calendar", opened: event.when, owner: "Me", icon: CalendarDays, color: "periwinkle" })),
   ];
-  const searchTextFor = (file) => file.type === "Docs" ? workspace.docs?.body?.replace(/<[^>]+>/g, " ") ?? "" : file.type === "Sheets" ? Object.values(workspace.sheets?.cells ?? {}).join(" ") : file.type === "Slides" ? (workspace.slides ?? []).map((slide) => `${slide.title} ${slide.body}`).join(" ") : file.type === "Notes" ? workspace.notes?.find((note) => note.title === file.title)?.body ?? "" : file.type === "Forms" ? (workspace.forms ?? []).map((question) => question.label).join(" ") : "";
+  const searchTextFor = (file) => {
+    if (file.type === "Docs") return workspace.docs?.body?.replace(/<[^>]+>/g, " ") ?? "";
+    if (file.type === "Sheets") return Object.values(workspace.sheets?.cells ?? {}).join(" ");
+    if (file.type === "Slides") {
+      const matchingSlide = (workspace.slides ?? []).find((slide) => slide.title === file.title);
+      return matchingSlide ? `${matchingSlide.title} ${matchingSlide.body}` : workspace.slidesTitle ?? "";
+    }
+    if (file.type === "Notes") return workspace.notes?.find((note) => note.title === file.title)?.body ?? "";
+    if (file.type === "Forms") return (workspace.forms ?? []).map((question) => question.label).join(" ");
+    return "";
+  };
   const mergedResults = new Map([...getLiveRecentFiles(workspace), ...localResults].map((file) => [`${file.type}-${file.title}`, file]));
   const results = [...mergedResults.values()].filter((file) => `${file.title} ${file.type} ${file.opened} ${searchTextFor(file)}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
   const handleResultKeyDown = (event) => {
@@ -346,7 +356,7 @@ function SearchResults({ query, onNavigate, workspace }) {
     if (nextIndex < 0) document.querySelector(".global-search input")?.focus();
     else resultButtons[nextIndex]?.focus();
   };
-  return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.type.toLowerCase())} onKeyDown={handleResultKeyDown}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
+  return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.type.toLowerCase(), { title: file.title })} onKeyDown={handleResultKeyDown}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
 function HomeView({ workspace, update, onNavigate, onFocusSearch }) {
@@ -479,8 +489,8 @@ function SheetsView({ workspace, update, onNavigate }) {
   </div>;
 }
 
-function SlidesView({ workspace, update, onNavigate }) {
-  const [active, setActive] = useState(0);
+function SlidesView({ workspace, update, onNavigate, initialSlideTitle }) {
+  const [active, setActive] = useState(() => Math.max(0, workspace.slides.findIndex((slide) => slide.title === initialSlideTitle)));
   const [presenting, setPresenting] = useState(false);
   const notesRef = useRef(null);
   const [deckTitle, setDeckTitle] = useState(workspace.slidesTitle ?? "Design review deck");
@@ -488,6 +498,11 @@ function SlidesView({ workspace, update, onNavigate }) {
   const slides = workspace.slides;
   const current = slides[active] ?? slides[0];
   const layout = current.layout ?? "title-body";
+  useEffect(() => {
+    if (!initialSlideTitle) return;
+    const nextIndex = slides.findIndex((slide) => slide.title === initialSlideTitle);
+    if (nextIndex >= 0) setActive(nextIndex);
+  }, [initialSlideTitle, slides]);
   useEffect(() => {
     if (!presenting) return undefined;
     const handlePresentationKey = (event) => {
@@ -506,9 +521,14 @@ function SlidesView({ workspace, update, onNavigate }) {
 
 function SlidersIcon() { return <Settings2 size={16} />; }
 
-function NotesView({ workspace, update, onNavigate }) {
-  const [selected, setSelected] = useState(workspace.notes[0]?.id ?? 1);
+function NotesView({ workspace, update, onNavigate, initialNoteTitle }) {
+  const [selected, setSelected] = useState(() => workspace.notes.find((note) => note.title === initialNoteTitle)?.id ?? workspace.notes[0]?.id ?? 1);
   const note = workspace.notes.find((item) => item.id === selected) ?? workspace.notes[0];
+  useEffect(() => {
+    if (!initialNoteTitle) return;
+    const nextNote = workspace.notes.find((item) => item.title === initialNoteTitle);
+    if (nextNote) setSelected(nextNote.id);
+  }, [initialNoteTitle, workspace.notes]);
   const updateNote = (patch) => update({ notes: workspace.notes.map((item) => item.id === note.id ? { ...item, ...patch, updatedAt: "Just now" } : item), ...(Object.prototype.hasOwnProperty.call(patch, "title") ? { starredFiles: renameStarredFile(workspace, note.title, patch.title) } : {}) });
   const addNote = () => { const id = Date.now(); update({ notes: [{ id, title: "Untitled note", body: "Start writing...", color: "blue", updatedAt: "Just now" }, ...workspace.notes] }); setSelected(id); };
   const removeNote = () => { if (workspace.notes.length <= 1) { emitNotice("Keep one note in the workspace."); return; } const remaining = workspace.notes.filter((item) => item.id !== note.id); const starredTitles = getStarredTitles(workspace); const deletedNote = { id: `note-${note.id}`, noteId: note.id, title: note.title, body: note.body, color: note.color, updatedAt: note.updatedAt, type: "Notes", appId: "notes", opened: "just now", owner: "Me", starred: starredTitles.has(note.title) }; starredTitles.delete(note.title); update({ notes: remaining, starredFiles: [...starredTitles], deletedFiles: [deletedNote, ...(workspace.deletedFiles ?? [])] }); setSelected(remaining[0].id); emitNotice("Note moved to local Trash."); };
@@ -867,13 +887,14 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
+  const [navigationContext, setNavigationContext] = useState(null);
   useEffect(() => {
     const handleNotice = (event) => setNotice(event.detail);
     window.addEventListener("crescent:notice", handleNotice);
     return () => window.removeEventListener("crescent:notice", handleNotice);
   }, []);
   useEffect(() => {
-    const handleLocationChange = () => setActiveApp(appFromLocation());
+    const handleLocationChange = () => { setActiveApp(appFromLocation()); setNavigationContext(null); };
     window.addEventListener("popstate", handleLocationChange);
     window.addEventListener("hashchange", handleLocationChange);
     return () => { window.removeEventListener("popstate", handleLocationChange); window.removeEventListener("hashchange", handleLocationChange); };
@@ -909,19 +930,19 @@ export default function App() {
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
   }, [query]);
-  const navigate = (id) => { setActiveApp(id); setQuery(""); setSidebarOpen(false); if (window.location.hash !== `#${id}`) window.history.pushState({ app: id }, "", `#${id}`); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const navigate = (id, context = null) => { setActiveApp(id); setNavigationContext(context); setQuery(""); setSidebarOpen(false); if (window.location.hash !== `#${id}`) window.history.pushState({ app: id }, "", `#${id}`); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const focusSearch = () => { setQuery(""); window.setTimeout(() => document.querySelector(".global-search input")?.focus(), 0); };
   const currentView = useMemo(() => {
     if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} onFocusSearch={focusSearch} />;
     if (activeApp === "docs") return <DocsView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "sheets") return <SheetsView workspace={workspace} update={update} onNavigate={navigate} />;
-    if (activeApp === "slides") return <SlidesView workspace={workspace} update={update} onNavigate={navigate} />;
-    if (activeApp === "notes") return <NotesView workspace={workspace} update={update} onNavigate={navigate} />;
+    if (activeApp === "slides") return <SlidesView workspace={workspace} update={update} onNavigate={navigate} initialSlideTitle={navigationContext?.title} />;
+    if (activeApp === "notes") return <NotesView workspace={workspace} update={update} onNavigate={navigate} initialNoteTitle={navigationContext?.title} />;
     if (activeApp === "tasks") return <TasksView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "calendar") return <CalendarView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "drive") return <DriveView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} />;
     return <UtilityView id={activeApp} workspace={workspace} update={update} onNavigate={navigate} />;
-  }, [activeApp, workspace, update]);
+  }, [activeApp, navigationContext, workspace, update]);
   return <div className="app-shell"><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} workspace={workspace} update={update} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} query={query} onQueryChange={setQuery} onNavigate={navigate} workspace={workspace} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div></div>;
 }

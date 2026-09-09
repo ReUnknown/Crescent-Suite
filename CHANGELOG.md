@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.0.6 — Exact search destinations
+
+Published September 9, 2026.
+
+### Fixed
+
+- Search results now carry local navigation context into Notes and Slides.
+- Selecting a note opens that note in the Notes list.
+- Selecting an individual slide opens that slide in the Slides editor.
+- Slide search now indexes each slide’s own title and body instead of attaching all slide text to the deck-level result.
+- Added a committed visual preview of an exact slide search destination.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage verifies exact note and slide result destinations.
+
 ## v1.0.5 — Keyboard-friendly search
 
 Published September 9, 2026.
