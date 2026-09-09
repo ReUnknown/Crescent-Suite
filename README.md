@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.119 — CI guards safe export filenames**
+**v0.1.120 — Drive file creation is recoverable**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -42,6 +42,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Sheets CSV export now includes the full nine-row visible range instead of truncating lower-row edits
 - Forms builders can now remove questions locally while keeping one safe question in the form; respondent Preview stays focused and hides builder controls
 - Forms builders can cycle each question between Short answer, Long answer, and Scale while preserving the local response flow
+- Drive New file prompts for a title, preserves the previous Docs record in local Trash, and lets Restore recover it without silently discarding the replacement document
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges

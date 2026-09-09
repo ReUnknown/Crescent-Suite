@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.120 — Drive file creation is recoverable
+
+Published September 9, 2026.
+
+### Changed
+
+- Drive New file prompts for a title and moves the current Docs record to local Trash.
+- Docs Restore archives the temporary active document before returning the selected document, preserving both records.
+
+### Verification
+
+- Browser smoke coverage now checks Drive → Docs → Trash → Restore.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.119 — CI guards safe export filenames
 
 Published September 9, 2026.

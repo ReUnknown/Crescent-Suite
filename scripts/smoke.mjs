@@ -101,6 +101,17 @@ try {
     await behaviorPage.getByRole("button", { name: "Export" }).click();
     const exportFilename = (await exportDownloadPromise).suggestedFilename();
     if (exportFilename.includes("/")) failures.push({ route: "forms", controls: "safe export filename", exportFilename });
+    const previousDocTitle = "Crescent smoke favorite";
+    await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
+    behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke new file"));
+    await behaviorPage.getByRole("button", { name: "New file" }).click();
+    if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== "Smoke new file") failures.push({ route: "drive", controls: "new file title" });
+    await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
+    const archivedDoc = behaviorPage.locator(".utility-file-row").filter({ hasText: previousDocTitle });
+    if (await archivedDoc.count() !== 1) failures.push({ route: "trash", controls: "archived Docs file" });
+    else await archivedDoc.getByRole("button", { name: "Restore" }).click();
+    await behaviorPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });
+    if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== previousDocTitle) failures.push({ route: "docs", controls: "Docs restore" });
     await behaviorPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
     await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "partial-backup.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Smoke restore" }, sheets: { title: "Smoke sheet" }, forms: null, formSettings: { collectEmail: true } })) });
     await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
@@ -114,7 +125,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; Month has 42 cells; content search, local formulas, Forms controls, favorite continuity, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; Month has 42 cells; content search, local formulas, Forms controls, favorite continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
