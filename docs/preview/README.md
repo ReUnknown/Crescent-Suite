@@ -19,4 +19,5 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `calendar.png` — Calendar with a saved local event
 - `calendar-month.png` — Calendar Month mode with event pills
 - `trash.png` — local Trash with a recoverable deleted task
+- `starred.png` — Starred utility view with locally persisted favorites
 - `mobile.png` — responsive home dashboard at a mobile viewport

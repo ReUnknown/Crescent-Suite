@@ -123,6 +123,10 @@ const RECENT_FILES = [
   { title: "Launch assets", type: "Drive", icon: HardDrive, color: "rainbow", opened: "3 days ago", owner: "Me", starred: false },
 ];
 
+function getStarredTitles(workspace) {
+  return new Set(Array.isArray(workspace.starredFiles) ? workspace.starredFiles : RECENT_FILES.filter((file) => file.starred).map((file) => file.title));
+}
+
 function getLiveRecentFiles(workspace) {
   const sourceFor = (type, fallback) => RECENT_FILES.find((file) => file.type === type) ?? fallback;
   const liveFiles = [
@@ -133,7 +137,8 @@ function getLiveRecentFiles(workspace) {
     workspace.formTitle && { ...sourceFor("Forms", { type: "Forms", icon: FormInput, color: "peach", owner: "Me", starred: false }), title: workspace.formTitle, opened: "just now", owner: "Me" },
   ].filter(Boolean);
   const liveTypes = new Set(liveFiles.map((file) => file.type));
-  return [...liveFiles, ...RECENT_FILES.filter((file) => !liveTypes.has(file.type))];
+  const starredTitles = getStarredTitles(workspace);
+  return [...liveFiles, ...RECENT_FILES.filter((file) => !liveTypes.has(file.type))].map((file) => ({ ...file, starred: starredTitles.has(file.title) }));
 }
 
 const SCHEDULE = [
@@ -236,11 +241,12 @@ function SearchResults({ query, onNavigate, workspace }) {
   return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.type.toLowerCase())}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
-function HomeView({ workspace, onNavigate }) {
+function HomeView({ workspace, update, onNavigate }) {
   const [filter, setFilter] = useState("All");
   const recentFiles = getLiveRecentFiles(workspace);
   const files = filter === "All" ? recentFiles : recentFiles.filter((file) => file.type === filter);
   const localSchedule = (workspace.calendarEvents ?? []).slice(0, 2).map((event) => ({ ...event, time: "Saved", end: "Local", color: "periwinkle" }));
+  const toggleStar = (event, file) => { event.stopPropagation(); const starredTitles = getStarredTitles(workspace); if (starredTitles.has(file.title)) starredTitles.delete(file.title); else starredTitles.add(file.title); update({ starredFiles: [...starredTitles] }); emitNotice(starredTitles.has(file.title) ? `${file.title} added to Starred.` : `${file.title} removed from Starred.`); };
   return <div className="home-layout page-enter">
     <main className="home-main">
       <section className="home-hero">
@@ -256,7 +262,7 @@ function HomeView({ workspace, onNavigate }) {
       </section>
       <section className="workspace-section recent-section">
         <div className="section-heading"><div><h2>Recent</h2><p>The latest files across your workspaces.</p></div><div className="filter-row">{["All", "Docs", "Sheets", "Slides", "Notes", "Tasks", "Calendar", "Drive", "Forms"].map((item) => <button className={filter === item ? "filter-button selected" : "filter-button"} key={item} onClick={() => setFilter(item)}>{item}</button>)}</div></div>
-        <div className="recent-table"><div className="recent-table-head"><span>Name</span><span>Type</span><span>Last opened</span><span>Owner</span><span aria-label="Actions" /></div>{files.map((file) => <button className="recent-row" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><span className="file-name"><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={18} /><strong>{file.title}</strong></span><span>{file.type}</span><span>{file.opened}</span><span>{file.owner}</span><span className="row-actions">{file.starred ? <Star size={16} fill="currentColor" /> : <Star size={16} />}<MoreHorizontal size={17} /></span></button>)}</div>
+        <div className="recent-table"><div className="recent-table-head"><span>Name</span><span>Type</span><span>Last opened</span><span>Owner</span><span aria-label="Actions" /></div>{files.map((file) => <button className="recent-row" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><span className="file-name"><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={18} /><strong>{file.title}</strong></span><span>{file.type}</span><span>{file.opened}</span><span>{file.owner}</span><span className="row-actions"><span className="row-action" role="button" tabIndex="0" aria-label={`${file.starred ? "Remove" : "Add"} ${file.title} ${file.starred ? "from" : "to"} Starred`} onClick={(event) => toggleStar(event, file)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") toggleStar(event, file); }}>{file.starred ? <Star size={16} fill="currentColor" /> : <Star size={16} />}</span><MoreHorizontal size={17} /></span></button>)}</div>
       </section>
     </main>
     <aside className="home-rail">
@@ -464,7 +470,7 @@ function EyeIcon() { return <span className="eye-icon">◉</span>; }
 function UtilityView({ id, workspace, update, onNavigate }) {
   const labels = { recent: ["Recent files", "Everything you touched lately, in one quiet list."], starred: ["Starred", "The files you want close at hand."], shared: ["Shared with me", "Work that has arrived from the people around you."], trash: ["Trash", "Files stay here until you are ready to let them go."], settings: ["Settings", "Shape Crescent around the way you work."] };
   const [title, description] = labels[id] ?? labels.recent;
-  const files = id === "starred" ? RECENT_FILES.filter((file) => file.starred) : id === "shared" ? RECENT_FILES.filter((file) => file.owner !== "Me") : id === "trash" ? (workspace.deletedFiles ?? []).map((file) => ({ ...(APP_META.find((app) => app.id === file.appId) ?? {}), ...file })) : getLiveRecentFiles(workspace);
+  const files = id === "starred" ? getLiveRecentFiles(workspace).filter((file) => file.starred) : id === "shared" ? RECENT_FILES.filter((file) => file.owner !== "Me") : id === "trash" ? (workspace.deletedFiles ?? []).map((file) => ({ ...(APP_META.find((app) => app.id === file.appId) ?? {}), ...file })) : getLiveRecentFiles(workspace);
   const backupInputRef = useRef(null);
   const exportWorkspace = () => { downloadText("crescent-workspace-backup.json", JSON.stringify({ format: "crescent-suite-workspace", version: 1, exportedAt: new Date().toISOString(), workspace }, null, 2), "application/json"); emitNotice("Workspace backup downloaded."); };
   const importWorkspace = (event) => { const file = event.target.files?.[0]; if (!file) return; const reader = new window.FileReader(); reader.onload = () => { try { const parsed = JSON.parse(reader.result); const imported = parsed?.workspace ?? parsed; if (!imported || imported.version !== 1 || !imported.docs || !imported.sheets) throw new Error("Invalid Crescent backup"); update({ ...INITIAL_WORKSPACE, ...imported, version: 1 }); emitNotice("Workspace backup restored locally."); } catch { emitNotice("That backup could not be restored."); } }; reader.readAsText(file); event.target.value = ""; };
@@ -528,7 +534,7 @@ export default function App() {
   }, []);
   const navigate = (id) => { setActiveApp(id); setQuery(""); setSidebarOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const currentView = useMemo(() => {
-    if (activeApp === "home") return <HomeView workspace={workspace} onNavigate={navigate} />;
+    if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "docs") return <DocsView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "sheets") return <SheetsView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "slides") return <SlidesView workspace={workspace} update={update} onNavigate={navigate} />;
