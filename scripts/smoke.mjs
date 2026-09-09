@@ -327,7 +327,7 @@ try {
     await behaviorPage.locator(".drive-file").filter({ hasText: liveDriveTitle }).click();
     if (behaviorPage.url().split("#")[1] !== "docs" || await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== liveDriveTitle) failures.push({ route: "drive", controls: "exact recent-file destination", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
-    await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "malformed-records.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Safe import" }, sheets: { title: "Safe sheet" }, slides: [null], notes: [null], tasks: [null], forms: [null], calendarEvents: [null], driveFolders: [null] })) });
+    await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "malformed-records.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Safe import" }, sheets: { title: "Safe sheet" }, slides: [null], notes: [null], tasks: [null], forms: [null], calendarEvents: [null], driveFolders: [null], deletedFiles: [null], formResponses: [null] })) });
     await behaviorPage.getByRole("status").filter({ hasText: "Workspace backup restored locally." }).waitFor({ state: "visible" });
     await behaviorPage.goto(`${baseUrl}/slides`, { waitUntil: "networkidle" });
     if (await behaviorPage.locator(".slide-thumb").count() !== 1) failures.push({ route: "settings", controls: "malformed slide backup normalization" });
@@ -339,6 +339,11 @@ try {
     if (await behaviorPage.locator(".question-label-input").count() !== 1) failures.push({ route: "settings", controls: "malformed form backup normalization" });
     await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
     if (await behaviorPage.locator(".calendar-local-card").count() !== 1) failures.push({ route: "settings", controls: "malformed calendar backup normalization" });
+    await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
+    if (await behaviorPage.locator(".utility-file-row").count() !== 0 || !(await behaviorPage.locator(".utility-panel").innerText()).includes("Trash is empty.")) failures.push({ route: "settings", controls: "malformed Trash backup normalization" });
+    await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("button", { name: /Responses/ }).click();
+    if (await behaviorPage.locator(".response-card").count() !== 1) failures.push({ route: "settings", controls: "malformed response backup normalization" });
   } finally {
     await behaviorPage.close();
   }

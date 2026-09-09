@@ -229,6 +229,20 @@ function normalizeWorkspace(source) {
       return { ...record, id: record.id ?? index + 1, title: String(record.title ?? `Event ${index + 1}`), when: String(record.when ?? "No time"), ...(record.date ? { date: String(record.date) } : {}) };
     })
     : [];
+  const deletedFiles = Array.isArray(source?.deletedFiles)
+    ? source.deletedFiles.filter((file) => file && typeof file === "object").map((file, index) => {
+      const type = ["Docs", "Sheets", "Slides", "Notes", "Tasks", "Calendar", "Drive", "Forms"].includes(file.type) ? file.type : "Docs";
+      return { ...file, id: file.id ?? `deleted-${index + 1}`, title: String(file.title ?? `Deleted ${type}`), type, appId: file.appId ?? type.toLowerCase(), opened: String(file.opened ?? "Previously"), owner: String(file.owner ?? "Me"), starred: Boolean(file.starred) };
+    })
+    : [];
+  const normalizeResponse = (response, index) => {
+    const record = response && typeof response === "object" ? response : {};
+    return { ...record, id: record.id ?? index + 1, saved: true, submittedAt: record.submittedAt ? String(record.submittedAt) : undefined, scale: record.scale ?? null, answers: record.answers && typeof record.answers === "object" ? record.answers : {} };
+  };
+  const formResponses = Array.isArray(source?.formResponses)
+    ? source.formResponses.map(normalizeResponse)
+    : source?.lastFormResponse?.saved ? [normalizeResponse(source.lastFormResponse, 0)] : [];
+  const lastFormResponse = source?.lastFormResponse && typeof source.lastFormResponse === "object" ? normalizeResponse(source.lastFormResponse, 0) : undefined;
   return {
     ...merged,
     docs: { ...INITIAL_WORKSPACE.docs, ...(source?.docs ?? {}) },
@@ -241,9 +255,10 @@ function normalizeWorkspace(source) {
     workspaces,
     projects,
     calendarEvents,
-    deletedFiles: Array.isArray(source?.deletedFiles) ? source.deletedFiles : [],
+    deletedFiles,
     formSettings: { ...INITIAL_WORKSPACE.formSettings, ...(source?.formSettings ?? {}) },
-    formResponses: Array.isArray(source?.formResponses) ? source.formResponses : source?.lastFormResponse?.saved ? [source.lastFormResponse] : [],
+    formResponses,
+    lastFormResponse,
     version: 1,
   };
 }

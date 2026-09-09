@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.5.1 — Safe imported history and Trash
+
+Published September 9, 2026.
+
+### Fixed
+
+- Malformed Form response history now normalizes into safe local response records.
+- Invalid Trash entries are ignored during backup import instead of producing phantom or crashing records.
+- Added production smoke coverage for malformed Responses and Trash collections.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.5.0 — Safe imported workspace records
 
 Published September 9, 2026.

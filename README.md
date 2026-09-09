@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.5.0 — Safe imported workspace records**
+**v1.5.1 — Safe imported history and Trash**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -67,6 +67,8 @@ The first major release establishes a usable Crescent product shell and a local-
 - Added a committed visual capture and smoke coverage for exact Drive-file selection
 - Workspace backup import now normalizes malformed Slides, Notes, Tasks, Forms, Calendar, and Drive records into safe local starter records
 - Added production smoke coverage for malformed-record backup recovery
+- Malformed Form response history now restores with safe answers and timestamps, while invalid Trash entries are ignored safely
+- Added smoke coverage for malformed Responses and Trash collections
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback
