@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.142 — Workspace-to-Drive preview
+
+Published September 9, 2026.
+
+### Documentation
+
+- Added a committed Drive screenshot showing a locally created Workspace mirrored as an empty folder.
+- The visual preview index now includes `workspace-drive.png` for GitHub review.
+
+### Verification
+
+- Preview captured from the running local app after creating a custom Workspace.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass on the underlying v0.1.141 implementation.
+
 ## v0.1.141 — Workspaces open into Drive
 
 Published September 9, 2026.
