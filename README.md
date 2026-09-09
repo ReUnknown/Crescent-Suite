@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.51 — Editor breadcrumbs are accessible**
+**v0.1.54 — Form and Slides themes are interactive**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -51,6 +51,8 @@ The first release establishes the Crescent product shell and a local-first suite
 - Forms blocks submission with a local message when email collection is enabled but the email field is empty
 - Forms now blocks incomplete required questions, including unanswered scale questions, before saving a response
 - Shared editor breadcrumb home buttons now expose an accessible “Back to Home” name across Docs, Sheets, Slides, Calendar, Drive, and Forms
+- Forms theme swatches now change and persist the cover treatment, with a selected state and respondent-facing color variants
+- Slides theme swatches now expose selected state and labels, and the speaker-note plus button focuses the note editor
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
