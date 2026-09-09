@@ -124,6 +124,7 @@ try {
     behaviorPage.off("dialog", acceptCalendarPrompts);
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".recent-table").innerText()).includes("Smoke Friday")) failures.push({ route: "home", controls: "live calendar recent file" });
+    if ((await behaviorPage.locator(".day-card").innerText()).includes("Smoke Friday")) failures.push({ route: "home", controls: "future event excluded from My day" });
     await behaviorPage.goto(`${baseUrl}/tasks`, { waitUntil: "networkidle" });
     const dueBefore = await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).innerText();
     await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).click();

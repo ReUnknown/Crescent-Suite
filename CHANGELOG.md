@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.163 — Focused Home day rail
+
+Published September 9, 2026.
+
+### Fixed
+
+- Home’s My day rail now filters saved Calendar events by the current local date, preventing future weekday events from appearing as today’s schedule.
+- Future local events remain searchable and visible in Calendar/Recent, preserving their discoverability without distorting the day view.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 30 desktop/mobile route checks.
+
 ## v0.1.162 — Complete app launcher layout
 
 Published September 9, 2026.
