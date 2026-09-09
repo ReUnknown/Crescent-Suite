@@ -319,8 +319,17 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
   ];
   const workspaces = workspace.workspaces ?? INITIAL_WORKSPACE.workspaces;
   const projects = workspace.projects ?? INITIAL_WORKSPACE.projects;
+  const [addDialog, setAddDialog] = useState(null);
+  const [addName, setAddName] = useState("");
+  const openAddDialog = (kind) => { setAddDialog(kind); setAddName(kind === "workspace" ? "New workspace" : "New project"); };
+  useEffect(() => {
+    if (!addDialog) return undefined;
+    const closeOnEscape = (event) => { if (event.key === "Escape") setAddDialog(null); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [addDialog]);
   const addWorkspace = () => {
-    const name = window.prompt("Workspace name", "New workspace")?.trim();
+    const name = addName.trim();
     if (!name) return;
     if (workspaces.some((item) => item.name.toLowerCase() === name.toLowerCase())) {
       emitNotice("That workspace already exists.");
@@ -331,16 +340,18 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
     const driveFolders = workspace.driveFolders ?? [];
     const hasFolder = driveFolders.some((folder) => folder.name.toLowerCase() === name.toLowerCase());
     update({ workspaces: [...workspaces, { name, color }], driveFolders: hasFolder ? driveFolders : [...driveFolders, { name, items: 0, color: folderColor }] });
+    setAddDialog(null);
     emitNotice(`${name} workspace added locally.`);
   };
   const addProject = () => {
-    const name = window.prompt("Project name", "New project")?.trim();
+    const name = addName.trim();
     if (!name) return;
     if (projects.some((item) => item.toLowerCase() === name.toLowerCase())) {
       emitNotice("That project already exists.");
       return;
     }
     update({ projects: [...projects, name] });
+    setAddDialog(null);
     emitNotice(`${name} project added locally.`);
   };
   return <>
@@ -351,16 +362,17 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
         {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={`sidebar-link ${activeApp === id ? "active" : ""}`} onClick={() => onNavigate(id)} aria-current={activeApp === id ? "page" : undefined}><Icon size={18} /><span>{label}</span></button>)}
       </nav>
       <div className="sidebar-divider" />
-      <div className="sidebar-section-head"><span>Workspaces</span><button className="icon-button muted" onClick={addWorkspace} aria-label="Add workspace"><Plus size={17} /></button></div>
+      <div className="sidebar-section-head"><span>Workspaces</span><button className="icon-button muted" onClick={() => openAddDialog("workspace")} aria-label="Add workspace"><Plus size={17} /></button></div>
       <div className="workspace-list">
         {workspaces.map((item, index) => <button className="workspace-link" key={`${item.name}-${index}`} onClick={() => onNavigate("drive", { folderName: item.name })}><span className={`workspace-dot dot-${item.color ?? index % 5}`} />{item.name}</button>)}
       </div>
-      <div className="sidebar-section-head projects-head"><span>Projects</span><button className="icon-button muted" onClick={addProject} aria-label="Add project"><Plus size={17} /></button></div>
+      <div className="sidebar-section-head projects-head"><span>Projects</span><button className="icon-button muted" onClick={() => openAddDialog("project")} aria-label="Add project"><Plus size={17} /></button></div>
       <div className="project-list">
         {projects.map((project) => <button className="project-link" key={project} onClick={() => onNavigate("tasks", { project })}><FileText size={16} />{project}</button>)}
         <button className="project-link project-more" onClick={() => emitNotice("More projects will be available when the workspace connects to a team.")}><MoreHorizontal size={16} />More projects...</button>
       </div>
       <div className="sidebar-quote"><div className="quote-orbit"><span className="quote-moon" /></div><p>A more focused way to work</p></div>
+      {addDialog && <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAddDialog(null); }}><section className="file-create-dialog sidebar-create-dialog" role="dialog" aria-modal="true" aria-labelledby="sidebar-create-title"><div className="file-create-heading"><div><span className="utility-kicker">{addDialog === "workspace" ? <FolderPlus size={14} /> : <ListChecks size={14} />}{addDialog === "workspace" ? "New workspace" : "New project"}</span><h2 id="sidebar-create-title">{addDialog === "workspace" ? "Make room for a new space" : "Give the work a clear home"}</h2><p>{addDialog === "workspace" ? "Create a local folder for a team, theme, or part of your life." : "Projects keep related tasks together in one focused view."}</p></div><button className="icon-button muted" onClick={() => setAddDialog(null)} aria-label="Close create dialog"><X size={18} /></button></div><label className="file-name-field"><span>{addDialog === "workspace" ? "Workspace name" : "Project name"}</span><input autoFocus value={addName} aria-label={addDialog === "workspace" ? "Workspace name" : "Project name"} onChange={(event) => setAddName(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") addDialog === "workspace" ? addWorkspace() : addProject(); }} /></label><div className="file-create-footer"><span><HardDrive size={14} />Saved locally in this browser</span><div><button className="secondary-button" onClick={() => setAddDialog(null)}>Cancel</button><button className="primary-button" onClick={addDialog === "workspace" ? addWorkspace : addProject}>{addDialog === "workspace" ? <><FolderPlus size={16} />Add workspace</> : <><ListChecks size={16} />Add project</>}</button></div></div></section></div>}
     </aside>
   </>;
 }

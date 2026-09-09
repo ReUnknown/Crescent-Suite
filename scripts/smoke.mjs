@@ -112,11 +112,15 @@ try {
   const behaviorPage = await browser.newPage({ viewport: viewports[0] });
   try {
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
-    behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke workspace"));
     await behaviorPage.getByRole("button", { name: "Add workspace" }).click();
+    const workspaceDialog = behaviorPage.getByRole("dialog", { name: "Make room for a new space" });
+    await workspaceDialog.getByRole("textbox", { name: "Workspace name" }).fill("Smoke workspace");
+    await workspaceDialog.getByRole("button", { name: "Add workspace", exact: true }).click();
     if (!(await behaviorPage.locator(".workspace-list").innerText()).includes("Smoke workspace")) failures.push({ route: "home", controls: "local workspace creation" });
-    behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke project"));
     await behaviorPage.getByRole("button", { name: "Add project" }).click();
+    const projectDialog = behaviorPage.getByRole("dialog", { name: "Give the work a clear home" });
+    await projectDialog.getByRole("textbox", { name: "Project name" }).fill("Smoke project");
+    await projectDialog.getByRole("button", { name: "Add project", exact: true }).click();
     if (!(await behaviorPage.locator(".project-list").innerText()).includes("Smoke project")) failures.push({ route: "home", controls: "local project creation" });
     await behaviorPage.locator(".recent-row").first().focus();
     await behaviorPage.locator(".recent-row").first().press("Enter");
@@ -469,7 +473,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; independent Form Scale answers; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; guided local workspace/project creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; independent Form Scale answers; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

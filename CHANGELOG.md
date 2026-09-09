@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.3.0 — Guided workspace organization
+
+Published September 9, 2026.
+
+### Improved
+
+- Workspace and Project creation in the sidebar now uses the same focused Crescent dialog pattern as Drive and Calendar.
+- Creation supports accessible names, Escape/backdrop dismissal, Enter-to-submit, duplicate guards, and local persistence.
+- Added a committed visual preview and updated behavior coverage for both organization surfaces.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v3.2.0 — Guided calendar events
 
 Published September 9, 2026.

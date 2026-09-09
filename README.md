@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v3.2.0 — Guided calendar events**
+**v3.3.0 — Guided workspace organization**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -20,6 +20,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Drive’s New file action now creates named Docs, Sheets, Slides, Notes, or Forms records and opens the selected editor
 - Drive’s New file action now uses an accessible, keyboard-friendly Crescent modal with app cards, title entry, Escape dismissal, and mobile layout
 - Calendar’s Event action now uses a matching accessible modal with title and natural-language time fields, Escape dismissal, and local persistence
+- Sidebar Workspaces and Projects now use matching accessible creation dialogs with local persistence and keyboard-friendly submission
 - Starting a new Docs, Sheets, Slides, or Forms file safely archives the active record in local Trash for recovery
 - Calendar events can be created, saved, reviewed, and removed in the local workspace
 - Calendar events can be exported as a standard `.ics` calendar file for use in other calendar apps
