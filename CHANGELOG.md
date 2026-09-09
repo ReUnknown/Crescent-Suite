@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.25 — Search follows your workspace
+
+Published September 8, 2026.
+
+### Changed
+
+- Global Search indexes the current local Docs, Sheets, Slides, and Notes content instead of relying only on seeded demo files.
+- Newly created or renamed workspace items can be found immediately, with duplicate seeded entries removed from the result set.
+
+### Verification
+
+- Created a blank document in Drive, searched for “Untitled document,” and confirmed the result navigated back to Docs with the saved title.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.24 — Drive can start work
 
 Published September 8, 2026.

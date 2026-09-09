@@ -200,12 +200,20 @@ function Header({ activeApp, onOpenSidebar, query, onQueryChange, onNavigate, wo
 }
 
 function SearchResults({ query, onNavigate, workspace }) {
+  const workspaceFiles = [
+    workspace.docs?.title && { title: workspace.docs.title, type: "Docs", opened: workspace.docs.updatedAt ?? "just now", owner: "Me", icon: FileText, color: "blue" },
+    workspace.sheets?.title && { title: workspace.sheets.title, type: "Sheets", opened: workspace.sheets.updatedAt ?? "just now", owner: "Me", icon: FileSpreadsheet, color: "green" },
+    ...(workspace.slides ?? []).map((slide) => ({ title: slide.title, type: "Slides", opened: "just now", owner: "Me", icon: Presentation, color: "gold" })),
+    ...(workspace.notes ?? []).map((note) => ({ title: note.title, type: "Notes", opened: note.updatedAt ?? "just now", owner: "Me", icon: StickyNote, color: "lilac" })),
+  ].filter(Boolean);
   const localResults = [
+    ...workspaceFiles,
     ...(workspace.tasks ?? []).map((task) => ({ title: task.title, type: "Tasks", opened: task.due, owner: "Me", icon: ListChecks, color: "violet" })),
     ...(workspace.driveFolders ?? []).map((folder) => ({ title: folder.name, type: "Drive", opened: `${folder.items} items`, owner: "Me", icon: HardDrive, color: "rainbow" })),
     ...(workspace.calendarEvents ?? []).map((event) => ({ title: event.title, type: "Calendar", opened: event.when, owner: "Me", icon: CalendarDays, color: "periwinkle" })),
   ];
-  const results = [...RECENT_FILES, ...localResults].filter((file) => `${file.title} ${file.type} ${file.opened}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
+  const seededKeys = new Set(RECENT_FILES.map((file) => `${file.type}-${file.title}`));
+  const results = [...RECENT_FILES, ...localResults.filter((file) => !seededKeys.has(`${file.type}-${file.title}`))].filter((file) => `${file.title} ${file.type} ${file.opened}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
   return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.type.toLowerCase())}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
