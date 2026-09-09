@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.1.27 — Workspace backup and restore
+
+Published September 8, 2026.
+
+### Changed
+
+- Added a Settings workspace backup row with Download and Import actions.
+- Backups use a versioned JSON envelope and restore through the existing local workspace state model.
+- Invalid or unsupported backup files show a local status message without changing current work.
+
+### Verification
+
+- Downloaded a backup and confirmed the filename is `crescent-workspace-backup.json`.
+- Imported a test backup and confirmed the restored document title appeared in Docs.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.26 — Recent work stays current
 
 Published September 8, 2026.
