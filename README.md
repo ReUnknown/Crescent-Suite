@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.7 — A cleaner build loop**
+**v0.1.8 — A live preview path**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -14,6 +14,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Slides editor with slide management, themes, and presentation mode
 - Notes, Tasks, Calendar, Drive, and Forms surfaces with working local interactions
 - Shared navigation, command-style search, responsive layouts, and a night-sky design system
+- GitHub Pages workflow for a published visual preview on every `main` milestone
 
 Everything is stored in this browser under a versioned local workspace key. No external account connection is required for this release.
 

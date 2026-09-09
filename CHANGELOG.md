@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.8 — A live preview path
+
+Published September 8, 2026.
+
+### Added
+
+- GitHub Pages workflow builds and deploys the Vite app from `main`.
+- Vite uses the repository base path in Actions so the hosted app resolves assets correctly.
+- Preview documentation now includes the Forms evidence screenshot alongside the other milestone captures.
+
+### Verification
+
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes with the GitHub Actions base path enabled locally through the config.
+
 ## v0.1.7 — A cleaner build loop
 
 Published September 8, 2026.
