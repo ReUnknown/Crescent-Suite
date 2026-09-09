@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.29 — Forms builder can shape questions
+
+Published September 8, 2026.
+
+### Changed
+
+- Added editable question-label inputs to Forms builder mode.
+- Preview mode now switches those labels to respondent-facing text and hides builder controls.
+- Question label changes continue through the same local workspace persistence model.
+
+### Verification
+
+- Edited the first question, entered Preview, confirmed the editable input disappeared and the new label rendered, then returned to Edit mode and added a fourth question.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.28 — Docs outline follows the draft
 
 Published September 8, 2026.
