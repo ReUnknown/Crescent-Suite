@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.9.0 — Recoverable Calendar events**
+**v2.0.0 — Recoverable editor files**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -84,6 +84,9 @@ The first major release establishes a usable Crescent product shell and a local-
 - Saved Calendar events now move to local Trash when removed instead of disappearing permanently
 - Calendar Trash restore returns the event’s title, time, date, and Starred state
 - Added production smoke coverage for recoverable Calendar events
+- Docs, Sheets, Slides, and Forms now share a consistent Move to Trash action
+- Trash restore returns core editor content, titles, and Starred state
+- Added production smoke coverage for all four core editor file recovery paths
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

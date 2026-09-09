@@ -1,5 +1,20 @@
 # Changelog
 
+## v2.0.0 — Recoverable editor files
+
+Published September 9, 2026.
+
+### Improved
+
+- Docs, Sheets, Slides, and Forms now expose a consistent “Move to Trash” action in their editor headers.
+- Trash restore now returns each editor to its saved content, title, and Starred state.
+- The existing Calendar, Notes, and Tasks recovery paths now share the same local-first lifecycle.
+- Added production smoke coverage for moving and restoring all four core editor file types.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.9.0 — Recoverable Calendar events
 
 Published September 9, 2026.

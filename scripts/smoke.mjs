@@ -185,6 +185,38 @@ try {
     else await deletedEvent.getByRole("button", { name: "Restore" }).click();
     await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".calendar-local-list").innerText()).includes("Smoke focus edited")) failures.push({ route: "calendar", controls: "Calendar event restore" });
+    await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("button", { name: "Move to Trash" }).click();
+    await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
+    const deletedSheet = behaviorPage.locator(".utility-file-row").filter({ hasText: "Growth metrics" });
+    if (await deletedSheet.count() !== 1) failures.push({ route: "trash", controls: "archived Sheets file" });
+    else await deletedSheet.getByRole("button", { name: "Restore" }).click();
+    await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
+    if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== "Growth metrics") failures.push({ route: "sheets", controls: "Sheets restore" });
+    await behaviorPage.goto(`${baseUrl}/slides`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("button", { name: "Move to Trash" }).click();
+    await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
+    const deletedDeck = behaviorPage.locator(".utility-file-row").filter({ hasText: "Design review deck" });
+    if (await deletedDeck.count() !== 1) failures.push({ route: "trash", controls: "archived Slides file" });
+    else await deletedDeck.getByRole("button", { name: "Restore" }).click();
+    await behaviorPage.goto(`${baseUrl}/slides`, { waitUntil: "networkidle" });
+    if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== "Design review deck") failures.push({ route: "slides", controls: "Slides restore" });
+    await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("button", { name: "Move to Trash" }).click();
+    await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
+    const deletedForm = behaviorPage.locator(".utility-file-row").filter({ hasText: "Launch feedback" });
+    if (await deletedForm.count() !== 1) failures.push({ route: "trash", controls: "archived Forms file" });
+    else await deletedForm.getByRole("button", { name: "Restore" }).click();
+    await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
+    if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== "Launch feedback") failures.push({ route: "forms", controls: "Forms restore" });
+    await behaviorPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("button", { name: "Move to Trash" }).click();
+    await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
+    const deletedDoc = behaviorPage.locator(".utility-file-row").filter({ hasText: "Product strategy Q3 2024" });
+    if (await deletedDoc.count() !== 1) failures.push({ route: "trash", controls: "archived Docs file" });
+    else await deletedDoc.getByRole("button", { name: "Restore" }).click();
+    await behaviorPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });
+    if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== "Product strategy Q3 2024") failures.push({ route: "docs", controls: "Docs restore" });
     await behaviorPage.goto(`${baseUrl}/tasks`, { waitUntil: "networkidle" });
     if (await behaviorPage.getByRole("textbox", { name: "File title" }).isEditable()) failures.push({ route: "tasks", controls: "fixed container title is read-only" });
     const dueBefore = await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).innerText();
@@ -376,7 +408,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; timed local events with inline editing, natural-language dates, live Recent, and timed ICS export; Month has 42 cells; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; timed local events with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
