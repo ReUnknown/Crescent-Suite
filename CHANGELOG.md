@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.34 — Calendar navigation is live
+
+Published September 8, 2026.
+
+### Changed
+
+- Calendar Previous and Today controls now update the displayed date context.
+- Week and month labels, day numbers, and month cells follow the selected offset.
+- Existing local event records remain intact while navigating.
+
+### Verification
+
+- Confirmed Previous changes April 23 / Week 17 to April 16 / Week 16, Today restores the original range, and Month renders April 2024 with seven cells.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.33 — Visual checkpoint refreshed
 
 Published September 8, 2026.

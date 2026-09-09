@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.33 — Visual checkpoint refreshed**
+**v0.1.34 — Calendar navigation is live**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -33,6 +33,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Home’s Recent filters and the Recent utility view now include the saved Forms workspace file
 - Slides decks now have an editable, persisted title while individual slide titles remain searchable
 - Updated committed Home and Forms preview screenshots to show the current suite surface and Recent workspace state
+- Calendar Previous and Today controls now move and reset the displayed week/month context while preserving local events
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
