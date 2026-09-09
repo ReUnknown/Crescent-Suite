@@ -177,6 +177,14 @@ function normalizeWorkspace(source) {
   const projects = Array.isArray(source?.projects)
     ? source.projects.map((item) => typeof item === "string" ? item : String(item?.name ?? "")).filter(Boolean)
     : INITIAL_WORKSPACE.projects;
+  const driveFolders = Array.isArray(source?.driveFolders)
+    ? source.driveFolders.map((folder, index) => ({
+      ...folder,
+      name: String(folder?.name ?? `Folder ${index + 1}`),
+      items: Number.isFinite(folder?.items) ? Math.max(0, Math.trunc(folder.items)) : 0,
+      color: Number.isFinite(folder?.color) ? Math.abs(Math.trunc(folder.color)) % 4 : index % 4,
+    }))
+    : INITIAL_WORKSPACE.driveFolders;
   return {
     ...merged,
     docs: { ...INITIAL_WORKSPACE.docs, ...(source?.docs ?? {}) },
@@ -185,7 +193,7 @@ function normalizeWorkspace(source) {
     notes: Array.isArray(source?.notes) && source.notes.length ? source.notes : INITIAL_WORKSPACE.notes,
     tasks: Array.isArray(source?.tasks) ? source.tasks : INITIAL_WORKSPACE.tasks,
     forms: Array.isArray(source?.forms) ? source.forms : INITIAL_WORKSPACE.forms,
-    driveFolders: Array.isArray(source?.driveFolders) ? source.driveFolders.map((folder, index) => ({ ...folder, color: Number.isFinite(folder?.color) ? Math.abs(Math.trunc(folder.color)) % 4 : index % 4 })) : INITIAL_WORKSPACE.driveFolders,
+    driveFolders,
     workspaces,
     projects,
     calendarEvents: Array.isArray(source?.calendarEvents) ? source.calendarEvents : [],

@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.148 — Safer legacy folder migration
+
+Published September 9, 2026.
+
+### Fixed
+
+- Partial or hand-edited backups with incomplete Drive folder records now receive safe names, non-negative item counts, and supported colors.
+- Drive duplicate detection can safely inspect migrated folders without throwing on missing names.
+
+### Verification
+
+- Smoke coverage imports an incomplete folder record and verifies Drive renders the synthesized `Folder 1` entry.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.147 — Searchable workspace preview
 
 Published September 9, 2026.
