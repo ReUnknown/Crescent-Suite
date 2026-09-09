@@ -482,7 +482,7 @@ function CalendarView({ workspace, update, onNavigate }) {
     displayDate.setDate(displayDate.getDate() + weekOffset * 7);
   }
   const weekStart = new Date(displayDate);
-  weekStart.setDate(displayDate.getDate() - displayDate.getDay());
+  if (mode !== "day") weekStart.setDate(displayDate.getDate() - displayDate.getDay());
   const todayKey = now.toISOString().slice(0, 10);
   const displayHeading = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric" }).format(displayDate);
   const displayMonth = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(displayDate);

@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.113 — Calendar Week is a full seven-day view**
+**v0.1.114 — Calendar Day keeps its current-date anchor**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -56,6 +56,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - CI smoke now verifies the Docs Text style selector in addition to the route and editor surfaces
 - Updated CHANGELOG.md with the complete current overnight milestone summary and verification record
 - Calendar Week now renders Sunday through Saturday, while Day remains one column and Month keeps its six-week grid
+- Calendar Day remains anchored to the displayed date after the seven-day Week refactor; smoke now checks the visible one-column state
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

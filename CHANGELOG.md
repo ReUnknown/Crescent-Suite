@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.114 — Calendar Day keeps its current-date anchor
+
+Published September 9, 2026.
+
+### Changed
+
+- Kept Day mode anchored to the displayed date while Week mode uses a Sunday-start seven-day range.
+- Smoke coverage now checks visible Day, Week, and Month layouts separately.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.113 — Calendar Week is a full seven-day view
 
 Published September 9, 2026.

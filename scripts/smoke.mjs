@@ -41,7 +41,11 @@ try {
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
         if (pageErrors.length || overflow) failures.push({ viewport: viewport.name, route, pageErrors, overflow });
         if (route === "calendar") {
-          const weekDays = await page.locator(".calendar-day").count();
+          await page.getByRole("button", { name: "Day", exact: true }).click();
+          const dayDays = await page.locator(".calendar-day:visible").count();
+          if (dayDays !== 1) failures.push({ viewport: viewport.name, route, dayDays });
+          await page.getByRole("button", { name: "Week", exact: true }).click();
+          const weekDays = await page.locator(".calendar-day:visible").count();
           if (weekDays !== 7) failures.push({ viewport: viewport.name, route, weekDays });
           await page.getByRole("button", { name: "Month", exact: true }).click();
           const monthCells = await page.locator(".calendar-month-cell").count();
