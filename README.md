@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.57 — Editor controls are labeled consistently**
+**v0.1.58 — Sheets formatting persists per selected cell**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -57,6 +57,8 @@ The first release establishes the Crescent product shell and a local-first suite
 - Drive’s Recent files “See all” action now routes to the shared Recent surface
 - Docs, Sheets, and Notes editor icon controls now expose explicit accessible labels
 - Sheet cell editing remains targeted to the active cell after the toolbar-label pass
+- Sheets Bold and Italic now apply to the selected cell and persist across reloads
+- Sheets alignment state is stored alongside the cell style for future formatting expansion
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
