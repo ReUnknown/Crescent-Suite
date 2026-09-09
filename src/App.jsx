@@ -498,8 +498,10 @@ function SlidesView({ workspace, update, onNavigate, initialSlideTitle }) {
   const slides = workspace.slides;
   const current = slides[active] ?? slides[0];
   const layout = current.layout ?? "title-body";
+  const appliedSlideNavigation = useRef(null);
   useEffect(() => {
-    if (!initialSlideTitle) return;
+    if (!initialSlideTitle || initialSlideTitle === appliedSlideNavigation.current) return;
+    appliedSlideNavigation.current = initialSlideTitle;
     const nextIndex = slides.findIndex((slide) => slide.title === initialSlideTitle);
     if (nextIndex >= 0) setActive(nextIndex);
   }, [initialSlideTitle, slides]);
@@ -524,8 +526,10 @@ function SlidersIcon() { return <Settings2 size={16} />; }
 function NotesView({ workspace, update, onNavigate, initialNoteTitle }) {
   const [selected, setSelected] = useState(() => workspace.notes.find((note) => note.title === initialNoteTitle)?.id ?? workspace.notes[0]?.id ?? 1);
   const note = workspace.notes.find((item) => item.id === selected) ?? workspace.notes[0];
+  const appliedNoteNavigation = useRef(null);
   useEffect(() => {
-    if (!initialNoteTitle) return;
+    if (!initialNoteTitle || initialNoteTitle === appliedNoteNavigation.current) return;
+    appliedNoteNavigation.current = initialNoteTitle;
     const nextNote = workspace.notes.find((item) => item.title === initialNoteTitle);
     if (nextNote) setSelected(nextNote.id);
   }, [initialNoteTitle, workspace.notes]);

@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.0.7 — Stable exact search destinations
+
+Published September 9, 2026.
+
+### Fixed
+
+- Applied search-selected note and slide context only once per destination.
+- Prevented later workspace edits from reselecting an old search result after the user has moved elsewhere.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.0.6 — Exact search destinations
 
 Published September 9, 2026.
