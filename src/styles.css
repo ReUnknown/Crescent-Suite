@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
+.new-task input { min-width: 0; }
+.new-task-project { max-width: 145px; padding: 6px 8px; border: 1px solid rgba(175, 160, 255, .16); border-radius: 6px; color: #bdb7df; background: rgba(135, 125, 193, .12); font-size: 11px; }
+
 :root {
   color-scheme: dark;
   font-family: "DM Sans", "SF Pro Display", ui-sans-serif, system-ui, sans-serif;

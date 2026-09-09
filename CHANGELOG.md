@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.154 — Project-linked task creation
+
+Published September 9, 2026.
+
+### Added
+
+- Tasks now expose a local Project selector when creating a new task.
+- Existing task project names remain available alongside persistent sidebar Projects, so older tasks do not lose their labels.
+
+### Verification
+
+- Smoke coverage creates a task under the new local “Smoke project” and verifies the project label persists on the task row.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.153 — Empty Tasks stay empty
 
 Published September 9, 2026.
