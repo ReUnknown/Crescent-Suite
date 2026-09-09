@@ -132,6 +132,8 @@ try {
     await composeDialog.getByRole("button", { name: "Send message" }).click();
     if (await behaviorPage.getByRole("button", { name: "Open message Smoke message" }).count() !== 1) failures.push({ route: "mail", controls: "local message send" });
     await behaviorPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("button", { name: "Share", exact: true }).click();
+    if (!(await behaviorPage.getByRole("status").innerText()).includes("Sharing will be available")) failures.push({ route: "docs", controls: "local-only sharing notice" });
     const documentBody = behaviorPage.getByRole("textbox", { name: "Document body" });
     await documentBody.evaluate((node) => { const textNode = document.createTreeWalker(node, globalThis.NodeFilter.SHOW_TEXT).nextNode(); const range = document.createRange(); range.setStart(textNode, 0); range.setEnd(textNode, Math.min(8, textNode.textContent.length)); const selection = globalThis.getSelection(); selection.removeAllRanges(); selection.addRange(range); });
     await behaviorPage.getByRole("button", { name: "Add link" }).click();

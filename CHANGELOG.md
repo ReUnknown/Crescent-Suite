@@ -1,5 +1,18 @@
 # Changelog
 
+## v4.0.1 — Honest local-only actions
+
+Published September 9, 2026.
+
+### Improved
+
+- Editor Share actions now explain that cloud sharing is not connected in the local build.
+- Added smoke coverage for the local-only sharing notice so the action never silently does nothing.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 route checks.
+
 ## v4.0.0 — Local Mail
 
 Published September 9, 2026.
