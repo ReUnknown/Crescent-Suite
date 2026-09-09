@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.2 — Editor direction
+
+Published September 8, 2026.
+
+### Added
+
+- A full Docs editor concept reference and matching implementation preview.
+- Visual evidence for Home, Docs, Sheets, and mobile Home in `docs/preview/`.
+
+### Verification
+
+- Docs editor renders the title, outline, North star, Three moves, quote, and local save state.
+- The implementation was visually reviewed against the editor concept for chrome, spacing, paper contrast, typography, and inspector structure.
+
 ## v0.1.1 — A little more light
 
 Published September 8, 2026.
