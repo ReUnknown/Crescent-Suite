@@ -318,6 +318,7 @@ function Header({ activeApp, onOpenSidebar, query, onQueryChange, onNavigate, wo
 }
 
 function SearchResults({ query, onNavigate, workspace }) {
+  const appResults = APP_META.map((app) => ({ title: app.label, type: "App", opened: app.description, owner: "Crescent", icon: app.icon, color: app.color, appId: app.id }));
   const workspaceFiles = [
     workspace.docs?.title && { title: workspace.docs.title, type: "Docs", opened: workspace.docs.updatedAt ?? "just now", owner: "Me", icon: FileText, color: "blue" },
     workspace.sheets?.title && { title: workspace.sheets.title, type: "Sheets", opened: workspace.sheets.updatedAt ?? "just now", owner: "Me", icon: FileSpreadsheet, color: "green" },
@@ -343,9 +344,10 @@ function SearchResults({ query, onNavigate, workspace }) {
     }
     if (file.type === "Notes") return workspace.notes?.find((note) => note.title === file.title)?.body ?? "";
     if (file.type === "Forms") return (workspace.forms ?? []).map((question) => question.label).join(" ");
+    if (file.type === "App") return file.opened;
     return "";
   };
-  const mergedResults = new Map([...getLiveRecentFiles(workspace), ...localResults].map((file) => [`${file.type}-${file.title}`, file]));
+  const mergedResults = new Map([...appResults, ...getLiveRecentFiles(workspace), ...localResults].map((file) => [`${file.type}-${file.title}`, file]));
   const results = [...mergedResults.values()].filter((file) => `${file.title} ${file.type} ${file.opened} ${searchTextFor(file)}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
   const handleResultKeyDown = (event) => {
     if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
@@ -356,7 +358,7 @@ function SearchResults({ query, onNavigate, workspace }) {
     if (nextIndex < 0) document.querySelector(".global-search input")?.focus();
     else resultButtons[nextIndex]?.focus();
   };
-  return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.type.toLowerCase(), { title: file.title })} onKeyDown={handleResultKeyDown}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
+  return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.appId ?? file.type.toLowerCase(), file.appId ? null : { title: file.title })} onKeyDown={handleResultKeyDown}><AppIcon app={{ ...file, id: file.appId ?? file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
 function HomeView({ workspace, update, onNavigate, onFocusSearch }) {

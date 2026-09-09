@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.1.0 — Universal app search
+
+Published September 9, 2026.
+
+### Added
+
+- Universal Search now includes direct destinations for Docs, Sheets, Slides, Notes, Tasks, Calendar, Drive, and Forms.
+- App results include the app’s purpose and open the app directly without requiring a saved file.
+- Added a committed preview of the app result state.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage verifies that searching for “Calendar” opens the Calendar app result.
+
 ## v1.0.9 — Exact Calendar and Drive destinations
 
 Published September 9, 2026.

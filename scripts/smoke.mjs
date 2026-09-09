@@ -255,6 +255,9 @@ try {
     if (!(await behaviorPage.locator(".workspace-list").innerText()).includes("Research") || !(await behaviorPage.locator(".project-list").innerText()).includes("Migration")) failures.push({ route: "settings", controls: "legacy workspace/project backup normalization" });
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Research");
     if (await behaviorPage.locator(".search-results .search-result").count() !== 1) failures.push({ route: "home", controls: "workspace/project global search" });
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Calendar");
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
+    if (behaviorPage.url().split("#")[1] !== "calendar") failures.push({ route: "search", controls: "open exact app result", url: behaviorPage.url() });
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Launch ideas");
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     if (behaviorPage.url().split("#")[1] !== "notes" || await behaviorPage.getByRole("textbox", { name: "Note title" }).inputValue() !== "Launch ideas") failures.push({ route: "search", controls: "open exact note result", url: behaviorPage.url() });
