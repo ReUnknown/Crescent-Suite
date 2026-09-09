@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.13 — Responses that stay put
+
+Published September 8, 2026.
+
+### Changed
+
+- Forms answer fields are now controlled by the local workspace state.
+- Saved responses retain answer text, selected scale, and the response-saved status after navigation.
+
+### Verification
+
+- Entered a response, selected scale 4, submitted, navigated away, and confirmed the text and scale restored in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.12 — Tasks with a point of view
 
 Published September 8, 2026.
