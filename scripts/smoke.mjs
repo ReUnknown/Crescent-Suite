@@ -1,4 +1,4 @@
-/* global console, document, fetch, process, setTimeout */
+/* global Buffer, console, document, fetch, process, setTimeout */
 
 import { spawn } from "node:child_process";
 import { chromium } from "playwright";
@@ -95,6 +95,10 @@ try {
     await behaviorPage.getByRole("combobox", { name: "Text style" }).selectOption("blockquote");
     const styleValue = await behaviorPage.getByRole("combobox", { name: "Text style" }).inputValue();
     if (styleValue !== "blockquote") failures.push({ route: "docs", controls: "text style", styleValue });
+    await behaviorPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
+    await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "partial-backup.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Smoke restore" }, sheets: { title: "Smoke sheet" }, forms: null, formSettings: { collectEmail: true } })) });
+    await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
+    if (await behaviorPage.locator(".question-label-input").count() !== 3 || await behaviorPage.getByRole("button", { name: "Collect email addresses" }).getAttribute("aria-pressed") !== "true") failures.push({ route: "settings", controls: "partial backup restore" });
   } finally {
     await behaviorPage.close();
   }

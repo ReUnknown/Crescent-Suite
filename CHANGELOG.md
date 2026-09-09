@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.117 — CI guards partial backup restore
+
+Published September 9, 2026.
+
+### Changed
+
+- CI smoke now imports a partial Settings backup and verifies safe default Forms questions plus a restored `collectEmail` setting.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.116 — GitHub Pages install paths are safe
 
 Published September 9, 2026.
