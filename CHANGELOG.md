@@ -1,5 +1,20 @@
 # Changelog
 
+## v3.2.0 — Guided calendar events
+
+Published September 9, 2026.
+
+### Improved
+
+- Replaced Calendar’s two browser prompts with a consistent Crescent event dialog.
+- Event creation now keeps title and natural-language time in one focused flow.
+- Added keyboard Escape dismissal, backdrop dismissal, Enter-to-save, and a committed visual preview.
+- Existing local-day calculations, editing, Trash recovery, and ICS export remain covered by smoke tests.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v3.1.0 — Guided file creation
 
 Published September 9, 2026.

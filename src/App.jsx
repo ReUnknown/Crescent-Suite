@@ -747,6 +747,9 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
   const [editingEventTitle, setEditingEventTitle] = useState("");
   const [editingEventWhen, setEditingEventWhen] = useState("");
   const [highlightedEvent, setHighlightedEvent] = useState(null);
+  const [eventDialog, setEventDialog] = useState(false);
+  const [newEventTitle, setNewEventTitle] = useState("New focus block");
+  const [newEventWhen, setNewEventWhen] = useState("Tomorrow · 3:00 PM");
   const appliedEventNavigation = useRef(null);
   const localEvents = useMemo(() => workspace.calendarEvents ?? [], [workspace.calendarEvents]);
   useEffect(() => {
@@ -757,13 +760,20 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
     setHighlightedEvent(targetEvent.id);
     window.setTimeout(() => [...document.querySelectorAll(".calendar-local-card")].find((card) => card.dataset.eventTitle === initialEventTitle)?.scrollIntoView({ block: "center" }), 0);
   }, [initialEventTitle, localEvents]);
+  const openEventDialog = () => { setNewEventTitle("New focus block"); setNewEventWhen("Tomorrow · 3:00 PM"); setEventDialog(true); };
+  useEffect(() => {
+    if (!eventDialog) return undefined;
+    const closeOnEscape = (event) => { if (event.key === "Escape") setEventDialog(false); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [eventDialog]);
   const addEvent = () => {
-    const title = window.prompt("Event title", "New focus block");
-    if (!title?.trim()) return;
-    const when = window.prompt("When should it happen?", "Tomorrow · 3:00 PM");
-    if (!when?.trim()) return;
+    const title = newEventTitle.trim();
+    const when = newEventWhen.trim();
+    if (!title || !when) { emitNotice("Add an event title and time before saving."); return; }
     const eventDate = resolveNaturalDate(when, displayDate);
-    update({ calendarEvents: [{ id: Date.now(), title: title.trim(), when: when.trim(), date: localDateKey(eventDate) }, ...localEvents] });
+    update({ calendarEvents: [{ id: Date.now(), title, when, date: localDateKey(eventDate) }, ...localEvents] });
+    setEventDialog(false);
     emitNotice("Event saved in this local workspace.");
   };
   const removeEvent = (id) => {
@@ -845,7 +855,7 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
       <button className="secondary-button mobile-calendar-action" onClick={() => mode === "month" ? setMonthOffset((current) => current - 1) : setWeekOffset((current) => current - 1)}><ChevronLeft size={16} />Previous</button>
       <button className="secondary-button mobile-calendar-action" onClick={() => { setWeekOffset(0); setMonthOffset(0); }}><CalendarCheck2 size={16} />Today</button>
       <button className="secondary-button mobile-calendar-action" onClick={() => mode === "month" ? setMonthOffset((current) => current + 1) : setWeekOffset((current) => current + 1)}><ChevronRight size={16} />Next</button>
-      <button className="primary-button" onClick={addEvent}><Plus size={16} />Event</button>
+      <button className="primary-button" onClick={openEventDialog}><Plus size={16} />Event</button>
     </EditorHeader>
     <div className="calendar-content">
       <div className="calendar-heading">
@@ -865,6 +875,7 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
       </section>}
       {mode === "month" ? monthCalendar : weekCalendar}
     </div>
+    {eventDialog && <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setEventDialog(false); }}><section className="file-create-dialog event-create-dialog" role="dialog" aria-modal="true" aria-labelledby="event-create-title"><div className="file-create-heading"><div><span className="utility-kicker"><CalendarCheck2 size={14} />New local event</span><h2 id="event-create-title">Block time with intention</h2><p>Add a saved event with the same natural language you use every day.</p></div><button className="icon-button muted" onClick={() => setEventDialog(false)} aria-label="Close new event dialog"><X size={18} /></button></div><div className="event-create-fields"><label className="file-name-field"><span>Event title</span><input autoFocus value={newEventTitle} aria-label="Event title" onChange={(event) => setNewEventTitle(event.target.value)} /></label><label className="file-name-field"><span>When</span><input value={newEventWhen} aria-label="Event time" placeholder="Tomorrow · 3:00 PM" onChange={(event) => setNewEventWhen(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") addEvent(); }} /></label></div><div className="file-create-footer"><span><CalendarCheck2 size={14} />Saved locally in this browser</span><div><button className="secondary-button" onClick={() => setEventDialog(false)}>Cancel</button><button className="primary-button" onClick={addEvent}><CalendarCheck2 size={16} />Save event</button></div></div></section></div>}
   </div>;
 }
 

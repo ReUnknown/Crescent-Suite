@@ -151,11 +151,8 @@ try {
     await behaviorPage.waitForSelector('[data-folder-name="Smoke folder"].selected');
     if (behaviorPage.url().split("#")[1] !== "drive" || await behaviorPage.locator('[data-folder-name="Smoke folder"].selected').count() !== 1) failures.push({ route: "search", controls: "open exact Drive folder result", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
-    let calendarPrompt = 0;
-    const calendarAnswers = ["Smoke focus block", "Tomorrow · 3:00 PM", "Smoke Friday", "Friday · 9:00 AM", "Smoke today", "Today · 5:00 PM"];
-    const acceptCalendarPrompts = async (dialog) => { calendarPrompt += 1; await dialog.accept(calendarAnswers[calendarPrompt - 1] ?? "Smoke event"); };
-    behaviorPage.on("dialog", acceptCalendarPrompts);
-    await behaviorPage.getByRole("button", { name: "Event" }).click();
+    const addCalendarEvent = async (title, when) => { await behaviorPage.getByRole("button", { name: "Event" }).click(); const dialog = behaviorPage.getByRole("dialog", { name: "Block time with intention" }); await dialog.waitFor(); await dialog.getByRole("textbox", { name: "Event title" }).fill(title); await dialog.getByRole("textbox", { name: "Event time" }).fill(when); await dialog.getByRole("button", { name: "Save event" }).click(); };
+    await addCalendarEvent("Smoke focus block", "Tomorrow · 3:00 PM");
     const localEvent = behaviorPage.locator(".calendar-event-local");
     const localEventStyle = await localEvent.getAttribute("style");
     if (await localEvent.count() !== 1 || !localEventStyle?.includes("top: 384px")) failures.push({ route: "calendar", controls: "timed local event", localEventStyle });
@@ -176,12 +173,11 @@ try {
     for await (const chunk of icsStream) icsChunks.push(chunk);
     const icsText = Buffer.concat(icsChunks).toString();
     if (!icsText.includes(`DTSTART:${expectedTomorrow.replaceAll("-", "")}T160000`)) failures.push({ route: "calendar", controls: "timed ICS export" });
-    await behaviorPage.getByRole("button", { name: "Event" }).click();
+    await addCalendarEvent("Smoke Friday", "Friday · 9:00 AM");
     const expectedFriday = await behaviorPage.evaluate(() => { const date = new Date(); date.setHours(0, 0, 0, 0); const daysAhead = (5 - date.getDay() + 7) % 7 || 7; date.setDate(date.getDate() + daysAhead); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; });
     const storedFriday = await behaviorPage.evaluate(() => JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").calendarEvents?.[0]?.date);
     if (storedFriday !== expectedFriday) failures.push({ route: "calendar", controls: "natural language weekday date", storedFriday, expectedFriday });
-    await behaviorPage.getByRole("button", { name: "Event" }).click();
-    behaviorPage.off("dialog", acceptCalendarPrompts);
+    await addCalendarEvent("Smoke today", "Today · 5:00 PM");
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".recent-table").innerText()).includes("Smoke today")) failures.push({ route: "home", controls: "live calendar recent file" });
     if ((await behaviorPage.locator(".day-card").innerText()).includes("Smoke Friday")) failures.push({ route: "home", controls: "future event excluded from My day" });
@@ -473,7 +469,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; timed local events with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; independent Form Scale answers; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; independent Form Scale answers; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
