@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.7.0 — Linked document polish
+
+Published September 9, 2026.
+
+### Improved
+
+- Added document-native styling for links inserted through Docs.
+- Linked text now reads clearly on the paper surface with consistent underline offset, color, and hover contrast.
+- Added a committed post-insertion visual preview to complement the link dialog capture.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v3.6.0 — Reversible editor recovery
 
 Published September 9, 2026.

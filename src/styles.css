@@ -155,6 +155,8 @@ input, textarea { color: var(--text); }
 @media (max-width: 780px) { .modal-scrim { padding: 14px; }.file-create-dialog { padding: 21px 17px; border-radius: 15px; }.file-type-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }.file-type-option { min-height: 84px; }.file-create-footer { align-items: stretch; flex-direction: column; }.file-create-footer > div { justify-content: stretch; }.file-create-footer > div button { flex: 1; } }
 
 .task-title-edit { width: 100%; min-width: 0; padding: 4px 6px; border: 1px solid rgba(175, 160, 255, .40); border-radius: 5px; outline: 0; color: #f2efff; background: rgba(31, 34, 53, .95); font: inherit; font-size: 13px; }
+.document-inner a { color: #6651c7; text-decoration: underline; text-decoration-color: rgba(102, 81, 199, .42); text-underline-offset: 3px; }
+.document-inner a:hover { color: #47369e; }
 .task-edit-actions { display: inline-flex; align-items: center; gap: 3px; }
 .task-edit-actions button { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 6px; }
 .task-edit-save { color: #172119; background: var(--green); }

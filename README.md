@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v3.6.0 — Reversible editor recovery**
+**v3.7.0 — Linked document polish**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -24,6 +24,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Drive’s New folder action now uses the same accessible dialog, duplicate guard, local-save language, and mobile-safe layout
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Restoring a trashed editor file now archives the displaced active Docs, Sheets, Slides, or Forms record back into local Trash
+- Linked text in Docs now has a clear document-paper treatment with visible underline and hover contrast
 - Starting a new Docs, Sheets, Slides, or Forms file safely archives the active record in local Trash for recovery
 - Calendar events can be created, saved, reviewed, and removed in the local workspace
 - Calendar events can be exported as a standard `.ics` calendar file for use in other calendar apps
