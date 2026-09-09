@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.135 — Forms answer controls are accessible
+
+Published September 9, 2026.
+
+### Changed
+
+- Respondent text inputs and Long answer textareas now expose each question’s text as their accessible label.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.134 — Forms multi-response state stays clear
 
 Published September 9, 2026.

@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.134 — Forms multi-response state stays clear**
+**v0.1.135 — Forms answer controls are accessible**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -57,6 +57,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - The live Recent/Starred surfaces now reflect the current task, and task Starred state survives Trash recovery
 - Home/Recent now includes the latest locally saved Calendar event with its entered timing text
 - Forms correctly returns the action label to “Submit response” when Allow one response is turned off after a previous submission
+- Respondent text and Long answer controls now expose their question text as accessible labels
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges
