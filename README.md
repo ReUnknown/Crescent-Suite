@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.71 — Shared shell controls give local feedback**
+**v0.1.72 — Forms questions can switch Required/Optional**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -71,6 +71,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Slides now export the full deck as a self-contained HTML document with escaped title/body content
 - Forms now export their questions, response settings, and saved local response as JSON
 - Help, Profile, workspace-add, project-add, and More projects shell controls now explain their local-only or not-yet-connected state
+- Forms creators can toggle each question between Required and Optional, with the state saved locally and reflected in Preview
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
