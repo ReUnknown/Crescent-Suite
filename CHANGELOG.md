@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.0.0 — First big Crescent release
+
+Published September 9, 2026.
+
+### Added
+
+- Established the first major Crescent Suite baseline from the v0.1.166 build.
+- Published the complete local-first suite shell with Home, Docs, Sheets, Slides, Notes, Tasks, Calendar, Drive, and Forms.
+- Carried forward the committed visual preview archive, responsive layouts, exports, local workspace persistence, and 30-route smoke coverage as the major-release foundation.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass before the `v1.0.0` tag.
+- GitHub Actions CI and Pages preview are expected to validate the tagged baseline from `main`.
+
 ## v0.1.166 — Settings accessibility polish
 
 Published September 9, 2026.

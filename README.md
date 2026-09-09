@@ -4,11 +4,11 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.166 — Settings accessibility polish**
+**v1.0.0 — First big Crescent release**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
-The first release establishes the Crescent product shell and a local-first suite experience:
+The first major release establishes a usable Crescent product shell and a local-first suite experience:
 
 - Home dashboard with app launcher, recent work, activity, and a daily focus rail
 - Docs editor with local autosave, formatting controls, outline, and HTML export
@@ -28,6 +28,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - The committed preview archive header and Home screenshot description now match the current published shell
 - Tasks now explain when a status or Project filter has no matches, with a clear next-step message instead of an empty list
 - Settings’ hidden workspace-backup input now has an explicit accessible name for assistive technology
+- `v1.0.0` marks the first major, reviewable Crescent baseline with the full suite shell, eight working apps, committed visual previews, and green CI smoke coverage
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback
