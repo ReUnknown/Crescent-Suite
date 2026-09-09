@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.146 — Drive folder persistence coverage
+
+Published September 9, 2026.
+
+### Testing
+
+- Playwright smoke coverage now reloads Drive after creating a folder and verifies the folder remains available.
+
+### Verification
+
+- `npm run test:smoke` passes with the expanded persistence assertion.
+
 ## v0.1.145 — Safer Drive folder creation
 
 Published September 9, 2026.

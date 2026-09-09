@@ -88,6 +88,8 @@ try {
     behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke folder"));
     await behaviorPage.getByRole("button", { name: "New folder" }).click();
     if (await behaviorPage.locator(".folder-card").filter({ hasText: "Smoke folder" }).count() !== 1) failures.push({ route: "drive", controls: "duplicate folder guard" });
+    await behaviorPage.reload({ waitUntil: "networkidle" });
+    if (await behaviorPage.locator(".folder-card").filter({ hasText: "Smoke folder" }).count() !== 1) failures.push({ route: "drive", controls: "folder persistence" });
     await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
     let calendarPrompt = 0;
     const acceptCalendarPrompts = async (dialog) => { calendarPrompt += 1; await dialog.accept(calendarPrompt === 1 ? "Smoke focus block" : "Tomorrow · 3:00 PM"); };
