@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.2.1 — Navigation semantics
+
+Published September 9, 2026.
+
+### Improved
+
+- Primary sidebar navigation now exposes the active page with `aria-current="page"`.
+- Preserved the existing visual active state while improving screen-reader route context.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.2.0 — Search overlay polish
 
 Published September 9, 2026.

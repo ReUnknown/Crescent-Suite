@@ -283,7 +283,7 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
     <aside className={`sidebar ${open ? "sidebar-open" : ""}`}>
       <div className="sidebar-header"><BrandMark /><button className="icon-button sidebar-close" onClick={onClose} aria-label="Close navigation"><X size={18} /></button></div>
       <nav className="sidebar-nav" aria-label="Primary">
-        {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={`sidebar-link ${activeApp === id ? "active" : ""}`} onClick={() => onNavigate(id)}><Icon size={18} /><span>{label}</span></button>)}
+        {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={`sidebar-link ${activeApp === id ? "active" : ""}`} onClick={() => onNavigate(id)} aria-current={activeApp === id ? "page" : undefined}><Icon size={18} /><span>{label}</span></button>)}
       </nav>
       <div className="sidebar-divider" />
       <div className="sidebar-section-head"><span>Workspaces</span><button className="icon-button muted" onClick={addWorkspace} aria-label="Add workspace"><Plus size={17} /></button></div>
@@ -973,6 +973,14 @@ export default function App() {
     };
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
+  }, [query]);
+  useEffect(() => {
+    if (!query) return undefined;
+    const handleOutsideSearch = (event) => {
+      if (!event.target.closest(".global-search") && !event.target.closest(".search-results")) setQuery("");
+    };
+    document.addEventListener("pointerdown", handleOutsideSearch);
+    return () => document.removeEventListener("pointerdown", handleOutsideSearch);
   }, [query]);
   const navigate = (id, context = null) => { setActiveApp(id); setNavigationContext(context); setQuery(""); setSidebarOpen(false); if (window.location.hash !== `#${id}`) window.history.pushState({ app: id }, "", `#${id}`); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const focusSearch = () => { setQuery(""); window.setTimeout(() => document.querySelector(".global-search input")?.focus(), 0); };

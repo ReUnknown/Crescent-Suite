@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.2.0 — Search overlay polish**
+**v1.2.1 — Navigation semantics**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -45,6 +45,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Fixed the shared editor header so fixed container surfaces are read-only while real file titles remain editable
 - Added smoke coverage that asserts fixed surface titles stay read-only in the rendered Tasks editor
 - Universal Search now dismisses on outside clicks while keeping its result buttons interactive
+- Primary sidebar navigation now exposes the active page with `aria-current="page"`
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback
