@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.1.21 — Slides with a stronger voice
+
+Published September 8, 2026.
+
+### Changed
+
+- Slides’ Big statement layout is now a real persisted slide layout.
+- The layout centers and enlarges the title while hiding body copy for presentation-style emphasis.
+- The corrected slide kicker stays in the canvas chrome instead of overlapping the title.
+- Added a committed Big statement screenshot to the visual evidence set.
+
+### Verification
+
+- Selected Big statement, confirmed the canvas and layout state persisted after navigation, and visually inspected the result in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.20 — Calendar with a wider view
 
 Published September 8, 2026.

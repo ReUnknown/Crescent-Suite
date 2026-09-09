@@ -195,3 +195,7 @@ input, textarea { color: var(--text); }
 .calendar-month-event { overflow: hidden; padding: 5px 6px; border-left: 2px solid; border-radius: 4px; color: #c7c7dd; background: rgba(129, 110, 210, .18); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 .month-event-0 { border-color: var(--lilac); }.month-event-1 { border-color: var(--blue); background: rgba(91, 136, 212, .14); }.month-event-2 { border-color: var(--green); background: rgba(71, 166, 113, .13); }.month-event-3 { border-color: var(--peach); background: rgba(230, 140, 100, .13); }
 @media (max-width: 1050px) { .calendar-month-grid { min-width: 800px; } }
+.presentation-canvas.canvas-layout-statement, .presentation-stage.canvas-layout-statement { align-items: center; text-align: center; }
+.presentation-canvas.canvas-layout-statement h1, .presentation-stage.canvas-layout-statement h1 { max-width: 760px; font-size: clamp(40px, 5.5vw, 78px); }
+.presentation-canvas.canvas-layout-statement p, .presentation-stage.canvas-layout-statement p { display: none; }
+.presentation-canvas .canvas-kicker, .presentation-stage .canvas-kicker { position: absolute; }

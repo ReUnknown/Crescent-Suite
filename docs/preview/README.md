@@ -7,6 +7,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `sheets-insights.png` — Sheets Insights view calculated from the grid
 - `docs.png` — working Docs editor implementation
 - `docs-concept.png` — editor design reference used for the implementation pass
+- `slides-statement.png` — Slides Big statement layout with persisted notes
 - `drive.png` — Drive surface with folders and recent files
 - `drive-list.png` — Drive in its compact list view
 - `forms.png` — Forms builder with published and saved-response states
