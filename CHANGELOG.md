@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.115 — Calendar Week copy matches its grid
+
+Published September 9, 2026.
+
+### Changed
+
+- Week headings now use the Sunday-start date shown by the seven-day timeline.
+- Refreshed `docs/preview/calendar.png` after the heading alignment.
+
+### Verification
+
+- Browser check confirms the Week heading, Week of subheading, and seven visible columns share the same anchor.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.114 — Calendar Day keeps its current-date anchor
 
 Published September 9, 2026.
