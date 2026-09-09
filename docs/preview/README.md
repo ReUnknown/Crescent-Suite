@@ -15,4 +15,5 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `forms-preview.png` — Forms respondent-facing Preview mode with email collection enabled
 - `calendar.png` — Calendar with a saved local event
 - `calendar-month.png` — Calendar Month mode with event pills
+- `trash.png` — local Trash with a recoverable deleted task
 - `mobile.png` — responsive home dashboard at a mobile viewport

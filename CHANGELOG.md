@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.46 — Trash visual checkpoint refreshed
+
+Published September 9, 2026.
+
+### Changed
+
+- Added `docs/preview/trash.png` showing the new local Trash and Restore action.
+- Added the Trash capture to the visual preview index.
+
+### Verification
+
+- Captured the screenshot from the running Vite app after moving a task to Trash and visually reviewed it.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.45 — Preview archive metadata refreshed
 
 Published September 9, 2026.
