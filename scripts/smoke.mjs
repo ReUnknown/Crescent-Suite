@@ -74,6 +74,14 @@ try {
     await behaviorPage.goto(`${baseUrl}/starred`, { waitUntil: "networkidle" });
     const renamedFavorite = await behaviorPage.locator(".utility-panel").innerText();
     if (!renamedFavorite.includes("Crescent smoke favorite")) failures.push({ route: "starred", controls: "rename favorite" });
+    await behaviorPage.goto(`${baseUrl}/slides`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("button", { name: "Present" }).click();
+    const slideBefore = await behaviorPage.locator(".presentation-stage .canvas-page").innerText();
+    await behaviorPage.keyboard.press("ArrowRight");
+    const slideAfter = await behaviorPage.locator(".presentation-stage .canvas-page").innerText();
+    if (slideBefore === slideAfter) failures.push({ route: "slides", controls: "keyboard presentation navigation" });
+    await behaviorPage.keyboard.press("Escape");
+    if (await behaviorPage.locator(".presentation-overlay").count()) failures.push({ route: "slides", controls: "presentation escape" });
   } finally {
     await behaviorPage.close();
   }
@@ -83,7 +91,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Month has 42 cells; content search, local formulas, Forms controls, and favorite continuity are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Month has 42 cells; content search, local formulas, Forms controls, favorite continuity, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

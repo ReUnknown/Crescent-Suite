@@ -403,6 +403,16 @@ function SlidesView({ workspace, update, onNavigate }) {
   const slides = workspace.slides;
   const current = slides[active] ?? slides[0];
   const layout = current.layout ?? "title-body";
+  useEffect(() => {
+    if (!presenting) return undefined;
+    const handlePresentationKey = (event) => {
+      if (event.key === "Escape") setPresenting(false);
+      if (event.key === "ArrowRight" || event.key === " ") { event.preventDefault(); setActive((index) => Math.min(slides.length - 1, index + 1)); }
+      if (event.key === "ArrowLeft") { event.preventDefault(); setActive((index) => Math.max(0, index - 1)); }
+    };
+    window.addEventListener("keydown", handlePresentationKey);
+    return () => window.removeEventListener("keydown", handlePresentationKey);
+  }, [presenting, slides.length]);
   const updateCurrent = (patch) => update({ slides: slides.map((slide, index) => index === active ? { ...slide, ...patch } : slide) });
   const addSlide = () => { update({ slides: [...slides, { title: "A new chapter", body: "Add a thought worth sharing.", accent: "blue", notes: "", layout: "title-body" }] }); setActive(slides.length); };
   const exportDeck = () => { const html = `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(deckTitle || "Crescent deck")}</title><style>body{margin:0;background:#10141e;color:#f6f4ff;font:16px system-ui,sans-serif}section{min-height:70vh;padding:15vh 12vw;box-sizing:border-box;border-bottom:1px solid #30364a}small{color:#aaa1e7;letter-spacing:.14em}h1{max-width:780px;font-size:clamp(36px,7vw,90px);line-height:1.02}p{max-width:580px;color:#c8c4dc;font-size:20px;line-height:1.5}</style></head><body>${slides.map((slide, index) => `<section><small>CRESCENT / SLIDE ${String(index + 1).padStart(2, "0")}</small><h1>${escapeHtml(slide.title)}</h1><p>${escapeHtml(slide.body)}</p></section>`).join("")}</body></html>`; downloadText(`${deckTitle || "crescent-deck"}.html`, html, "text/html"); emitNotice("Slides export downloaded."); };
