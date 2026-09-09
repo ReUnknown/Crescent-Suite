@@ -178,12 +178,17 @@ function normalizeWorkspace(source) {
     ? source.projects.map((item) => typeof item === "string" ? item : String(item?.name ?? "")).filter(Boolean)
     : INITIAL_WORKSPACE.projects;
   const driveFolders = Array.isArray(source?.driveFolders)
-    ? source.driveFolders.map((folder, index) => ({
-      ...folder,
-      name: String(folder?.name ?? `Folder ${index + 1}`),
-      items: Number.isFinite(folder?.items) ? Math.max(0, Math.trunc(folder.items)) : 0,
-      color: Number.isFinite(folder?.color) ? Math.abs(Math.trunc(folder.color)) % 4 : index % 4,
-    }))
+    ? source.driveFolders.map((folder, index) => {
+      const record = folder && typeof folder === "object" ? folder : {};
+      const items = Number(record.items);
+      const color = Number(record.color);
+      return {
+        ...record,
+        name: String(typeof folder === "string" ? folder : record.name ?? `Folder ${index + 1}`),
+        items: Number.isFinite(items) ? Math.max(0, Math.trunc(items)) : 0,
+        color: Number.isFinite(color) ? Math.abs(Math.trunc(color)) % 4 : index % 4,
+      };
+    })
     : INITIAL_WORKSPACE.driveFolders;
   return {
     ...merged,

@@ -191,7 +191,7 @@ try {
     await behaviorPage.goto(`${baseUrl}/starred`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".utility-panel").innerText()).includes(previousDocTitle)) failures.push({ route: "starred", controls: "restored favorite" });
     await behaviorPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
-    await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "partial-backup.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Smoke restore" }, sheets: { title: "Smoke sheet" }, forms: null, formSettings: { collectEmail: true }, workspaces: ["Research"], projects: [{ name: "Migration" }], driveFolders: [{}] })) });
+    await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "partial-backup.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Smoke restore" }, sheets: { title: "Smoke sheet" }, forms: null, formSettings: { collectEmail: true }, workspaces: ["Research"], projects: [{ name: "Migration" }], driveFolders: [{}, "Archive"] })) });
     await behaviorPage.getByRole("status").filter({ hasText: "Workspace backup restored locally." }).waitFor({ state: "visible" });
     await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
     if (await behaviorPage.locator(".question-label-input").count() !== 3 || await behaviorPage.getByRole("button", { name: "Collect email addresses" }).getAttribute("aria-pressed") !== "true") failures.push({ route: "settings", controls: "partial backup restore" });
@@ -200,7 +200,8 @@ try {
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Research");
     if (await behaviorPage.locator(".search-results .search-result").count() !== 1) failures.push({ route: "home", controls: "workspace/project global search" });
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
-    if (!(await behaviorPage.locator(".folder-grid").innerText()).includes("Folder 1")) failures.push({ route: "settings", controls: "legacy folder backup normalization" });
+    const migratedFolders = await behaviorPage.locator(".folder-grid").innerText();
+    if (!migratedFolders.includes("Folder 1") || !migratedFolders.includes("Archive")) failures.push({ route: "settings", controls: "legacy folder backup normalization" });
   } finally {
     await behaviorPage.close();
   }

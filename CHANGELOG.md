@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.150 — Legacy folder names preserved
+
+Published September 9, 2026.
+
+### Fixed
+
+- String-style Drive folder records from older backups now retain their original names during normalization.
+- Incomplete object records still receive synthesized names and safe metadata in the same migration pass.
+
+### Verification
+
+- Smoke coverage imports both an incomplete folder object and a legacy `Archive` string, then verifies both render.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.149 — Scrollable local navigation
 
 Published September 9, 2026.
