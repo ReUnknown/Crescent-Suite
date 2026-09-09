@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.31 — Forms appear in Recent work**
+**v0.1.32 — Slides decks have a saved identity**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -31,6 +31,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Global Search now indexes the current Docs, Sheets, Slides, and Notes workspace content alongside tasks, folders, and events
 - Creating a blank document in Drive makes that new title immediately discoverable through Search
 - Home’s Recent filters and the Recent utility view now include the saved Forms workspace file
+- Slides decks now have an editable, persisted title while individual slide titles remain searchable
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device

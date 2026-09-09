@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.1.32 — Slides decks have a saved identity
+
+Published September 8, 2026.
+
+### Changed
+
+- Added a persisted `slidesTitle` workspace field for the deck-level file name.
+- Slides now uses the shared editable title breadcrumb.
+- Global Search indexes the deck title and keeps individual slide titles searchable.
+- Home and Drive recent records display the deck title instead of the first slide title.
+
+### Verification
+
+- Renamed the deck to “Crescent launch story,” searched for it, and confirmed the result reopened Slides with the saved title.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.31 — Forms appear in Recent work
 
 Published September 8, 2026.
