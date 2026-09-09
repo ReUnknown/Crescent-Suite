@@ -431,7 +431,7 @@ function NotesView({ workspace, update, onNavigate }) {
   const note = workspace.notes.find((item) => item.id === selected) ?? workspace.notes[0];
   const updateNote = (patch) => update({ notes: workspace.notes.map((item) => item.id === note.id ? { ...item, ...patch, updatedAt: "Just now" } : item), ...(Object.prototype.hasOwnProperty.call(patch, "title") ? { starredFiles: renameStarredFile(workspace, note.title, patch.title) } : {}) });
   const addNote = () => { const id = Date.now(); update({ notes: [{ id, title: "Untitled note", body: "Start writing...", color: "blue", updatedAt: "Just now" }, ...workspace.notes] }); setSelected(id); };
-  const removeNote = () => { if (workspace.notes.length <= 1) { emitNotice("Keep one note in the workspace."); return; } const remaining = workspace.notes.filter((item) => item.id !== note.id); update({ notes: remaining, deletedFiles: [{ id: `note-${note.id}`, noteId: note.id, title: note.title, body: note.body, color: note.color, updatedAt: note.updatedAt, type: "Notes", appId: "notes", opened: "just now", owner: "Me" }, ...(workspace.deletedFiles ?? [])] }); setSelected(remaining[0].id); emitNotice("Note moved to local Trash."); };
+  const removeNote = () => { if (workspace.notes.length <= 1) { emitNotice("Keep one note in the workspace."); return; } const remaining = workspace.notes.filter((item) => item.id !== note.id); const starredTitles = getStarredTitles(workspace); const deletedNote = { id: `note-${note.id}`, noteId: note.id, title: note.title, body: note.body, color: note.color, updatedAt: note.updatedAt, type: "Notes", appId: "notes", opened: "just now", owner: "Me", starred: starredTitles.has(note.title) }; starredTitles.delete(note.title); update({ notes: remaining, starredFiles: [...starredTitles], deletedFiles: [deletedNote, ...(workspace.deletedFiles ?? [])] }); setSelected(remaining[0].id); emitNotice("Note moved to local Trash."); };
   return <div className="notes-page page-enter"><EditorHeader title="Notes" icon={APP_META.find((app) => app.id === "notes")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={() => downloadText(`${safeFileName(note.title || "crescent-note")}.txt`, note.body, "text/plain")}><Download size={16} />Export</button><button className="primary-button" onClick={addNote}><Plus size={16} />New note</button></EditorHeader><div className="notes-workspace"><aside className="notes-list"><div className="notes-list-head"><span>All notes</span><button className="icon-button muted" onClick={addNote} aria-label="Add note"><FolderPlus size={16} /></button></div>{workspace.notes.map((item) => <button className={`note-list-item ${item.id === selected ? "selected" : ""}`} key={item.id} onClick={() => setSelected(item.id)}><span className={`note-dot note-dot-${item.color}`} /><span><strong>{item.title}</strong><small>{item.body}</small><em>{item.updatedAt}</em></span></button>)}</aside><main className="note-editor"><div className="note-editor-top"><span className={`note-dot note-dot-${note.color}`} /> <input value={note.title} onChange={(event) => updateNote({ title: event.target.value })} aria-label="Note title" /><span className="saved-status"><Check size={14} />Saved</span><button className="icon-button muted" onClick={removeNote} aria-label={`Delete ${note.title}`}><Trash2 size={16} /></button></div><textarea value={note.body} onChange={(event) => updateNote({ body: event.target.value })} aria-label="Note body" /><div className="note-footer"><span><NotebookPen size={15} />Plain text note</span><span>{note.body.length} characters</span></div></main></div></div>;
 }
 
@@ -442,7 +442,7 @@ function TasksView({ workspace, update, onNavigate }) {
   const filterLabels = { all: "All", today: "Today", open: "Open", done: "Done" };
   const toggle = (id) => update({ tasks: workspace.tasks.map((task) => task.id === id ? { ...task, complete: !task.complete } : task) });
   const addTask = (event) => { event.preventDefault(); if (!newTask.trim()) return; update({ tasks: [{ id: Date.now(), title: newTask.trim(), project: "Personal", due: "Today", complete: false }, ...workspace.tasks] }); setNewTask(""); };
-  const removeTask = (id) => { const task = workspace.tasks.find((item) => item.id === id); if (!task) return; update({ tasks: workspace.tasks.filter((item) => item.id !== id), deletedFiles: [{ id: `task-${id}`, taskId: id, title: task.title, project: task.project, due: task.due, complete: task.complete, type: "Tasks", appId: "tasks", opened: "just now", owner: "Me" }, ...(workspace.deletedFiles ?? [])] }); emitNotice("Task moved to local Trash."); };
+  const removeTask = (id) => { const task = workspace.tasks.find((item) => item.id === id); if (!task) return; const starredTitles = getStarredTitles(workspace); const deletedTask = { id: `task-${id}`, taskId: id, title: task.title, project: task.project, due: task.due, complete: task.complete, type: "Tasks", appId: "tasks", opened: "just now", owner: "Me", starred: starredTitles.has(task.title) }; starredTitles.delete(task.title); update({ tasks: workspace.tasks.filter((item) => item.id !== id), starredFiles: [...starredTitles], deletedFiles: [deletedTask, ...(workspace.deletedFiles ?? [])] }); emitNotice("Task moved to local Trash."); };
   const openCount = workspace.tasks.filter((task) => !task.complete).length;
   const visibleTasks = workspace.tasks.filter((task) => filter === "all" || (filter === "today" ? task.due === "Today" : filter === "open" ? !task.complete : task.complete));
   const cycleFilter = () => setFilter((current) => filterOrder[(filterOrder.indexOf(current) + 1) % filterOrder.length]);
@@ -598,13 +598,17 @@ function UtilityView({ id, workspace, update, onNavigate }) {
     }
     if (file.type === "Tasks") {
       const restoredTask = { id: file.taskId ?? Date.now(), title: file.title, project: file.project ?? "Recovered", due: file.due ?? "Today", complete: file.complete ?? false };
-      update({ tasks: [restoredTask, ...workspace.tasks], deletedFiles: (workspace.deletedFiles ?? []).filter((item) => item.id !== file.id) });
+      const starredTitles = getStarredTitles(workspace);
+      if (file.starred) starredTitles.add(file.title); else starredTitles.delete(file.title);
+      update({ tasks: [restoredTask, ...workspace.tasks], starredFiles: [...starredTitles], deletedFiles: (workspace.deletedFiles ?? []).filter((item) => item.id !== file.id) });
       emitNotice("Task restored to Tasks.");
       return;
     }
     if (file.type === "Notes") {
       const restoredNote = { id: file.noteId ?? Date.now(), title: file.title, body: file.body ?? "", color: file.color ?? "blue", updatedAt: file.updatedAt ?? "Recovered" };
-      update({ notes: [restoredNote, ...workspace.notes], deletedFiles: (workspace.deletedFiles ?? []).filter((item) => item.id !== file.id) });
+      const starredTitles = getStarredTitles(workspace);
+      if (file.starred) starredTitles.add(file.title); else starredTitles.delete(file.title);
+      update({ notes: [restoredNote, ...workspace.notes], starredFiles: [...starredTitles], deletedFiles: (workspace.deletedFiles ?? []).filter((item) => item.id !== file.id) });
       emitNotice("Note restored to Notes.");
     }
   };

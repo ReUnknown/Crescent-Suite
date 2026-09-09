@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.128 — Trash recovery preserves Starred state across apps
+
+Published September 9, 2026.
+
+### Changed
+
+- Notes and Tasks now archive their Starred metadata when moved to Trash.
+- Restoring Notes or Tasks brings their Starred state back, matching the Docs recovery path.
+
+### Verification
+
+- Shared local recovery paths pass lint, build, and browser smoke coverage.
+
 ## v0.1.127 — Drive restores Starred metadata
 
 Published September 9, 2026.
