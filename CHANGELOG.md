@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.28 — Docs outline follows the draft
+
+Published September 8, 2026.
+
+### Changed
+
+- Docs derives its outline from the current title and saved `h2`/`h3` headings.
+- The document cover reflects the current title, including new blank drafts and renamed files.
+
+### Verification
+
+- Created a blank document from Drive and confirmed the Docs outline and cover both show “Untitled document.”
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.27 — Workspace backup and restore
 
 Published September 8, 2026.

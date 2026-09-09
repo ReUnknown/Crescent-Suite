@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.27 — Workspace backup and restore**
+**v0.1.28 — Docs outline follows the draft**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -34,6 +34,8 @@ The first release establishes the Crescent product shell and a local-first suite
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
 - Backup and restore stay local-first; no account or external storage connection is required
+- Docs now derives its outline from the current document title and headings
+- The Docs cover title follows renamed or newly created drafts instead of showing seeded copy
 - Starred, Shared with me, and Trash now show filtered or empty states instead of duplicating Recent files
 - Home Recent filters now include Calendar and Drive alongside the core editors
 - Drive’s New file action now opens a real blank local Docs draft instead of reopening seeded content
