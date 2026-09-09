@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.157 — Project-linked smoke reporting
+
+Published September 9, 2026.
+
+### Testing
+
+- The successful smoke summary now explicitly reports local project-linked task creation coverage.
+
+### Verification
+
+- `npm run test:smoke` passes with the clarified report.
+
 ## v0.1.156 — Consistent Task project choices
 
 Published September 9, 2026.

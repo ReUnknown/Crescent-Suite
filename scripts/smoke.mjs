@@ -219,7 +219,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation; Calendar Week has 7 days; timed local events, natural-language dates, live Recent, and timed ICS export; Month has 42 cells; editable task due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; timed local events, natural-language dates, live Recent, and timed ICS export; Month has 42 cells; editable task due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
