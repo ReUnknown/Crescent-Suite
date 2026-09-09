@@ -5,7 +5,7 @@ import { chromium } from "playwright";
 
 const port = 4173;
 const baseUrl = process.env.SMOKE_URL ?? `http://127.0.0.1:${port}`;
-const routes = ["home", "docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "settings"];
+const routes = ["home", "docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "settings", "Crescent-Suite/forms"];
 const viewports = [
   { name: "desktop", width: 1440, height: 1000 },
   { name: "mobile", width: 390, height: 844 },
