@@ -149,3 +149,12 @@ input, textarea { color: var(--text); }
 .calendar-local-card small { overflow: hidden; color: #8c96ae; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 .calendar-local-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--lilac); box-shadow: 0 0 12px rgba(183, 167, 255, .45); }
 @media (max-width: 780px) { .calendar-local-list { grid-template-columns: 1fr; } }
+.folder-list-view, .drive-list-view { grid-template-columns: 1fr; }
+.folder-list-view .folder-card { min-height: 64px; flex-direction: row; align-items: center; gap: 10px; padding: 11px 15px; }
+.folder-list-view .folder-icon { width: 31px; height: 31px; }
+.folder-list-view .folder-card small { margin-left: auto; margin-right: 27px; }
+.drive-list-view { gap: 8px; }
+.drive-list-view .drive-file { display: grid; grid-template-columns: 128px minmax(0, 1fr); min-height: 86px; padding: 0; }
+.drive-list-view .drive-file-preview { grid-row: 1 / 3; height: 100%; min-height: 86px; }
+.drive-list-view .drive-file > div:not(.drive-file-preview) { align-self: end; padding: 14px 13px 0; }
+.drive-list-view .drive-file > small { align-self: start; padding: 6px 13px 14px; }

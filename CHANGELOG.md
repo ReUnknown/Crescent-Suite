@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.15 — Drive in the right shape
+
+Published September 8, 2026.
+
+### Added
+
+- Drive’s Grid/List view toggle now changes both folders and recent files.
+- List view keeps file previews, metadata, and actions readable in a compact vertical scan.
+- Added a committed Drive list-view preview to the visual evidence set.
+
+### Verification
+
+- Switched Drive to List view and confirmed folder/file list layouts in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.14 — Slides that remember
 
 Published September 8, 2026.
