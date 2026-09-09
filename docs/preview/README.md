@@ -4,6 +4,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 
 - `home.png` — desktop home dashboard
 - `sheets.png` — editable Sheets surface with formula bar and populated grid
+- `sheets-insights.png` — Sheets Insights view calculated from the grid
 - `docs.png` — working Docs editor implementation
 - `docs-concept.png` — editor design reference used for the implementation pass
 - `drive.png` — Drive surface with folders and recent files

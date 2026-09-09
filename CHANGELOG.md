@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.16 — Sheets with a signal
+
+Published September 8, 2026.
+
+### Added
+
+- Sheets now has a working Insights view with local totals, conversion, and visits-by-channel bars.
+- Insights are calculated from the same editable cell data and ignore empty rows.
+- Added a committed Sheets Insights preview to the visual evidence set.
+
+### Verification
+
+- Switched between Grid and Insights, confirmed three metric cards and four populated channel bars in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.15 — Drive in the right shape
 
 Published September 8, 2026.
