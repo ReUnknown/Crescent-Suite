@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.3.9 — Consistent selection semantics**
+**v1.4.0 — Accessibility and motion preferences**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -60,6 +60,8 @@ The first major release establishes a usable Crescent product shell and a local-
 - Added production smoke coverage for the active Slides speaker-notes field
 - Home Recent filters, Drive Grid/List modes, and Slides selection controls now expose their active state semantically
 - Added production smoke coverage for the key selected-state contracts
+- Crescent now respects `prefers-reduced-motion`, collapsing transitions and route animations to a near-zero duration when the device requests less motion
+- Added production smoke coverage under reduced-motion browser emulation
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

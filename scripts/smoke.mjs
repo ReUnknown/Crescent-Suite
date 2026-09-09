@@ -1,4 +1,4 @@
-/* global Buffer, console, document, fetch, localStorage, process, setTimeout */
+/* global Buffer, console, document, fetch, getComputedStyle, localStorage, process, setTimeout */
 
 import { spawn } from "node:child_process";
 import { chromium } from "playwright";
@@ -33,6 +33,15 @@ try {
   if (manifest.start_url !== "./" || manifest.scope !== "./" || manifest.icons?.[0]?.src !== "./favicon.svg") throw new Error("PWA manifest is not subpath-safe");
   const browser = await chromium.launch({ headless: true });
   const failures = [];
+  const reducedMotionPage = await browser.newPage({ viewport: viewports[0] });
+  try {
+    await reducedMotionPage.emulateMedia({ reducedMotion: "reduce" });
+    await reducedMotionPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    const motionStyle = await reducedMotionPage.locator(".page-enter").first().evaluate((node) => getComputedStyle(node).transitionDuration);
+    if (Number.parseFloat(motionStyle) > 0.001) failures.push({ route: "home", accessibility: "reduced-motion transitions", motionStyle });
+  } finally {
+    await reducedMotionPage.close();
+  }
 
   for (const viewport of viewports) {
     for (const route of routes) {

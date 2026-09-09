@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.4.0 — Accessibility and motion preferences
+
+Published September 9, 2026.
+
+### Improved
+
+- Crescent now respects `prefers-reduced-motion` for route animations, hover transitions, and scroll behavior.
+- Reduced-motion users get the same complete suite without unnecessary movement.
+- Added production smoke coverage under reduced-motion browser emulation.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.3.9 — Consistent selection semantics
 
 Published September 9, 2026.
