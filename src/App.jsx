@@ -500,7 +500,8 @@ function downloadText(name, content, type) {
 const ROUTE_IDS = new Set(["home", "recent", "starred", "shared", "trash", "settings", ...APP_META.map((app) => app.id)]);
 function appFromLocation() {
   const hashRoute = window.location.hash.replace(/^#/, "");
-  const pathRoute = window.location.pathname.replace(/^\/+/, "").split("/")[0];
+  const pathSegments = window.location.pathname.split("/").filter(Boolean);
+  const pathRoute = [...pathSegments].reverse().find((segment) => ROUTE_IDS.has(segment)) ?? "";
   const candidate = hashRoute || pathRoute;
   return ROUTE_IDS.has(candidate) ? candidate : "home";
 }
