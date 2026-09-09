@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.3.3 — Surface-aware editor headers
+
+Published September 9, 2026.
+
+### Fixed
+
+- Shared editor title editability now follows the actual surface identity instead of the current displayed title.
+- Real files named “Tasks,” “Calendar,” “Drive,” or “Notes” remain editable while fixed container headers stay read-only.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.3.2 — Exact Docs heading destinations
 
 Published September 9, 2026.
