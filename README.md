@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.23 — A complete Recent shelf**
+**v0.1.24 — Drive can start work**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -30,6 +30,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Slides’ Big statement layout now changes the canvas, persists per slide, and remains available in presentation mode
 - Starred, Shared with me, and Trash now show filtered or empty states instead of duplicating Recent files
 - Home Recent filters now include Calendar and Drive alongside the core editors
+- Drive’s New file action now opens a real blank local Docs draft instead of reopening seeded content
 
 Everything is stored in this browser under a versioned local workspace key. No external account connection is required for this release.
 

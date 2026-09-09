@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.24 — Drive can start work
+
+Published September 8, 2026.
+
+### Changed
+
+- Drive New file creates an Untitled document with starter copy and opens it in Docs.
+- The new draft is saved through the same local workspace model as the existing Docs editor.
+
+### Verification
+
+- Triggered Drive New file and confirmed the Docs title and body reset to a blank local draft in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.23 — A complete Recent shelf
 
 Published September 8, 2026.
