@@ -362,7 +362,7 @@ function Header({ activeApp, onOpenSidebar, query, onQueryChange, onNavigate, wo
   return <header className="topbar">
     <button className="mobile-menu icon-button" onClick={onOpenSidebar} aria-label="Open navigation"><Menu size={20} /></button>
     <div className="mobile-title"><BrandMark small /><span>{title}</span></div>
-    <div className="global-search"><Search size={19} /><input value={query} onChange={(event) => onQueryChange(event.target.value)} onKeyDown={handleSearchKeyDown} placeholder="Search across Crescent..." aria-label="Search across Crescent" aria-expanded={Boolean(query)} aria-controls="crescent-search-results" /><kbd><Command size={13} />K</kbd></div>
+    <div className="global-search"><Search size={19} /><input value={query} onChange={(event) => onQueryChange(event.target.value)} onKeyDown={handleSearchKeyDown} placeholder="Search across Crescent..." aria-label="Search across Crescent" aria-expanded={Boolean(query)} aria-controls="crescent-search-results" aria-autocomplete="list" aria-haspopup="listbox" /><kbd><Command size={13} />K</kbd></div>
     <div className="topbar-actions"><button className="icon-button" aria-label="Help" onClick={() => emitNotice("Help center is coming soon to this local workspace.")}><CircleHelp size={19} /></button><button className="icon-button" aria-label="Settings" onClick={() => onNavigate("settings")}><Settings2 size={19} /></button><div className="topbar-divider" /><button className="profile-button" aria-label="Open profile" onClick={() => emitNotice("Crescent is running locally in this browser.")}><span>A</span><ChevronDown size={15} /></button></div>
     {query && <SearchResults query={query} onNavigate={onNavigate} workspace={workspace} />}
   </header>;
@@ -428,7 +428,7 @@ function SearchResults({ query, onNavigate, workspace }) {
     if (nextIndex < 0) document.querySelector(".global-search input")?.focus();
     else resultButtons[nextIndex]?.focus();
   };
-  return <div className="search-results" id="crescent-search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.appId ?? file.type.toLowerCase(), navigationFor(file))} onKeyDown={handleResultKeyDown}><AppIcon app={{ ...file, id: file.appId ?? file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
+  return <div className="search-results" id="crescent-search-results" role="listbox" aria-label="Search results" aria-live="polite"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" role="option" onClick={() => onNavigate(file.appId ?? file.type.toLowerCase(), navigationFor(file))} onKeyDown={handleResultKeyDown}><AppIcon app={{ ...file, id: file.appId ?? file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
 function HomeView({ workspace, update, onNavigate, onFocusSearch }) {

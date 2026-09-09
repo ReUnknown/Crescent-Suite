@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.6.0 — Universal Search accessibility
+
+Published September 9, 2026.
+
+### Improved
+
+- Universal Search now advertises list autocomplete and a result listbox to assistive technology.
+- Search results now expose option semantics while preserving direct keyboard focus and navigation.
+- Result updates are announced through a polite live region.
+- Added production smoke coverage for the result-region semantics alongside Escape, outside-click, ArrowDown, and Enter behavior.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.5.2 — Project search regression coverage
 
 Published September 9, 2026.

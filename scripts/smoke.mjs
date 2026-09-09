@@ -76,7 +76,7 @@ try {
           if (!formsBox || (railBox && formsBox.right > railBox.left)) failures.push({ viewport: viewport.name, route, formsLauncher: formsBox, homeRail: railBox });
           await page.getByRole("textbox", { name: "Search across Crescent" }).fill("North star");
           const searchHits = await page.locator(".search-results .search-result").count();
-          if (!searchHits || await page.getByRole("textbox", { name: "Search across Crescent" }).getAttribute("aria-expanded") !== "true" || await page.getByRole("textbox", { name: "Search across Crescent" }).getAttribute("aria-controls") !== "crescent-search-results") failures.push({ viewport: viewport.name, route, search: "North star" });
+          if (!searchHits || await page.getByRole("textbox", { name: "Search across Crescent" }).getAttribute("aria-expanded") !== "true" || await page.getByRole("textbox", { name: "Search across Crescent" }).getAttribute("aria-controls") !== "crescent-search-results" || await page.getByRole("textbox", { name: "Search across Crescent" }).getAttribute("aria-autocomplete") !== "list" || await page.getByRole("listbox", { name: "Search results" }).count() !== 1) failures.push({ viewport: viewport.name, route, search: "North star" });
           await page.keyboard.press("Escape");
           if (await page.locator(".search-results").count()) failures.push({ viewport: viewport.name, route, search: "Escape dismiss" });
           await page.getByRole("textbox", { name: "Search across Crescent" }).fill("North star");
