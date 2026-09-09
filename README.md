@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.56 — Drive folders have a visible local selection state**
+**v0.1.57 — Editor controls are labeled consistently**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -55,6 +55,8 @@ The first release establishes the Crescent product shell and a local-first suite
 - Slides theme swatches now expose selected state and labels, and the speaker-note plus button focuses the note editor
 - Drive folder cards now select locally, update the page context, and show a clear folder-selection panel
 - Drive’s Recent files “See all” action now routes to the shared Recent surface
+- Docs, Sheets, and Notes editor icon controls now expose explicit accessible labels
+- Sheet cell editing remains targeted to the active cell after the toolbar-label pass
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
