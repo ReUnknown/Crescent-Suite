@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.86 — Mobile Home filters stay inside the viewport**
+**v0.1.87 — Pages base paths are isolated from CI smoke builds**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -29,6 +29,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Sheets CSV exports now use the current saved workbook title with safe filename characters
 - CI now runs a Playwright smoke suite across desktop/mobile routes, page errors, overflow, and the full Calendar Month grid
 - Mobile Home’s Recent filter row now stays within the viewport while remaining horizontally scrollable
+- Pages subpath builds now opt in explicitly, so local and CI smoke previews test root-mounted assets reliably
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

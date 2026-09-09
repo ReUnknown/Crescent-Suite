@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: process.env.GITHUB_ACTIONS ? "/Crescent-Suite/" : "/",
+  base: process.env.CRESCENT_PAGES_BUILD === "true" ? "/Crescent-Suite/" : "/",
 });
