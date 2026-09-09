@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.66 — GitHub Pages-prefixed routes resolve correctly**
+**v0.1.67 — Pages deployment supports direct app URLs**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -66,6 +66,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Notes can be deleted into local Trash and restored with their original title, body, color, and id
 - The committed visual preview index now identifies the current v0.1.66 archive state
 - Direct app routing also recognizes repository-prefixed paths such as `/Crescent-Suite/forms`
+- The Pages artifact includes a `404.html` app fallback and base-aware favicon/manifest links for direct URL loads
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
