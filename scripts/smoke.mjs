@@ -57,6 +57,7 @@ try {
         }));
         if (pageErrors.length || overflow || accessibility.unnamedButtons || accessibility.unnamedFields) failures.push({ viewport: viewport.name, route, pageErrors, overflow, accessibility });
         if (route === "docs" && await page.title() !== "Docs · Crescent Suite") failures.push({ viewport: viewport.name, route, title: await page.title() });
+        if (viewport.name === "mobile" && ["docs", "sheets", "slides", "forms"].includes(route) && !(await page.getByRole("button", { name: "Move to Trash" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "mobile editor Trash action" });
         if (route === "calendar") {
           await page.getByRole("button", { name: "Day", exact: true }).click();
           const dayDays = await page.locator(".calendar-day:visible").count();

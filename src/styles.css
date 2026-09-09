@@ -271,3 +271,4 @@ input, textarea { color: var(--text); }
 .document-inner .search-target { margin-left: -12px; padding-left: 10px; border-left: 2px solid #8d79d8; color: #302848; background: #eeeafb; }
 .drive-file.selected { border-color: rgba(190, 174, 255, .72); box-shadow: 0 0 0 2px rgba(145, 124, 224, .16); background: rgba(39, 35, 68, .88); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+@media (max-width: 780px) { .editor-actions .editor-trash-button { display: inline-flex; width: 34px; padding: 0; gap: 0; font-size: 0; } .editor-actions .editor-trash-button svg { width: 16px; } }

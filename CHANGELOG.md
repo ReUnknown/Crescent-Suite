@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.3.0 — Mobile editor actions
+
+Published September 9, 2026.
+
+### Improved
+
+- The core editor Trash action remains available on mobile as a compact icon control.
+- The control keeps its full accessible name, so responsive styling does not hide the action from assistive technology.
+- Added mobile smoke coverage for Docs, Sheets, Slides, and Forms editor Trash access.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v2.2.0 — Accessibility smoke guardrails
 
 Published September 9, 2026.
