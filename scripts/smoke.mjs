@@ -58,6 +58,10 @@ try {
         if (pageErrors.length || overflow || accessibility.unnamedButtons || accessibility.unnamedFields) failures.push({ viewport: viewport.name, route, pageErrors, overflow, accessibility });
         if (route === "docs" && await page.title() !== "Docs · Crescent Suite") failures.push({ viewport: viewport.name, route, title: await page.title() });
         if (viewport.name === "mobile" && ["docs", "sheets", "slides", "forms"].includes(route) && !(await page.getByRole("button", { name: "Move to Trash" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "mobile editor Trash action" });
+        if (viewport.name === "mobile" && route === "calendar") {
+          const mobileCalendarNavigation = await Promise.all(["Previous", "Today", "Next"].map((name) => page.getByRole("button", { name, exact: true }).isVisible()));
+          if (mobileCalendarNavigation.some((visible) => !visible)) failures.push({ viewport: viewport.name, route, controls: "mobile Calendar navigation" });
+        }
         if (route === "calendar") {
           await page.getByRole("button", { name: "Day", exact: true }).click();
           const dayDays = await page.locator(".calendar-day:visible").count();
@@ -436,7 +440,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; timed local events with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; independent Form Scale answers; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; timed local events with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; independent Form Scale answers; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

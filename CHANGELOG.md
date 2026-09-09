@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.7.0 — Mobile Calendar navigation
+
+Published September 9, 2026.
+
+### Improved
+
+- Calendar Export, Previous, Today, and Next controls remain available on mobile as compact icon actions.
+- Today now has an explicit calendar icon while retaining its accessible name.
+- Added mobile smoke coverage for Calendar navigation controls.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v2.6.0 — Safe Scale response imports
 
 Published September 9, 2026.
