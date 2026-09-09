@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.136 — Calendar ICS export keeps event times**
+**v0.1.137 — Local workspace and project creation**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -59,6 +59,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Forms correctly returns the action label to “Submit response” when Allow one response is turned off after a previous submission
 - Respondent text and Long answer controls now expose their question text as accessible labels
 - Calendar ICS export now writes `DTSTART` times for local events such as “3:00 PM,” with an all-day fallback when no time is entered
+- Sidebar Workspaces and Projects can now be created locally, persisted in the workspace backup, and restored on this device
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges
@@ -135,7 +136,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Notes now export the selected note as a plain-text `.txt` file alongside Docs HTML and Sheets CSV export
 - Slides now export the full deck as a self-contained HTML document with escaped title/body content
 - Forms now export their questions, response settings, and saved local response as JSON
-- Help, Profile, workspace-add, project-add, and More projects shell controls now explain their local-only or not-yet-connected state
+- Help, Profile, and More projects shell controls explain their local-only or not-yet-connected state; Workspace and Project “+” controls create persistent local entries
 - Forms creators can toggle each question between Required and Optional, with the state saved locally and reflected in Preview
 - The committed visual archive now captures that Required state in the Forms builder
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles

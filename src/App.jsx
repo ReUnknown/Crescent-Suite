@@ -111,6 +111,14 @@ const INITIAL_WORKSPACE = {
     { name: "Design", items: 14, color: 2 },
     { name: "Operations", items: 5, color: 3 },
   ],
+  workspaces: [
+    { name: "Product", color: 0 },
+    { name: "Marketing", color: 1 },
+    { name: "Design", color: 2 },
+    { name: "Operations", color: 3 },
+    { name: "Personal", color: 4 },
+  ],
+  projects: ["Q3 Planning", "Website Redesign", "Product Launch", "Team Offsite"],
 };
 
 const RECENT_FILES = [
@@ -170,6 +178,8 @@ function normalizeWorkspace(source) {
     tasks: Array.isArray(source?.tasks) ? source.tasks : INITIAL_WORKSPACE.tasks,
     forms: Array.isArray(source?.forms) ? source.forms : INITIAL_WORKSPACE.forms,
     driveFolders: Array.isArray(source?.driveFolders) ? source.driveFolders : INITIAL_WORKSPACE.driveFolders,
+    workspaces: Array.isArray(source?.workspaces) && source.workspaces.length ? source.workspaces : INITIAL_WORKSPACE.workspaces,
+    projects: Array.isArray(source?.projects) ? source.projects : INITIAL_WORKSPACE.projects,
     calendarEvents: Array.isArray(source?.calendarEvents) ? source.calendarEvents : [],
     deletedFiles: Array.isArray(source?.deletedFiles) ? source.deletedFiles : [],
     formSettings: { ...INITIAL_WORKSPACE.formSettings, ...(source?.formSettings ?? {}) },
@@ -210,7 +220,7 @@ function BrandMark({ small = false }) {
   </div>;
 }
 
-function Sidebar({ activeApp, onNavigate, open, onClose }) {
+function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
   const navItems = [
     { id: "home", label: "Home", icon: Home },
     { id: "recent", label: "Recent", icon: Clock3 },
@@ -218,6 +228,28 @@ function Sidebar({ activeApp, onNavigate, open, onClose }) {
     { id: "shared", label: "Shared with me", icon: UsersRound },
     { id: "trash", label: "Trash", icon: Trash2 },
   ];
+  const workspaces = workspace.workspaces ?? INITIAL_WORKSPACE.workspaces;
+  const projects = workspace.projects ?? INITIAL_WORKSPACE.projects;
+  const addWorkspace = () => {
+    const name = window.prompt("Workspace name", "New workspace")?.trim();
+    if (!name) return;
+    if (workspaces.some((item) => item.name.toLowerCase() === name.toLowerCase())) {
+      emitNotice("That workspace already exists.");
+      return;
+    }
+    update({ workspaces: [...workspaces, { name, color: workspaces.length % 5 }] });
+    emitNotice(`${name} workspace added locally.`);
+  };
+  const addProject = () => {
+    const name = window.prompt("Project name", "New project")?.trim();
+    if (!name) return;
+    if (projects.some((item) => item.toLowerCase() === name.toLowerCase())) {
+      emitNotice("That project already exists.");
+      return;
+    }
+    update({ projects: [...projects, name] });
+    emitNotice(`${name} project added locally.`);
+  };
   return <>
     {open && <button className="sidebar-scrim" onClick={onClose} aria-label="Close navigation" />}
     <aside className={`sidebar ${open ? "sidebar-open" : ""}`}>
@@ -226,13 +258,13 @@ function Sidebar({ activeApp, onNavigate, open, onClose }) {
         {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={`sidebar-link ${activeApp === id ? "active" : ""}`} onClick={() => onNavigate(id)}><Icon size={18} /><span>{label}</span></button>)}
       </nav>
       <div className="sidebar-divider" />
-      <div className="sidebar-section-head"><span>Workspaces</span><button className="icon-button muted" onClick={() => emitNotice("Workspace creation is coming soon.")} aria-label="Add workspace"><Plus size={17} /></button></div>
+      <div className="sidebar-section-head"><span>Workspaces</span><button className="icon-button muted" onClick={addWorkspace} aria-label="Add workspace"><Plus size={17} /></button></div>
       <div className="workspace-list">
-        {["Product", "Marketing", "Design", "Operations", "Personal"].map((workspace, index) => <button className="workspace-link" key={workspace} onClick={() => onNavigate("drive")}><span className={`workspace-dot dot-${index}`} />{workspace}</button>)}
+        {workspaces.map((item, index) => <button className="workspace-link" key={`${item.name}-${index}`} onClick={() => onNavigate("drive")}><span className={`workspace-dot dot-${item.color ?? index % 5}`} />{item.name}</button>)}
       </div>
-      <div className="sidebar-section-head projects-head"><span>Projects</span><button className="icon-button muted" onClick={() => emitNotice("Project creation is coming soon.")} aria-label="Add project"><Plus size={17} /></button></div>
+      <div className="sidebar-section-head projects-head"><span>Projects</span><button className="icon-button muted" onClick={addProject} aria-label="Add project"><Plus size={17} /></button></div>
       <div className="project-list">
-        {["Q3 Planning", "Website Redesign", "Product Launch", "Team Offsite"].map((project) => <button className="project-link" key={project} onClick={() => onNavigate("drive")}><FileText size={16} />{project}</button>)}
+        {projects.map((project) => <button className="project-link" key={project} onClick={() => onNavigate("drive")}><FileText size={16} />{project}</button>)}
         <button className="project-link project-more" onClick={() => emitNotice("More projects will be available when the workspace connects to a team.")}><MoreHorizontal size={16} />More projects...</button>
       </div>
       <div className="sidebar-quote"><div className="quote-orbit"><span className="quote-moon" /></div><p>A more focused way to work</p></div>
@@ -730,5 +762,5 @@ export default function App() {
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} />;
     return <UtilityView id={activeApp} workspace={workspace} update={update} onNavigate={navigate} />;
   }, [activeApp, workspace, update]);
-  return <div className="app-shell"><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} query={query} onQueryChange={setQuery} onNavigate={navigate} workspace={workspace} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div></div>;
+  return <div className="app-shell"><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} workspace={workspace} update={update} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} query={query} onQueryChange={setQuery} onNavigate={navigate} workspace={workspace} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div></div>;
 }

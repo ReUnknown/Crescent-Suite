@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.137 — Local workspace and project creation
+
+Published September 9, 2026.
+
+### Added
+
+- Sidebar Workspaces and Projects can now be created with a local prompt and stored in the version-1 workspace model.
+- Imported or exported backups retain the custom workspace and project lists.
+- The committed Home preview now shows the persistent navigation shell used by these local creation flows.
+
+### Verification
+
+- Smoke coverage creates a workspace and project through the sidebar and verifies both appear immediately.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.136 — Calendar ICS export keeps event times
 
 Published September 9, 2026.

@@ -67,6 +67,15 @@ try {
 
   const behaviorPage = await browser.newPage({ viewport: viewports[0] });
   try {
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke workspace"));
+    await behaviorPage.getByRole("button", { name: "Add workspace" }).click();
+    if (!(await behaviorPage.locator(".workspace-list").innerText()).includes("Smoke workspace")) failures.push({ route: "home", controls: "local workspace creation" });
+    behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke project"));
+    await behaviorPage.getByRole("button", { name: "Add project" }).click();
+    if (!(await behaviorPage.locator(".project-list").innerText()).includes("Smoke project")) failures.push({ route: "home", controls: "local project creation" });
+    await behaviorPage.reload({ waitUntil: "networkidle" });
+    if (!(await behaviorPage.locator(".workspace-list").innerText()).includes("Smoke workspace") || !(await behaviorPage.locator(".project-list").innerText()).includes("Smoke project")) failures.push({ route: "home", controls: "workspace/project persistence" });
     await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
     let calendarPrompt = 0;
     const acceptCalendarPrompts = async (dialog) => { calendarPrompt += 1; await dialog.accept(calendarPrompt === 1 ? "Smoke focus block" : "Tomorrow · 3:00 PM"); };
@@ -181,7 +190,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed local events, natural-language dates, live Recent, and timed ICS export; Month has 42 cells; editable task due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation; Calendar Week has 7 days; timed local events, natural-language dates, live Recent, and timed ICS export; Month has 42 cells; editable task due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
