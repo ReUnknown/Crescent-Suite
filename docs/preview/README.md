@@ -8,4 +8,5 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `docs-concept.png` — editor design reference used for the implementation pass
 - `drive.png` — Drive surface with folders and recent files
 - `forms.png` — Forms builder with published and saved-response states
+- `calendar.png` — Calendar with a saved local event
 - `mobile.png` — responsive home dashboard at a mobile viewport

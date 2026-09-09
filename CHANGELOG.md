@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.1.9 — Calendar that remembers
+
+Published September 8, 2026.
+
+### Added
+
+- Calendar can create local events with a title and time description.
+- Saved events render in a focused local-events strip above the weekly calendar.
+- Events can be removed and remain consistent after navigating between apps.
+- Added a committed calendar preview showing the new workflow.
+
+### Verification
+
+- Created an event, navigated Home → Calendar, verified it persisted, and removed it in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.8 — A live preview path
 
 Published September 8, 2026.
