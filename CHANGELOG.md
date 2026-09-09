@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.141 — Workspaces open into Drive
+
+Published September 9, 2026.
+
+### Changed
+
+- Creating a local Workspace now creates an empty Drive folder with the same name, making the sidebar destination immediately useful.
+- Workspace and folder colors stay aligned through the local creation flow.
+
+### Verification
+
+- Smoke coverage creates a workspace, reloads it, and verifies its matching Drive folder.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.140 — Searchable local navigation
 
 Published September 9, 2026.

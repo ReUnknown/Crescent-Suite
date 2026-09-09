@@ -245,7 +245,10 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
       emitNotice("That workspace already exists.");
       return;
     }
-    update({ workspaces: [...workspaces, { name, color: workspaces.length % 5 }] });
+    const color = workspaces.length % 5;
+    const driveFolders = workspace.driveFolders ?? [];
+    const hasFolder = driveFolders.some((folder) => folder.name.toLowerCase() === name.toLowerCase());
+    update({ workspaces: [...workspaces, { name, color }], driveFolders: hasFolder ? driveFolders : [...driveFolders, { name, items: 0, color }] });
     emitNotice(`${name} workspace added locally.`);
   };
   const addProject = () => {
