@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.93 — Search follows renamed live files**
+**v0.1.94 — Local workspace state normalizes safely**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -35,6 +35,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Global Search now matches current Docs, Sheets cell values, Slides body text, Notes body text, and Forms question labels
 - CI smoke checks now exercise a seeded Docs body search in addition to route, layout, and Month-grid coverage
 - SearchResults now deduplicates against live workspace records so renamed files do not leave stale seeded entries
+- Local reloads now normalize partial version-1 workspace data so newer suite surfaces retain safe defaults
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

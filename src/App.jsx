@@ -148,12 +148,30 @@ const SCHEDULE = [
   { time: "4:00 PM", end: "4:30 PM", title: "Marketing check-in", color: "peach" },
 ];
 
+function normalizeWorkspace(source) {
+  const merged = { ...INITIAL_WORKSPACE, ...(source ?? {}) };
+  return {
+    ...merged,
+    docs: { ...INITIAL_WORKSPACE.docs, ...(source?.docs ?? {}) },
+    sheets: { ...INITIAL_WORKSPACE.sheets, ...(source?.sheets ?? {}) },
+    slides: Array.isArray(source?.slides) ? source.slides : INITIAL_WORKSPACE.slides,
+    notes: Array.isArray(source?.notes) ? source.notes : INITIAL_WORKSPACE.notes,
+    tasks: Array.isArray(source?.tasks) ? source.tasks : INITIAL_WORKSPACE.tasks,
+    forms: Array.isArray(source?.forms) ? source.forms : INITIAL_WORKSPACE.forms,
+    driveFolders: Array.isArray(source?.driveFolders) ? source.driveFolders : INITIAL_WORKSPACE.driveFolders,
+    calendarEvents: Array.isArray(source?.calendarEvents) ? source.calendarEvents : [],
+    deletedFiles: Array.isArray(source?.deletedFiles) ? source.deletedFiles : [],
+    formSettings: { ...INITIAL_WORKSPACE.formSettings, ...(source?.formSettings ?? {}) },
+    version: 1,
+  };
+}
+
 function loadWorkspace() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return INITIAL_WORKSPACE;
     const parsed = JSON.parse(stored);
-    return parsed?.version === 1 ? { ...INITIAL_WORKSPACE, ...parsed } : INITIAL_WORKSPACE;
+    return parsed?.version === 1 ? normalizeWorkspace(parsed) : INITIAL_WORKSPACE;
   } catch {
     return INITIAL_WORKSPACE;
   }
