@@ -100,6 +100,10 @@ try {
     await behaviorPage.getByRole("button", { name: "Smoke project" }).click();
     await behaviorPage.waitForFunction(() => document.querySelector(".task-project-filter")?.value?.toLowerCase() === "smoke project");
     if (behaviorPage.url().split("#")[1] !== "tasks" || (await behaviorPage.getByRole("combobox", { name: "Filter tasks by project" }).inputValue()).toLowerCase() !== "smoke project") failures.push({ route: "home", controls: "sidebar project destination", url: behaviorPage.url() });
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    await behaviorPage.locator(".recent-row").filter({ hasText: "Meeting notes" }).click();
+    await behaviorPage.waitForFunction(() => document.querySelector('input[aria-label="Note title"]')?.value === "Meeting notes");
+    if (behaviorPage.url().split("#")[1] !== "notes") failures.push({ route: "home", controls: "exact Recent note destination", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".folder-grid").innerText()).includes("Smoke workspace")) failures.push({ route: "drive", controls: "workspace folder creation" });
     behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke folder"));

@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.1.2 — Exact Recent destinations
+
+Published September 9, 2026.
+
+### Improved
+
+- Home Continue working cards now carry exact local navigation context.
+- Home Recent rows now reopen the selected note, slide, task, or event instead of only opening the containing app.
+- Added a committed preview of an exact Recent note destination.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage verifies that a Recent note row opens the matching note editor.
+
 ## v1.1.1 — Contextual sidebar navigation
 
 Published September 9, 2026.
