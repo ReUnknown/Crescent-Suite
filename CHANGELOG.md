@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.1.5 — Editor header semantics
+
+Published September 9, 2026.
+
+### Improved
+
+- Added an explicit regression assertion for read-only container titles in the rendered Tasks surface.
+- Kept the shared title behavior verified in the same production smoke pass as the full suite.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.1.4 — Clear container navigation
 
 Published September 9, 2026.

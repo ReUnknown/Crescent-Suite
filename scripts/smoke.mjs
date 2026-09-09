@@ -160,6 +160,7 @@ try {
     await behaviorPage.waitForSelector(".calendar-local-card.selected");
     if (behaviorPage.url().split("#")[1] !== "calendar" || !(await behaviorPage.locator(".calendar-local-card.selected").innerText()).includes("Smoke focus edited")) failures.push({ route: "search", controls: "open exact Calendar event result", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/tasks`, { waitUntil: "networkidle" });
+    if (await behaviorPage.getByRole("textbox", { name: "File title" }).isEditable()) failures.push({ route: "tasks", controls: "fixed container title is read-only" });
     const dueBefore = await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).innerText();
     await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).click();
     const dueAfter = await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).innerText();
