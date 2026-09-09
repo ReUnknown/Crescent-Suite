@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v2.0.0 — Recoverable editor files**
+**v2.1.0 — Trash cleanup controls**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -87,6 +87,9 @@ The first major release establishes a usable Crescent product shell and a local-
 - Docs, Sheets, Slides, and Forms now share a consistent Move to Trash action
 - Trash restore returns core editor content, titles, and Starred state
 - Added production smoke coverage for all four core editor file recovery paths
+- Trash supports confirmed permanent deletion for individual items
+- Trash supports a confirmed Empty Trash action for local cleanup
+- Added production smoke coverage for permanent deletion and full Trash cleanup
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

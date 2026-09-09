@@ -1,4 +1,4 @@
-# v2.0.0 visual preview
+# v2.1.0 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -38,6 +38,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `drive-folder-selected.png` — Drive with a local folder selected and its context panel visible
 - `forms.png` — Forms builder with published and saved-response states
 - `forms-persisted.png` — Forms with restored answer text, scale, and saved-response confirmation
+- `trash-cleanup.png` — Trash with confirmed cleanup controls for restore, permanent deletion, and Empty Trash
 - `forms-preview.png` — Forms respondent-facing Preview mode with email collection enabled
 - `forms-theme-blue.png` — Forms with a persisted blue theme selected from the inspector
 - `forms-required.png` — Forms builder with a locally toggled Required question state

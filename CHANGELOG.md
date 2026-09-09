@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.1.0 — Trash cleanup controls
+
+Published September 9, 2026.
+
+### Improved
+
+- Trash rows now support confirmed permanent deletion for individual local items.
+- Trash now exposes a confirmed Empty Trash action when it contains local items.
+- Added production smoke coverage for permanent item deletion and full Trash cleanup.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v2.0.0 — Recoverable editor files
 
 Published September 9, 2026.
