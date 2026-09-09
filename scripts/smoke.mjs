@@ -141,11 +141,15 @@ try {
     if (behaviorPage.url().split("#")[1] !== "notes") failures.push({ route: "home", controls: "exact Recent note destination", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".folder-grid").innerText()).includes("Smoke workspace")) failures.push({ route: "drive", controls: "workspace folder creation" });
-    behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke folder"));
     await behaviorPage.getByRole("button", { name: "New folder" }).click();
+    const folderDialog = behaviorPage.getByRole("dialog", { name: "Make room for a new folder" });
+    await folderDialog.getByRole("textbox", { name: "Folder name" }).fill("Smoke folder");
+    await folderDialog.getByRole("button", { name: "Add folder", exact: true }).click();
     if (!(await behaviorPage.locator(".folder-grid").innerText()).includes("Smoke folder")) failures.push({ route: "drive", controls: "new folder creation" });
-    behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke folder"));
     await behaviorPage.getByRole("button", { name: "New folder" }).click();
+    const duplicateFolderDialog = behaviorPage.getByRole("dialog", { name: "Make room for a new folder" });
+    await duplicateFolderDialog.getByRole("textbox", { name: "Folder name" }).fill("Smoke folder");
+    await duplicateFolderDialog.getByRole("button", { name: "Add folder", exact: true }).click();
     if (await behaviorPage.locator(".folder-card").filter({ hasText: "Smoke folder" }).count() !== 1) failures.push({ route: "drive", controls: "duplicate folder guard" });
     await behaviorPage.reload({ waitUntil: "networkidle" });
     if (await behaviorPage.locator(".folder-card").filter({ hasText: "Smoke folder" }).count() !== 1) failures.push({ route: "drive", controls: "folder persistence" });
@@ -473,7 +477,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; guided local workspace/project creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; independent Form Scale answers; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; independent Form Scale answers; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

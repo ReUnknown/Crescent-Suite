@@ -1,4 +1,4 @@
-# v3.3.0 visual preview
+# v3.4.0 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -45,6 +45,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `drive-create-modal-mobile.png` — mobile creation modal with a responsive two-column app picker
 - `calendar-create-modal.png` — Calendar’s focused local event dialog with natural-language time entry
 - `sidebar-create-modal.png` — Home with the local Workspace creation dialog open
+- `drive-folder-modal.png` — Drive’s local folder creation dialog with duplicate-safe naming
 - `forms-preview.png` — Forms respondent-facing Preview mode with email collection enabled
 - `forms-theme-blue.png` — Forms with a persisted blue theme selected from the inspector
 - `forms-required.png` — Forms builder with a locally toggled Required question state

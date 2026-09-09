@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.4.0 — Guided Drive folders
+
+Published September 9, 2026.
+
+### Improved
+
+- Replaced Drive’s remaining folder browser prompt with a consistent Crescent dialog.
+- Folder creation now supports accessible naming, Escape/backdrop dismissal, Enter-to-submit, duplicate guards, and local persistence.
+- Added a committed visual preview and retained coverage for folder creation, duplication, persistence, and search navigation.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v3.3.0 — Guided workspace organization
 
 Published September 9, 2026.
