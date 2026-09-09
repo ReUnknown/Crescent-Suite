@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.132 — Shared Starred recovery across live Tasks
+
+Published September 9, 2026.
+
+### Changed
+
+- Recent files now include the current task record rather than only the seeded task placeholder.
+- Smoke coverage verifies task Starred → Trash → Restore continuity through the shared recovery model.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.131 — Forms Long answer control
 
 Published September 9, 2026.

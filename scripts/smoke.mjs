@@ -84,6 +84,17 @@ try {
     await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).click();
     const dueAfter = await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).innerText();
     if (dueBefore === dueAfter) failures.push({ route: "tasks", controls: "due date cycle", dueBefore, dueAfter });
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    const liveTaskRow = behaviorPage.locator(".recent-row").filter({ hasText: "Review the launch brief" });
+    await liveTaskRow.locator(".row-action").click();
+    await behaviorPage.goto(`${baseUrl}/tasks`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("button", { name: "Delete Review the launch brief" }).click();
+    await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
+    const deletedTask = behaviorPage.locator(".utility-file-row").filter({ hasText: "Review the launch brief" });
+    if (await deletedTask.count() !== 1) failures.push({ route: "trash", controls: "archived starred task" });
+    else await deletedTask.getByRole("button", { name: "Restore" }).click();
+    await behaviorPage.goto(`${baseUrl}/starred`, { waitUntil: "networkidle" });
+    if (!(await behaviorPage.locator(".utility-panel").innerText()).includes("Review the launch brief")) failures.push({ route: "starred", controls: "restored task favorite" });
     await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("textbox", { name: "Cell B9" }).fill("=AVERAGE(B2:B4)");
     const averageValue = await behaviorPage.evaluate(() => document.querySelector('[aria-label="Cell B9"]')?.parentElement?.querySelector(".sheet-display")?.textContent);
@@ -161,7 +172,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed and natural-language local events; Month has 42 cells; editable task due dates; Forms response controls including Long answer; content search, local formulas (including COUNT), response history and CSV export, Starred continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed and natural-language local events; Month has 42 cells; editable task due dates; Forms response controls including Long answer; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

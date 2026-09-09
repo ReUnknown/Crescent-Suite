@@ -143,6 +143,7 @@ function getLiveRecentFiles(workspace) {
     workspace.sheets?.title && { ...sourceFor("Sheets"), title: workspace.sheets.title, opened: workspace.sheets.updatedAt ?? "just now", owner: "Me" },
     (workspace.slidesTitle || workspace.slides?.[0]?.title) && { ...sourceFor("Slides"), title: workspace.slidesTitle || workspace.slides[0].title, opened: "just now", owner: "Me" },
     workspace.notes?.[0]?.title && { ...sourceFor("Notes"), title: workspace.notes[0].title, opened: workspace.notes[0].updatedAt ?? "just now", owner: "Me" },
+    workspace.tasks?.[0]?.title && { ...sourceFor("Tasks"), title: workspace.tasks[0].title, opened: workspace.tasks[0].due ?? "just now", owner: "Me" },
     workspace.formTitle && { ...sourceFor("Forms", { type: "Forms", icon: FormInput, color: "peach", owner: "Me", starred: false }), title: workspace.formTitle, opened: "just now", owner: "Me" },
   ].filter(Boolean);
   const liveTypes = new Set(liveFiles.map((file) => file.type));
