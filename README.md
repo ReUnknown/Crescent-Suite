@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.83 — Home preview reflects the live date**
+**v0.1.84 — Sheets CSV export follows the workbook title**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -26,6 +26,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Calendar Month now renders a complete six-week grid with muted adjacent-month days and date-aware saved events
 - Calendar Previous/Next now move by week in Day/Week mode and by month in Month mode; Today resets either view
 - Refreshed the committed Home preview so its My day rail matches the live browser date
+- Sheets CSV exports now use the current saved workbook title with safe filename characters
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

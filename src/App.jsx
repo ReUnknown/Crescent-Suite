@@ -344,7 +344,7 @@ function SheetsView({ workspace, update, onNavigate }) {
   const addSheet = () => { const nextTabs = [...sheetTabs, { name: `Sheet ${sheetTabs.length + 1}`, cells: {} }]; commitSheets({ ...workspace.sheets, tabs: nextTabs, activeSheet: nextTabs.length - 1, cells: {}, updatedAt: "just now" }); setSelected("A1"); setView("grid"); };
   const undo = () => { if (!past.length) return; const previous = past[past.length - 1]; setPast(past.slice(0, -1)); setFuture((current) => [workspace.sheets, ...current]); update({ sheets: previous }); };
   const redo = () => { if (!future.length) return; const next = future[0]; setFuture(future.slice(1)); setPast((current) => [...current, workspace.sheets].slice(-30)); update({ sheets: next }); };
-  const exportCsv = () => { const csv = SHEET_ROWS.slice(0, 6).map((row) => SHEET_COLS.map((col) => JSON.stringify(evaluateCell(cells[`${col}${row}`] ?? "", cells))).join(",")).join("\n"); downloadText("growth-metrics.csv", csv, "text/csv"); };
+  const exportCsv = () => { const csv = SHEET_ROWS.slice(0, 6).map((row) => SHEET_COLS.map((col) => JSON.stringify(evaluateCell(cells[`${col}${row}`] ?? "", cells))).join(",")).join("\n"); downloadText(`${safeFileName(workspace.sheets.title || "crescent-sheet")}.csv`, csv, "text/csv"); emitNotice("Sheet export downloaded."); };
   const sheetName = sheetTabs[activeSheet]?.name ?? "Sheet 1";
   const sheetStyles = workspace.sheets.styles ?? {};
   const styleKey = (cell) => `${sheetName}:${cell}`;
@@ -527,6 +527,10 @@ function escapeIcs(value) {
 
 function icsTimestamp(date) {
   return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+}
+
+function safeFileName(value) {
+  return String(value ?? "").trim().replace(/[\\/:*?"<>|]+/g, "-").replace(/\s+/g, " ").slice(0, 80) || "crescent-file";
 }
 
 function downloadText(name, content, type) {
