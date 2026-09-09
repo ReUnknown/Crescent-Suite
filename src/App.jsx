@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlignCenter,
   AlignLeft,
@@ -142,7 +142,7 @@ function useWorkspace() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(workspace));
   }, [workspace]);
-  const update = (patch) => setWorkspace((current) => ({ ...current, ...patch }));
+  const update = useCallback((patch) => setWorkspace((current) => ({ ...current, ...patch })), []);
   return [workspace, update];
 }
 

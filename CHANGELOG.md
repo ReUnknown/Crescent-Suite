@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.18 — A steadier workspace loop
+
+Published September 8, 2026.
+
+### Changed
+
+- Workspace updates now use a stable React callback, reducing avoidable view recomputation during shell interactions.
+
+### Verification
+
+- Full lint and production build pass after the workspace hook change.
+- The cross-app regression pass still covers Sheets Insights, Forms Preview, Drive List, and mobile overflow.
+
 ## v0.1.17 — Forms you can preview
 
 Published September 8, 2026.
