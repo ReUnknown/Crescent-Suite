@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.1.1 — Contextual sidebar navigation
+
+Published September 9, 2026.
+
+### Improved
+
+- Sidebar Workspaces now open Drive with the matching folder selected.
+- Sidebar Projects now open Tasks with the matching Project filter selected.
+- Added a committed preview of the contextual Project destination.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage verifies sidebar Workspace and Project destinations persist through local navigation.
+
 ## v1.1.0 — Universal app search
 
 Published September 9, 2026.

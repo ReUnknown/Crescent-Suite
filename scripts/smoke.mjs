@@ -93,6 +93,13 @@ try {
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     await behaviorPage.reload({ waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".workspace-list").innerText()).includes("Smoke workspace") || !(await behaviorPage.locator(".project-list").innerText()).includes("Smoke project")) failures.push({ route: "home", controls: "workspace/project persistence" });
+    await behaviorPage.getByRole("button", { name: "Smoke workspace" }).click();
+    await behaviorPage.waitForSelector('[data-folder-name="Smoke workspace"].selected');
+    if (behaviorPage.url().split("#")[1] !== "drive") failures.push({ route: "home", controls: "sidebar workspace destination", url: behaviorPage.url() });
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("button", { name: "Smoke project" }).click();
+    await behaviorPage.waitForFunction(() => document.querySelector(".task-project-filter")?.value?.toLowerCase() === "smoke project");
+    if (behaviorPage.url().split("#")[1] !== "tasks" || (await behaviorPage.getByRole("combobox", { name: "Filter tasks by project" }).inputValue()).toLowerCase() !== "smoke project") failures.push({ route: "home", controls: "sidebar project destination", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".folder-grid").innerText()).includes("Smoke workspace")) failures.push({ route: "drive", controls: "workspace folder creation" });
     behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke folder"));

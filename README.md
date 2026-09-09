@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.1.0 — Universal app search**
+**v1.1.1 — Contextual sidebar navigation**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -39,6 +39,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Search results now open the matching task with its existing Project filter selected
 - Search results now highlight the matching local Calendar event or Drive folder in its destination surface
 - Universal Search now includes direct destinations for all eight Crescent apps, even before they have local files
+- Sidebar Workspaces now select their matching Drive folder, and Projects open Tasks with the matching Project filter selected
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

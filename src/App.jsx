@@ -288,11 +288,11 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
       <div className="sidebar-divider" />
       <div className="sidebar-section-head"><span>Workspaces</span><button className="icon-button muted" onClick={addWorkspace} aria-label="Add workspace"><Plus size={17} /></button></div>
       <div className="workspace-list">
-        {workspaces.map((item, index) => <button className="workspace-link" key={`${item.name}-${index}`} onClick={() => onNavigate("drive")}><span className={`workspace-dot dot-${item.color ?? index % 5}`} />{item.name}</button>)}
+        {workspaces.map((item, index) => <button className="workspace-link" key={`${item.name}-${index}`} onClick={() => onNavigate("drive", { title: item.name })}><span className={`workspace-dot dot-${item.color ?? index % 5}`} />{item.name}</button>)}
       </div>
       <div className="sidebar-section-head projects-head"><span>Projects</span><button className="icon-button muted" onClick={addProject} aria-label="Add project"><Plus size={17} /></button></div>
       <div className="project-list">
-        {projects.map((project) => <button className="project-link" key={project} onClick={() => onNavigate("drive")}><FileText size={16} />{project}</button>)}
+        {projects.map((project) => <button className="project-link" key={project} onClick={() => onNavigate("tasks", { project })}><FileText size={16} />{project}</button>)}
         <button className="project-link project-more" onClick={() => emitNotice("More projects will be available when the workspace connects to a team.")}><MoreHorizontal size={16} />More projects...</button>
       </div>
       <div className="sidebar-quote"><div className="quote-orbit"><span className="quote-moon" /></div><p>A more focused way to work</p></div>
@@ -541,7 +541,7 @@ function NotesView({ workspace, update, onNavigate, initialNoteTitle }) {
   return <div className="notes-page page-enter"><EditorHeader title="Notes" icon={APP_META.find((app) => app.id === "notes")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={() => downloadText(`${safeFileName(note.title || "crescent-note")}.txt`, note.body, "text/plain")}><Download size={16} />Export</button><button className="primary-button" onClick={addNote}><Plus size={16} />New note</button></EditorHeader><div className="notes-workspace"><aside className="notes-list"><div className="notes-list-head"><span>All notes</span><button className="icon-button muted" onClick={addNote} aria-label="Add note"><FolderPlus size={16} /></button></div>{workspace.notes.map((item) => <button className={`note-list-item ${item.id === selected ? "selected" : ""}`} key={item.id} onClick={() => setSelected(item.id)}><span className={`note-dot note-dot-${item.color}`} /><span><strong>{item.title}</strong><small>{item.body}</small><em>{item.updatedAt}</em></span></button>)}</aside><main className="note-editor"><div className="note-editor-top"><span className={`note-dot note-dot-${note.color}`} /> <input value={note.title} onChange={(event) => updateNote({ title: event.target.value })} aria-label="Note title" /><span className="saved-status"><Check size={14} />Saved</span><button className="icon-button muted" onClick={removeNote} aria-label={`Delete ${note.title}`}><Trash2 size={16} /></button></div><textarea value={note.body} onChange={(event) => updateNote({ body: event.target.value })} aria-label="Note body" /><div className="note-footer"><span><NotebookPen size={15} />Plain text note</span><span>{note.body.length} characters</span></div></main></div></div>;
 }
 
-function TasksView({ workspace, update, onNavigate, initialTaskTitle }) {
+function TasksView({ workspace, update, onNavigate, initialTaskTitle, initialProject }) {
   const [newTask, setNewTask] = useState("");
   const [newProject, setNewProject] = useState("Personal");
   const [projectFilter, setProjectFilter] = useState("all");
@@ -549,6 +549,7 @@ function TasksView({ workspace, update, onNavigate, initialTaskTitle }) {
   const [editingTask, setEditingTask] = useState(null);
   const [editingTitle, setEditingTitle] = useState("");
   const appliedTaskNavigation = useRef(null);
+  const appliedProjectNavigation = useRef(null);
   const projectOptions = useMemo(() => {
     const options = [];
     ["Personal", ...(workspace.projects ?? []), ...workspace.tasks.map((task) => task.project).filter(Boolean)].forEach((project) => {
@@ -591,6 +592,12 @@ function TasksView({ workspace, update, onNavigate, initialTaskTitle }) {
     setProjectFilter(projectOptions.find((project) => project.toLowerCase() === String(targetTask.project ?? "").toLowerCase()) ?? "all");
     window.setTimeout(() => [...document.querySelectorAll(".task-row")].find((row) => row.dataset.taskTitle === initialTaskTitle)?.scrollIntoView({ block: "center" }), 0);
   }, [initialTaskTitle, projectOptions, workspace.tasks]);
+  useEffect(() => {
+    if (!initialProject || initialProject === appliedProjectNavigation.current) return;
+    appliedProjectNavigation.current = initialProject;
+    setFilter("all");
+    setProjectFilter(projectOptions.find((project) => project.toLowerCase() === initialProject.toLowerCase()) ?? "all");
+  }, [initialProject, projectOptions]);
   const cycleFilter = () => setFilter((current) => filterOrder[(filterOrder.indexOf(current) + 1) % filterOrder.length]);
   const exportTasks = () => { downloadText("crescent-tasks.json", JSON.stringify({ format: "crescent-suite-tasks", version: 1, exportedAt: new Date().toISOString(), tasks: workspace.tasks }, null, 2), "application/json"); emitNotice(`${workspace.tasks.length} task${workspace.tasks.length === 1 ? "" : "s"} exported.`); };
   return <div className="tasks-page page-enter">
@@ -974,7 +981,7 @@ export default function App() {
     if (activeApp === "sheets") return <SheetsView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "slides") return <SlidesView workspace={workspace} update={update} onNavigate={navigate} initialSlideTitle={navigationContext?.title} />;
     if (activeApp === "notes") return <NotesView workspace={workspace} update={update} onNavigate={navigate} initialNoteTitle={navigationContext?.title} />;
-    if (activeApp === "tasks") return <TasksView workspace={workspace} update={update} onNavigate={navigate} initialTaskTitle={navigationContext?.title} />;
+    if (activeApp === "tasks") return <TasksView workspace={workspace} update={update} onNavigate={navigate} initialTaskTitle={navigationContext?.title} initialProject={navigationContext?.project} />;
     if (activeApp === "calendar") return <CalendarView workspace={workspace} update={update} onNavigate={navigate} initialEventTitle={navigationContext?.title} />;
     if (activeApp === "drive") return <DriveView workspace={workspace} update={update} onNavigate={navigate} initialFolderName={navigationContext?.title} />;
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} />;
