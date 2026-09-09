@@ -1,4 +1,4 @@
-/* global Buffer, console, document, fetch, process, setTimeout */
+/* global Buffer, console, document, fetch, localStorage, process, setTimeout */
 
 import { spawn } from "node:child_process";
 import { chromium } from "playwright";
@@ -122,6 +122,10 @@ try {
     await behaviorPage.getByRole("button", { name: "Submit response" }).click();
     await behaviorPage.getByRole("button", { name: /Responses/ }).click();
     if (await behaviorPage.locator(".response-card").count() !== 1) failures.push({ route: "forms", controls: "response history" });
+    const responseCsvDownloadPromise = behaviorPage.waitForEvent("download");
+    await behaviorPage.getByRole("button", { name: "Export CSV" }).click();
+    const responseCsvFilename = (await responseCsvDownloadPromise).suggestedFilename();
+    if (!responseCsvFilename.endsWith("-responses.csv")) failures.push({ route: "forms", controls: "response CSV export", responseCsvFilename });
     await behaviorPage.getByRole("button", { name: "Back to form" }).click();
     const previousDocTitle = "Crescent smoke favorite";
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
@@ -148,7 +152,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed and natural-language local events; Month has 42 cells; content search, local formulas (including COUNT), Forms controls, response history, favorite continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed and natural-language local events; Month has 42 cells; content search, local formulas (including COUNT), Forms controls, response history and CSV export, favorite continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.126 — Form responses export to CSV
+
+Published September 9, 2026.
+
+### Changed
+
+- Added a CSV export action to the local Forms Responses view.
+- CSV columns include the submission timestamp, optional email address, and every current question label.
+
+### Verification
+
+- Browser smoke coverage verifies a submitted response downloads with a `-responses.csv` filename.
+- Refreshed the committed Forms response-history preview.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.125 — Calendar natural-language dates are respected
 
 Published September 9, 2026.
