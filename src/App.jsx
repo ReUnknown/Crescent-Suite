@@ -350,7 +350,12 @@ function SearchResults({ query, onNavigate, workspace }) {
   const mergedResults = new Map([...appResults, ...getLiveRecentFiles(workspace), ...localResults].map((file) => [`${file.type}-${file.title}`, file]));
   const results = [...mergedResults.values()].filter((file) => `${file.title} ${file.type} ${file.opened} ${searchTextFor(file)}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
   const navigationFor = (file) => {
-    if (file.type !== "Sheets") return file.appId ? null : { title: file.title };
+    if (file.appId) return null;
+    if (file.type === "Forms") {
+      const matchedQuestion = workspace.forms?.find((question) => String(question.label).toLowerCase().includes(query.toLowerCase()));
+      return { title: file.title, ...(matchedQuestion ? { questionId: matchedQuestion.id } : {}) };
+    }
+    if (file.type !== "Sheets") return { title: file.title };
     const matchedCell = Object.entries(workspace.sheets?.cells ?? {}).find(([, value]) => String(value).toLowerCase().includes(query.toLowerCase()))?.[0];
     return { title: file.title, ...(matchedCell ? { cell: matchedCell } : {}) };
   };
@@ -791,7 +796,7 @@ function FormResponses({ workspace, responses, onBack, onExport }) {
   return <section className="form-responses-panel"><div className="response-panel-heading"><div><span className="utility-kicker"><CheckCircle2 size={14} />Saved locally</span><h2>{responses.length} response{responses.length === 1 ? "" : "s"}</h2><p>Review the answers collected on this device.</p></div><div className="response-panel-actions"><button className="secondary-button" onClick={onExport} disabled={!responses.length}><Download size={15} />Export CSV</button><button className="secondary-button" onClick={onBack}><EyeIcon />Back to form</button></div></div>{responses.length ? <div className="response-list">{responses.map((response, responseIndex) => <article className="response-card" key={response.id ?? responseIndex}><div className="response-card-heading"><strong>Response {responses.length - responseIndex}</strong><small>{response.submittedAt ? new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(new Date(response.submittedAt)) : "Saved locally"}</small></div><div className="response-grid">{workspace.formSettings?.collectEmail && <div><span>Email address</span><strong>{response.answers?.email || "No email"}</strong></div>}{workspace.forms.map((question) => <div key={question.id}><span>{question.label}</span><strong>{question.type === "Scale" ? response.scale ?? "No answer" : response.answers?.[question.id] || "No answer"}</strong></div>)}</div></article>)}</div> : <div className="response-empty"><CheckCircle2 size={20} /><strong>No responses yet.</strong><small>Submit the form in Preview mode to create the first local response.</small></div>}</section>;
 }
 
-function FormsView({ workspace, update, onNavigate }) {
+function FormsView({ workspace, update, onNavigate, initialQuestionId }) {
   const [formTitle, setFormTitle] = useState(workspace.formTitle ?? "Launch feedback");
   const [published, setPublished] = useState(workspace.formPublished ?? false);
   const [submitted, setSubmitted] = useState(workspace.lastFormResponse?.saved ?? false);
@@ -799,9 +804,23 @@ function FormsView({ workspace, update, onNavigate }) {
   const [answers, setAnswers] = useState(workspace.lastFormResponse?.answers ?? {});
   const [previewing, setPreviewing] = useState(false);
   const [showResponses, setShowResponses] = useState(false);
+  const appliedQuestionNavigation = useRef(null);
   const formTheme = workspace.formTheme ?? "lilac";
   const formSettings = workspace.formSettings ?? { collectEmail: false, oneResponse: true };
   const responses = workspace.formResponses?.length ? workspace.formResponses : workspace.lastFormResponse?.saved ? [workspace.lastFormResponse] : [];
+  useEffect(() => {
+    if (!initialQuestionId || initialQuestionId === appliedQuestionNavigation.current) return;
+    appliedQuestionNavigation.current = initialQuestionId;
+    const targetQuestion = workspace.forms.find((question) => question.id === initialQuestionId);
+    if (!targetQuestion) return;
+    window.setTimeout(() => {
+      const questionIndex = workspace.forms.findIndex((question) => question.id === targetQuestion.id) + (formSettings.collectEmail ? 1 : 0);
+      const questionNode = document.querySelectorAll(".form-question")[questionIndex];
+      questionNode?.classList.add("selected");
+      questionNode?.setAttribute("data-question-id", String(initialQuestionId));
+      questionNode?.scrollIntoView({ block: "center" });
+    }, 0);
+  }, [formSettings.collectEmail, initialQuestionId, workspace.forms]);
   const addQuestion = () => update({ forms: [...workspace.forms, { id: Date.now(), label: "New question", type: "Short answer", required: false }] });
   const updateQuestion = (id, label) => update({ forms: workspace.forms.map((question) => question.id === id ? { ...question, label } : question) });
   const toggleRequired = (id) => update({ forms: workspace.forms.map((question) => question.id === id ? { ...question, required: !question.required } : question) });
@@ -1004,7 +1023,7 @@ export default function App() {
     if (activeApp === "tasks") return <TasksView workspace={workspace} update={update} onNavigate={navigate} initialTaskTitle={navigationContext?.title} initialProject={navigationContext?.project} />;
     if (activeApp === "calendar") return <CalendarView workspace={workspace} update={update} onNavigate={navigate} initialEventTitle={navigationContext?.title} />;
     if (activeApp === "drive") return <DriveView workspace={workspace} update={update} onNavigate={navigate} initialFolderName={navigationContext?.title} />;
-    if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} />;
+    if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} initialQuestionId={navigationContext?.questionId} />;
     return <UtilityView id={activeApp} workspace={workspace} update={update} onNavigate={navigate} />;
   }, [activeApp, navigationContext, workspace, update]);
   return <div className="app-shell"><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} workspace={workspace} update={update} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} query={query} onQueryChange={setQuery} onNavigate={navigate} workspace={workspace} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div></div>;

@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.3.1 — Exact Forms question destinations
+
+Published September 9, 2026.
+
+### Added
+
+- Universal Search now carries matching Forms question context into the form builder.
+- Searching for a question opens Forms with that question highlighted and centered in view.
+- Added a committed preview of the exact Forms question destination.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage verifies that searching for “What are you working on?” highlights the first form question.
+
 ## v1.3.0 — Exact Sheets cell destinations
 
 Published September 9, 2026.

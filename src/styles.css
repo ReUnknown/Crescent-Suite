@@ -267,3 +267,4 @@ input, textarea { color: var(--text); }
 .editor-breadcrumb input[readonly] { cursor: default; color: #b6bed5; }
 .search-results { pointer-events: none; }
 .search-result { pointer-events: auto; }
+.form-question.selected { border-color: rgba(197, 185, 255, .62); background: rgba(125, 108, 210, .16); box-shadow: 0 0 0 2px rgba(161, 145, 237, .10); }
