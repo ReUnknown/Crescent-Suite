@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.3.8 — Accessible Slides speaker notes
+
+Published September 9, 2026.
+
+### Improved
+
+- Slides speaker notes now expose a stable accessible name tied to the active slide.
+- Assistive technology can identify the notes field even after the slide title changes.
+- Added production smoke coverage for the active Slides speaker-notes label.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.3.7 — Exact Drive recent-file destinations
 
 Published September 9, 2026.

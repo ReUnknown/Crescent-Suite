@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.3.7 — Exact Drive recent-file destinations**
+**v1.3.8 — Accessible Slides speaker notes**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -56,6 +56,8 @@ The first major release establishes a usable Crescent product shell and a local-
 - Transient Docs search highlights are removed before autosave so they never enter document HTML
 - Drive Recent files cards now preserve the clicked file title so the card opens the exact live local record
 - Added production smoke coverage for the Drive Recent files destination contract
+- Slides speaker notes now expose a stable, slide-specific accessible name instead of relying on placeholder text
+- Added production smoke coverage for the active Slides speaker-notes field
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

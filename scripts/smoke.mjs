@@ -55,6 +55,7 @@ try {
           const monthCells = await page.locator(".calendar-month-cell").count();
           if (monthCells !== 42) failures.push({ viewport: viewport.name, route, monthCells });
         }
+        if (route === "slides" && await page.getByRole("textbox", { name: "Speaker notes for From ideas to impact" }).count() !== 1) failures.push({ viewport: viewport.name, route, accessibility: "speaker notes label" });
         if (route === "trash" && !(await page.locator(".utility-panel").innerText()).includes("Trash is empty.")) failures.push({ viewport: viewport.name, route, emptyState: "Trash is empty." });
         if (route === "home" && viewport.name === "desktop") {
           const launchers = page.locator(".app-launch");
