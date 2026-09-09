@@ -13,4 +13,5 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `forms-persisted.png` — Forms with restored answer text, scale, and saved-response confirmation
 - `forms-preview.png` — Forms respondent-facing Preview mode
 - `calendar.png` — Calendar with a saved local event
+- `calendar-month.png` — Calendar Month mode with event pills
 - `mobile.png` — responsive home dashboard at a mobile viewport

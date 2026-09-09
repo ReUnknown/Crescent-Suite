@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.19 — A calmer GitHub check**
+**v0.1.20 — Calendar with a wider view**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -26,6 +26,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Forms has a true Preview/Edit toggle that centers the respondent experience and hides builder controls
 - Shared workspace updates now keep a stable callback so app views do less unnecessary recomputation while searching and switching
 - Pages deployment is gated until the repository explicitly enables Pages, while the preview artifact still builds on every milestone
+- Calendar’s Day, Week, and Month controls now switch between real timeline and month-grid views
 
 Everything is stored in this browser under a versioned local workspace key. No external account connection is required for this release.
 

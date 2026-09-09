@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.1.20 — Calendar with a wider view
+
+Published September 8, 2026.
+
+### Added
+
+- Calendar Day mode narrows the schedule to today.
+- Calendar Week mode preserves the detailed timeline.
+- Calendar Month mode renders a seven-day month grid with event pills and saved local events.
+- Added a committed Calendar Month preview to the visual evidence set.
+
+### Verification
+
+- Switched Day → Month and confirmed the timeline, headings, seven month cells, and event pills in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.19 — A calmer GitHub check
 
 Published September 8, 2026.

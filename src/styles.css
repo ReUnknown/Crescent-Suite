@@ -181,3 +181,17 @@ input, textarea { color: var(--text); }
 .forms-preview-mode .form-builder { display: block; max-width: 760px; margin: 36px auto 0; }
 .forms-preview-mode .form-preview { max-width: none; }
 .forms-preview-mode .form-settings, .forms-preview-mode .add-question { display: none; }
+.calendar-grid-day { grid-template-columns: 64px minmax(0, 1fr); min-width: 620px; }
+.calendar-grid-day .muted-day { display: none; }
+.calendar-month-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); min-height: 520px; margin-top: 30px; border: 1px solid var(--line); border-radius: 13px; overflow: hidden; background: rgba(19, 24, 36, .72); }
+.calendar-month-cell { min-height: 130px; padding: 12px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(19, 24, 36, .45); }
+.calendar-month-cell:nth-child(7n) { border-right: 0; }
+.calendar-month-cell.today { background: rgba(106, 91, 178, .13); }
+.calendar-month-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #7e879d; font-size: 10px; }
+.calendar-month-head strong { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; color: #aeb5c9; background: transparent; font-size: 11px; }
+.calendar-month-cell.today .calendar-month-head { color: #d7d2fa; }
+.calendar-month-cell.today .calendar-month-head strong { color: white; background: var(--lilac); }
+.calendar-month-events { display: grid; gap: 5px; margin-top: 13px; }
+.calendar-month-event { overflow: hidden; padding: 5px 6px; border-left: 2px solid; border-radius: 4px; color: #c7c7dd; background: rgba(129, 110, 210, .18); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.month-event-0 { border-color: var(--lilac); }.month-event-1 { border-color: var(--blue); background: rgba(91, 136, 212, .14); }.month-event-2 { border-color: var(--green); background: rgba(71, 166, 113, .13); }.month-event-3 { border-color: var(--peach); background: rgba(230, 140, 100, .13); }
+@media (max-width: 1050px) { .calendar-month-grid { min-width: 800px; } }
