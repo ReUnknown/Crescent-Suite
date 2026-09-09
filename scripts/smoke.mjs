@@ -43,6 +43,7 @@ try {
         await page.goto(`${baseUrl}/${route}`, { waitUntil: "networkidle" });
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
         if (pageErrors.length || overflow) failures.push({ viewport: viewport.name, route, pageErrors, overflow });
+        if (route === "docs" && await page.title() !== "Docs · Crescent Suite") failures.push({ viewport: viewport.name, route, title: await page.title() });
         if (route === "calendar") {
           await page.getByRole("button", { name: "Day", exact: true }).click();
           const dayDays = await page.locator(".calendar-day:visible").count();

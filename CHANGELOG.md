@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.3.5 — Browser tab context
+
+Published September 9, 2026.
+
+### Improved
+
+- Route navigation now updates the browser tab title, for example `Docs · Crescent Suite`.
+- Added production smoke coverage for the route title behavior.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.3.4 — Search accessibility semantics
 
 Published September 9, 2026.
