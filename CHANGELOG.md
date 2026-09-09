@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.147 — Searchable workspace preview
+
+Published September 9, 2026.
+
+### Documentation
+
+- Added a committed Home screenshot showing Global Search finding a locally created Workspace and identifying its Drive destination.
+- The visual preview index now includes `search-local-navigation.png`.
+
+### Verification
+
+- Preview captured from the running local app after creating the custom Workspace.
+- `npm run test:smoke` passes on the underlying v0.1.146 implementation.
+
 ## v0.1.146 — Drive folder persistence coverage
 
 Published September 9, 2026.

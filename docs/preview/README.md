@@ -1,10 +1,11 @@
-# v0.1.146 visual preview
+# v0.1.147 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
 - `home.png` — desktop home dashboard
 - `local-workspaces.png` — Home with the persistent Workspaces and Projects navigation shell
 - `workspace-drive.png` — a locally created Workspace mirrored as an empty Drive folder
+- `search-local-navigation.png` — Global Search finding a locally created Workspace
 - `sheets.png` — editable Sheets surface with formula bar, populated grid, and persistent tabs
 - `sheets-formatting.png` — Sheets with persistent Bold and Italic state on the selected cell
 - `sheets-insights.png` — Sheets Insights view calculated from the grid
