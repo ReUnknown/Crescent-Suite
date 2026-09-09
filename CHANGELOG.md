@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.131 — Forms Long answer control
+
+Published September 9, 2026.
+
+### Changed
+
+- Forms Long answer questions now render resizable textareas for respondent input.
+
+### Verification
+
+- Smoke coverage cycles a question through types and asserts the Long answer textarea is present.
+- Added a committed Forms Preview screenshot showing the multi-line control.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.130 — Tasks due-date interaction preview
 
 Published September 9, 2026.

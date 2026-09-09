@@ -93,8 +93,10 @@ try {
     if (countValue !== "3") failures.push({ route: "sheets", formula: "COUNT", countValue });
     await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: "Change question 1 type" }).click();
-    const typeAfterCycle = await behaviorPage.getByRole("button", { name: "Change question 1 type" }).innerText();
-    if (!typeAfterCycle) failures.push({ route: "forms", controls: "question type cycle" });
+    await behaviorPage.getByRole("button", { name: "Change question 1 type" }).click();
+    await behaviorPage.getByRole("button", { name: "Change question 1 type" }).click();
+    if (await behaviorPage.locator("textarea.form-textarea").count() !== 1) failures.push({ route: "forms", controls: "long answer textarea" });
+    await behaviorPage.getByRole("button", { name: "Change question 1 type" }).click();
     await behaviorPage.getByRole("button", { name: "Delete question 1" }).click();
     const questionCount = await behaviorPage.locator(".question-label-input").count();
     if (questionCount !== 2) failures.push({ route: "forms", controls: "question delete", questionCount });
@@ -159,7 +161,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed and natural-language local events; Month has 42 cells; editable task due dates; content search, local formulas (including COUNT), Forms controls, response history and CSV export, Starred continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed and natural-language local events; Month has 42 cells; editable task due dates; Forms response controls including Long answer; content search, local formulas (including COUNT), response history and CSV export, Starred continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
