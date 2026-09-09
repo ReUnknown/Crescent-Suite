@@ -1,5 +1,18 @@
 # Changelog
 
+## v4.0.2 — Verified local-only feedback
+
+Published September 9, 2026.
+
+### Fixed
+
+- Consolidated local-only action feedback so editor Share notices are emitted once through the shared workspace layer.
+- Updated smoke output to document the verified local-only sharing path.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 route checks.
+
 ## v4.0.1 — Honest local-only actions
 
 Published September 9, 2026.

@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v4.0.1 — Honest local-only actions**
+**v4.0.2 — Verified local-only feedback**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -17,6 +17,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Notes, Tasks, Calendar, Drive, Forms, and Mail surfaces with working local interactions
 - Mail inbox with unread and Starred state, message selection, local reply prefill, and a browser-saved compose/send flow
 - Editor Share actions now respond with clear local-only guidance instead of appearing inert while Crescent Cloud is disconnected
+- Local-only action feedback is routed through the shared workspace layer without duplicate notifications
 - Shared navigation, command-style search, responsive layouts, and a night-sky design system
 - Pages-ready workflow builds a visual preview on every `main` milestone and deploys when repository Pages is enabled
 - Drive’s New file action now creates named Docs, Sheets, Slides, Notes, or Forms records and opens the selected editor

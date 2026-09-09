@@ -525,8 +525,7 @@ function PreviewArt({ type }) {
 
 function EditorHeader({ title, icon, onChangeTitle, children, onNavigate }) {
   const titleEditable = !["notes", "tasks", "calendar", "drive", "mail"].includes(icon?.id);
-  const handleEditorAction = (event) => { if (event.target.closest("button")?.textContent?.trim() === "Share") emitNotice("Sharing will be available when Crescent Cloud is connected."); };
-  return <div className="editor-header"><div className="editor-breadcrumb"><button onClick={() => onNavigate("home")} className="crumb-home" aria-label="Back to Home"><Home size={15} /></button><ChevronRight size={14} /><span className="editor-app-label"><AppIcon app={icon} size={15} />{icon.label}</span><ChevronRight size={14} /><input value={title} onChange={(event) => onChangeTitle(event.target.value)} readOnly={!titleEditable} aria-label="File title" aria-readonly={!titleEditable} /></div><div className="editor-actions" onClick={handleEditorAction}><span className="saved-status"><Check size={14} />Saved locally</span>{children}</div></div>;
+  return <div className="editor-header"><div className="editor-breadcrumb"><button onClick={() => onNavigate("home")} className="crumb-home" aria-label="Back to Home"><Home size={15} /></button><ChevronRight size={14} /><span className="editor-app-label"><AppIcon app={icon} size={15} />{icon.label}</span><ChevronRight size={14} /><input value={title} onChange={(event) => onChangeTitle(event.target.value)} readOnly={!titleEditable} aria-label="File title" aria-readonly={!titleEditable} /></div><div className="editor-actions"><span className="saved-status"><Check size={14} />Saved locally</span>{children}</div></div>;
 }
 
 function MailView({ workspace, update, onNavigate, initialSubject }) {
@@ -1351,7 +1350,7 @@ export default function App() {
     const handleActionFeedback = (event) => {
       const button = event.target.closest("button");
       const label = button?.textContent?.trim() ?? "";
-      if (label === "Share") emitNotice("Share links will be available when Crescent Cloud is connected.");
+      if (label === "Share") emitNotice("Sharing will be available when Crescent Cloud is connected.");
       if (label === "Night") emitNotice("Night mode is active for this local preview.");
       if (label.includes("Invite someone")) emitNotice("Inviting people will be available when Crescent Cloud is connected.");
       if (button?.getAttribute("aria-label") === "Insert link") emitNotice("Cell links will be available in a connected workspace.");
