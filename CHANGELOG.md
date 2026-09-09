@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.9.0 — Recoverable Calendar events
+
+Published September 9, 2026.
+
+### Improved
+
+- Removing a saved Calendar event now moves it to local Trash instead of silently deleting it.
+- Restoring a Calendar item returns its title, time, date, and Starred state to Calendar.
+- Added user feedback for both Calendar-to-Trash and Trash-to-Calendar actions.
+- Added smoke coverage for the recoverable Calendar workflow.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.8.0 — Accessible rich-text editing
 
 Published September 9, 2026.

@@ -730,7 +730,15 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
     update({ calendarEvents: [{ id: Date.now(), title: title.trim(), when: when.trim(), date: localDateKey(eventDate) }, ...localEvents] });
     emitNotice("Event saved in this local workspace.");
   };
-  const removeEvent = (id) => update({ calendarEvents: localEvents.filter((event) => event.id !== id) });
+  const removeEvent = (id) => {
+    const event = localEvents.find((item) => item.id === id);
+    if (!event) return;
+    const starredTitles = getStarredTitles(workspace);
+    const deletedEvent = { id: `calendar-${id}`, eventId: id, title: event.title, when: event.when, date: event.date, type: "Calendar", appId: "calendar", opened: "just now", owner: "Me", starred: starredTitles.has(event.title) };
+    starredTitles.delete(event.title);
+    update({ calendarEvents: localEvents.filter((item) => item.id !== id), starredFiles: [...starredTitles], deletedFiles: [deletedEvent, ...(workspace.deletedFiles ?? [])] });
+    emitNotice("Event moved to local Trash.");
+  };
   const startEventEdit = (event) => { setEditingEvent(event.id); setEditingEventTitle(event.title); setEditingEventWhen(event.when); };
   const cancelEventEdit = () => { setEditingEvent(null); setEditingEventTitle(""); setEditingEventWhen(""); };
   const saveEventEdit = (id) => {
@@ -962,6 +970,14 @@ function UtilityView({ id, workspace, update, onNavigate }) {
       if (file.starred) starredTitles.add(file.title); else starredTitles.delete(file.title);
       update({ notes: [restoredNote, ...workspace.notes], starredFiles: [...starredTitles], deletedFiles: (workspace.deletedFiles ?? []).filter((item) => item.id !== file.id) });
       emitNotice("Note restored to Notes.");
+      return;
+    }
+    if (file.type === "Calendar") {
+      const restoredEvent = { id: file.eventId ?? Date.now(), title: file.title, when: file.when ?? "No time", ...(file.date ? { date: file.date } : {}) };
+      const starredTitles = getStarredTitles(workspace);
+      if (file.starred) starredTitles.add(file.title); else starredTitles.delete(file.title);
+      update({ calendarEvents: [restoredEvent, ...(workspace.calendarEvents ?? [])], starredFiles: [...starredTitles], deletedFiles: (workspace.deletedFiles ?? []).filter((item) => item.id !== file.id) });
+      emitNotice("Event restored to Calendar.");
     }
   };
   const fileRows = files.map((file) => id === "trash" ? <div className="utility-file-row" key={file.id ?? file.title}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} /><div><strong>{file.title}</strong><small>{file.type} · {file.opened} · {file.owner}</small></div><button className="secondary-button" onClick={() => restoreFile(file)}>Restore</button></div> : <button className="utility-file-row" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), fileNavigationContext(file))}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} /><div><strong>{file.title}</strong><small>{file.type} · {file.opened} · {file.owner}</small></div><ArrowRight size={16} /></button>);

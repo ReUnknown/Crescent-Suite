@@ -178,6 +178,13 @@ try {
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     await behaviorPage.waitForSelector(".calendar-local-card.selected");
     if (behaviorPage.url().split("#")[1] !== "calendar" || !(await behaviorPage.locator(".calendar-local-card.selected").innerText()).includes("Smoke focus edited")) failures.push({ route: "search", controls: "open exact Calendar event result", url: behaviorPage.url() });
+    await behaviorPage.getByRole("button", { name: "Remove Smoke focus edited" }).click();
+    await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
+    const deletedEvent = behaviorPage.locator(".utility-file-row").filter({ hasText: "Smoke focus edited" });
+    if (await deletedEvent.count() !== 1) failures.push({ route: "trash", controls: "archived calendar event" });
+    else await deletedEvent.getByRole("button", { name: "Restore" }).click();
+    await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
+    if (!(await behaviorPage.locator(".calendar-local-list").innerText()).includes("Smoke focus edited")) failures.push({ route: "calendar", controls: "Calendar event restore" });
     await behaviorPage.goto(`${baseUrl}/tasks`, { waitUntil: "networkidle" });
     if (await behaviorPage.getByRole("textbox", { name: "File title" }).isEditable()) failures.push({ route: "tasks", controls: "fixed container title is read-only" });
     const dueBefore = await behaviorPage.getByRole("button", { name: "Change due date for Review the launch brief" }).innerText();
