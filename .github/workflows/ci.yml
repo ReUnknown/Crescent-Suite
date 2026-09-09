@@ -23,3 +23,5 @@ jobs:
         run: npm run build
       - name: Lint source
         run: npm run lint
+      - name: Run browser smoke checks
+        run: npm run test:smoke

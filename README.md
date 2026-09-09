@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.84 — Sheets CSV export follows the workbook title**
+**v0.1.86 — Mobile Home filters stay inside the viewport**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -27,6 +27,8 @@ The first release establishes the Crescent product shell and a local-first suite
 - Calendar Previous/Next now move by week in Day/Week mode and by month in Month mode; Today resets either view
 - Refreshed the committed Home preview so its My day rail matches the live browser date
 - Sheets CSV exports now use the current saved workbook title with safe filename characters
+- CI now runs a Playwright smoke suite across desktop/mobile routes, page errors, overflow, and the full Calendar Month grid
+- Mobile Home’s Recent filter row now stays within the viewport while remaining horizontally scrollable
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

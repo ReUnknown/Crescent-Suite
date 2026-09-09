@@ -1,13 +1,14 @@
 {
   "name": "crescent-suite",
   "private": true,
-  "version": "0.1.84",
+  "version": "0.1.86",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:smoke": "node scripts/smoke.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
