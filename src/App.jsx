@@ -496,9 +496,17 @@ function downloadText(name, content, type) {
   URL.revokeObjectURL(url);
 }
 
+const ROUTE_IDS = new Set(["home", "recent", "starred", "shared", "trash", "settings", ...APP_META.map((app) => app.id)]);
+function appFromLocation() {
+  const hashRoute = window.location.hash.replace(/^#/, "");
+  const pathRoute = window.location.pathname.replace(/^\/+/, "").split("/")[0];
+  const candidate = hashRoute || pathRoute;
+  return ROUTE_IDS.has(candidate) ? candidate : "home";
+}
+
 export default function App() {
   const [workspace, update] = useWorkspace();
-  const [activeApp, setActiveApp] = useState("home");
+  const [activeApp, setActiveApp] = useState(appFromLocation);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
@@ -506,6 +514,12 @@ export default function App() {
     const handleNotice = (event) => setNotice(event.detail);
     window.addEventListener("crescent:notice", handleNotice);
     return () => window.removeEventListener("crescent:notice", handleNotice);
+  }, []);
+  useEffect(() => {
+    const handleLocationChange = () => setActiveApp(appFromLocation());
+    window.addEventListener("popstate", handleLocationChange);
+    window.addEventListener("hashchange", handleLocationChange);
+    return () => { window.removeEventListener("popstate", handleLocationChange); window.removeEventListener("hashchange", handleLocationChange); };
   }, []);
   useEffect(() => {
     if (!notice) return undefined;
@@ -533,7 +547,7 @@ export default function App() {
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
   }, []);
-  const navigate = (id) => { setActiveApp(id); setQuery(""); setSidebarOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const navigate = (id) => { setActiveApp(id); setQuery(""); setSidebarOpen(false); if (window.location.hash !== `#${id}`) window.history.pushState({ app: id }, "", `#${id}`); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const currentView = useMemo(() => {
     if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "docs") return <DocsView workspace={workspace} update={update} onNavigate={navigate} />;
