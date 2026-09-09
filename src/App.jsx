@@ -109,6 +109,12 @@ const INITIAL_WORKSPACE = {
     { id: 2, label: "How clear is the next step?", type: "Scale", required: true },
     { id: 3, label: "Anything else to share?", type: "Short answer", required: false },
   ],
+  driveFolders: [
+    { name: "Product", items: 12, color: 0 },
+    { name: "Marketing", items: 8, color: 1 },
+    { name: "Design", items: 14, color: 2 },
+    { name: "Operations", items: 5, color: 3 },
+  ],
 };
 
 const RECENT_FILES = [
@@ -321,17 +327,17 @@ function DriveViewLegacy({ onNavigate }) {
   return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button"><FolderPlus size={16} />New folder</button><button className="primary-button"><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>Everything in one place.</h1><p>Organize your work without losing the thread.</p></div><div className="drive-view"><button className="selected"><Grid2X2 size={16} /></button><button><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>4 folders</small></div><div className="folder-grid">{folders.map((folder, index) => <button className="folder-card" key={folder}><span className={`folder-icon folder-${index}`}><FolderOpen size={21} /></span><strong>{folder}</strong><small>{[12, 8, 14, 5][index]} items</small><MoreHorizontal size={17} /></button>)}</div></div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link">See all <ArrowRight size={14} /></button></div><div className="drive-file-grid">{RECENT_FILES.slice(0, 6).map((file) => <button className="drive-file" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
 }
 
-function DriveView({ onNavigate }) {
-  const [folders, setFolders] = useState([
+function DriveView({ workspace, update, onNavigate }) {
+  const folders = workspace.driveFolders ?? [
     { name: "Product", items: 12, color: 0 },
     { name: "Marketing", items: 8, color: 1 },
     { name: "Design", items: 14, color: 2 },
     { name: "Operations", items: 5, color: 3 },
-  ]);
+  ];
   const createFolder = () => {
     const name = window.prompt("Folder name", "New workspace");
     if (!name?.trim()) return;
-    setFolders((current) => [...current, { name: name.trim(), items: 0, color: current.length % 4 }]);
+    update({ driveFolders: [...folders, { name: name.trim(), items: 0, color: folders.length % 4 }] });
   };
   return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={createFolder}><FolderPlus size={16} />New folder</button><button className="primary-button" onClick={() => onNavigate("docs")}><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>Everything in one place.</h1><p>Organize your work without losing the thread.</p></div><div className="drive-view"><button className="selected"><Grid2X2 size={16} /></button><button><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>{folders.length} folders</small></div><div className="folder-grid">{folders.map((folder) => <button className="folder-card" key={folder.name}><span className={`folder-icon folder-${folder.color}`}><FolderOpen size={21} /></span><strong>{folder.name}</strong><small>{folder.items} items</small><MoreHorizontal size={17} /></button>)}</div></div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link">See all <ArrowRight size={14} /></button></div><div className="drive-file-grid">{RECENT_FILES.slice(0, 6).map((file) => <button className="drive-file" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
 }
@@ -413,7 +419,7 @@ export default function App() {
     if (activeApp === "notes") return <NotesView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "tasks") return <TasksView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "calendar") return <CalendarView onNavigate={navigate} />;
-    if (activeApp === "drive") return <DriveView onNavigate={navigate} />;
+    if (activeApp === "drive") return <DriveView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} />;
     return <UtilityView id={activeApp} onNavigate={navigate} />;
   }, [activeApp, workspace]);

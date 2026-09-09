@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.5 — Persistent Drive
+
+Published September 8, 2026.
+
+### Changed
+
+- Drive folders now persist in Crescent's versioned browser workspace instead of resetting when you navigate away.
+- The Drive preview now shows the local folder workflow in the committed visual evidence.
+
+### Verification
+
+- Created a folder through the UI, navigated Home → Drive, and verified it remained visible.
+- Production build passes after the persistence change.
+
 ## v0.1.4 — Local Drive
 
 Published September 8, 2026.
