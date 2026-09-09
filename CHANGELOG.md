@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.149 — Scrollable local navigation
+
+Published September 9, 2026.
+
+### Changed
+
+- The fixed sidebar now scrolls vertically, keeping custom Workspaces, Projects, and its lower focus card reachable as local navigation grows.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass across desktop and mobile route coverage.
+
 ## v0.1.148 — Safer legacy folder migration
 
 Published September 9, 2026.

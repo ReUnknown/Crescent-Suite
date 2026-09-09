@@ -38,7 +38,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, [contentedita
 input, textarea { color: var(--text); }
 
 .app-shell { min-height: 100vh; display: flex; background: radial-gradient(circle at 65% -30%, rgba(91, 90, 160, .16), transparent 34%), var(--bg); }
-.sidebar { width: var(--sidebar-width); min-height: 100vh; position: fixed; left: 0; top: 0; bottom: 0; z-index: 20; display: flex; flex-direction: column; padding: 21px 15px 18px; border-right: 1px solid var(--line); background: linear-gradient(180deg, rgba(18, 22, 34, .98), rgba(11, 14, 22, .98)); }
+.sidebar { width: var(--sidebar-width); min-height: 100vh; position: fixed; left: 0; top: 0; bottom: 0; z-index: 20; display: flex; flex-direction: column; overflow-y: auto; padding: 21px 15px 18px; border-right: 1px solid var(--line); background: linear-gradient(180deg, rgba(18, 22, 34, .98), rgba(11, 14, 22, .98)); }
 .sidebar-header { height: 44px; display: flex; align-items: center; padding: 0 12px; margin-bottom: 17px; }
 .brand-mark { display: inline-flex; align-items: center; gap: 13px; }
 .crescent-shape { display: block; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #fbf6ff 0%, #baa9ff 58%, #8a7bdd 100%); position: relative; box-shadow: 0 0 26px rgba(185, 165, 255, .22); }

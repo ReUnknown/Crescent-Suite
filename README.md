@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.148 — Safer legacy folder migration**
+**v0.1.149 — Scrollable local navigation**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -71,6 +71,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - CI now verifies a new Drive folder remains after a full page reload
 - Added a committed Home preview showing Global Search finding a custom Workspace
 - Workspace backups now synthesize safe folder names, counts, and supported colors for incomplete folder records
+- The sidebar now scrolls safely as local Workspaces and Projects grow beyond the initial shell
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges
