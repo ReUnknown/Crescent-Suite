@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.44 — Task restore preserves metadata
+
+Published September 9, 2026.
+
+### Changed
+
+- Trash records now retain task project, due label, completion state, and original id.
+- Restored tasks return with their original metadata instead of a generic recovered project.
+
+### Verification
+
+- Deleted and restored the completed “Share growth metrics” task, then confirmed its `Q3 planning`, `Tomorrow`, and completed state were preserved.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.43 — Trash can restore tasks
 
 Published September 9, 2026.
