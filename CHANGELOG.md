@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.159 — Project-filtered Tasks
+
+Published September 9, 2026.
+
+### Added
+
+- Tasks now includes a local Project filter alongside the existing All, Today, Open, and Done status cycle.
+- The filter uses the same persistent project vocabulary as New task and the sidebar, keeping project labels consistent as the workspace grows.
+- Added a committed Tasks screenshot showing a filtered project list.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.158 — Local calendar date fidelity
 
 Published September 9, 2026.
