@@ -1,4 +1,4 @@
-# v1.4.0 visual preview
+# v1.4.1 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -18,6 +18,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `search-exact-task.png` — Search opening the exact matching task with its Project filter selected
 - `search-exact-calendar.png` — Search opening the exact matching Calendar event with the saved event highlighted
 - `search-exact-drive.png` — Search opening the exact matching Drive folder with its context panel selected
+- `search-exact-drive-file.png` — Search opening the exact Drive file with its recent card selected
 - `search-app-result.png` — Universal Search offering a direct Calendar app destination alongside local files
 - `search-exact-sheet-cell.png` — Search opening the exact matching Sheets cell with the formula bar populated
 - `search-exact-form-question.png` — Search opening the exact matching Forms question with the builder card highlighted

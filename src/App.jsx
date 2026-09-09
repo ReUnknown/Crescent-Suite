@@ -163,6 +163,10 @@ function getLiveRecentFiles(workspace) {
   return [...liveFiles, ...RECENT_FILES.filter((file) => !liveTypes.has(file.type) && !suppressedTypes.has(file.type))].map((file) => ({ ...file, starred: starredTitles.has(file.title) }));
 }
 
+function fileNavigationContext(file) {
+  return file.type === "Drive" ? { fileTitle: file.title } : { title: file.title };
+}
+
 const SCHEDULE = [
   { time: "9:00 AM", end: "9:45 AM", title: "Product sync", color: "lilac" },
   { time: "10:00 AM", end: "11:00 AM", title: "Design review", color: "blue" },
@@ -288,7 +292,7 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
       <div className="sidebar-divider" />
       <div className="sidebar-section-head"><span>Workspaces</span><button className="icon-button muted" onClick={addWorkspace} aria-label="Add workspace"><Plus size={17} /></button></div>
       <div className="workspace-list">
-        {workspaces.map((item, index) => <button className="workspace-link" key={`${item.name}-${index}`} onClick={() => onNavigate("drive", { title: item.name })}><span className={`workspace-dot dot-${item.color ?? index % 5}`} />{item.name}</button>)}
+        {workspaces.map((item, index) => <button className="workspace-link" key={`${item.name}-${index}`} onClick={() => onNavigate("drive", { folderName: item.name })}><span className={`workspace-dot dot-${item.color ?? index % 5}`} />{item.name}</button>)}
       </div>
       <div className="sidebar-section-head projects-head"><span>Projects</span><button className="icon-button muted" onClick={addProject} aria-label="Add project"><Plus size={17} /></button></div>
       <div className="project-list">
@@ -332,7 +336,7 @@ function SearchResults({ query, onNavigate, workspace }) {
     ...(workspace.tasks ?? []).map((task) => ({ title: task.title, type: "Tasks", opened: task.due, owner: "Me", icon: ListChecks, color: "violet" })),
     ...(workspace.driveFolders ?? []).map((folder) => ({ title: folder.name, type: "Drive", opened: `${folder.items} items`, owner: "Me", icon: HardDrive, color: "rainbow" })),
     ...(workspace.workspaces ?? []).map((item) => ({ title: item.name, type: "Drive", opened: "workspace", owner: "Me", icon: HardDrive, color: "rainbow" })),
-    ...(workspace.projects ?? []).map((project) => ({ title: project, type: "Drive", opened: "project", owner: "Me", icon: HardDrive, color: "rainbow" })),
+    ...(workspace.projects ?? []).map((project) => ({ title: project, type: "Tasks", appId: "tasks", opened: "project", owner: "Me", icon: ListChecks, color: "violet" })),
     ...(workspace.calendarEvents ?? []).map((event) => ({ title: event.title, type: "Calendar", opened: event.when, owner: "Me", icon: CalendarDays, color: "periwinkle" })),
   ];
   const searchTextFor = (file) => {
@@ -350,7 +354,11 @@ function SearchResults({ query, onNavigate, workspace }) {
   const mergedResults = new Map([...appResults, ...getLiveRecentFiles(workspace), ...localResults].map((file) => [`${file.type}-${file.title}`, file]));
   const results = [...mergedResults.values()].filter((file) => `${file.title} ${file.type} ${file.opened} ${searchTextFor(file)}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
   const navigationFor = (file) => {
-    if (file.appId) return null;
+    if (file.appId) return file.appId === "tasks" ? { project: file.title } : null;
+    if (file.type === "Drive") {
+      const isFolder = [...(workspace.driveFolders ?? []), ...(workspace.workspaces ?? [])].some((folder) => folder.name?.toLowerCase() === file.title.toLowerCase());
+      return isFolder ? { folderName: file.title } : { fileTitle: file.title };
+    }
     if (file.type === "Docs") {
       const parsed = new window.DOMParser().parseFromString(workspace.docs?.body ?? "", "text/html");
       const matchedHeading = [...parsed.querySelectorAll("h1, h2, h3")].find((heading) => heading.textContent.toLowerCase().includes(query.toLowerCase()));
@@ -396,7 +404,7 @@ function HomeView({ workspace, update, onNavigate, onFocusSearch }) {
       </section>
       <section className="workspace-section">
         <div className="section-heading"><div><h2>Continue working</h2><p>Jump back into the work that is already in motion.</p></div><button className="quiet-button" onClick={() => onNavigate("recent")}>See all <ArrowRight size={15} /></button></div>
-        <div className="continue-row">{recentFiles.slice(0, 4).map((file) => <button className="continue-card" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), { title: file.title })}><div className={`file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div className="file-meta"><span><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={14} />{file.type}</span><MoreHorizontal size={15} /></div><strong>{file.title}</strong><small>Edited {file.opened}</small></button>)}</div>
+        <div className="continue-row">{recentFiles.slice(0, 4).map((file) => <button className="continue-card" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), fileNavigationContext(file))}><div className={`file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div className="file-meta"><span><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={14} />{file.type}</span><MoreHorizontal size={15} /></div><strong>{file.title}</strong><small>Edited {file.opened}</small></button>)}</div>
       </section>
       <section className="workspace-section recent-section">
         <div className="section-heading"><div><h2>Recent</h2><p>The latest files across your workspaces.</p></div><div className="filter-row">{["All", "Docs", "Sheets", "Slides", "Notes", "Tasks", "Calendar", "Drive", "Forms"].map((item) => <button className={filter === item ? "filter-button selected" : "filter-button"} key={item} onClick={() => setFilter(item)} aria-pressed={filter === item}>{item}</button>)}</div></div>
@@ -772,11 +780,18 @@ function _DriveViewLegacy({ onNavigate }) {
   return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button"><FolderPlus size={16} />New folder</button><button className="primary-button"><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>Everything in one place.</h1><p>Organize your work without losing the thread.</p></div><div className="drive-view"><button className="selected"><Grid2X2 size={16} /></button><button><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>4 folders</small></div><div className="folder-grid">{folders.map((folder, index) => <button className="folder-card" key={folder}><span className={`folder-icon folder-${index}`}><FolderOpen size={21} /></span><strong>{folder}</strong><small>{[12, 8, 14, 5][index]} items</small><MoreHorizontal size={17} /></button>)}</div></div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link">See all <ArrowRight size={14} /></button></div><div className="drive-file-grid">{RECENT_FILES.slice(0, 6).map((file) => <button className="drive-file" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
 }
 
-function DriveView({ workspace, update, onNavigate, initialFolderName }) {
+function DriveView({ workspace, update, onNavigate, initialFolderName, initialFileTitle }) {
   const [view, setView] = useState("grid");
   const [selectedFolder, setSelectedFolder] = useState(null);
+  const [selectedRecentTitle, setSelectedRecentTitle] = useState(null);
   const appliedFolderNavigation = useRef(null);
+  const appliedFileNavigation = useRef(null);
   const recentFiles = getLiveRecentFiles(workspace);
+  const displayRecentFiles = useMemo(() => {
+    const visibleFiles = recentFiles.slice(0, 6);
+    const targetedFile = recentFiles.find((file) => file.title === initialFileTitle);
+    return targetedFile && !visibleFiles.some((file) => file.title === targetedFile.title) ? [...visibleFiles.slice(0, 5), targetedFile] : visibleFiles;
+  }, [initialFileTitle, recentFiles]);
   const folders = useMemo(() => workspace.driveFolders ?? [
     { name: "Product", items: 12, color: 0 },
     { name: "Marketing", items: 8, color: 1 },
@@ -789,6 +804,13 @@ function DriveView({ workspace, update, onNavigate, initialFolderName }) {
     const targetFolder = folders.find((folder) => folder.name.toLowerCase() === initialFolderName.toLowerCase());
     if (targetFolder) setSelectedFolder(targetFolder.name);
   }, [folders, initialFolderName]);
+  useEffect(() => {
+    if (!initialFileTitle || initialFileTitle === appliedFileNavigation.current) return;
+    appliedFileNavigation.current = initialFileTitle;
+    if (!recentFiles.some((file) => file.title === initialFileTitle)) return;
+    setSelectedRecentTitle(initialFileTitle);
+    window.setTimeout(() => [...document.querySelectorAll("[data-file-title]")].find((node) => node.dataset.fileTitle === initialFileTitle)?.scrollIntoView({ block: "center" }), 0);
+  }, [initialFileTitle, recentFiles]);
   const createFolder = () => {
     const name = window.prompt("Folder name", "New workspace");
     if (!name?.trim()) return;
@@ -803,7 +825,7 @@ function DriveView({ workspace, update, onNavigate, initialFolderName }) {
   const activeFolder = folders.find((folder) => folder.name === selectedFolder);
   const selectFolder = (folder) => { setSelectedFolder((current) => current === folder.name ? null : folder.name); emitNotice(`${folder.name} folder selected locally.`); };
   const createFile = () => { const requestedTitle = window.prompt("Document name", "Untitled document"); if (!requestedTitle?.trim()) return; const title = requestedTitle.trim(); const previousDoc = workspace.docs; const starredTitles = getStarredTitles(workspace); const deletedDoc = { id: `doc-${Date.now()}`, title: previousDoc.title, body: previousDoc.body, updatedAt: previousDoc.updatedAt, type: "Docs", appId: "docs", opened: "just now", owner: "Me", starred: starredTitles.has(previousDoc.title) }; starredTitles.delete(previousDoc.title); update({ docs: { title, body: `<h1>${escapeHtml(title)}</h1><p>Start writing your next idea here.</p>`, updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles: [deletedDoc, ...(workspace.deletedFiles ?? [])] }); onNavigate("docs"); };
-  return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={createFolder}><FolderPlus size={16} />New folder</button><button className="primary-button" onClick={createFile}><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>{activeFolder ? activeFolder.name : "Everything in one place."}</h1><p>{activeFolder ? "A local folder ready for the work you want to keep together." : "Organize your work without losing the thread."}</p></div><div className="drive-view"><button className={view === "grid" ? "selected" : ""} onClick={() => setView("grid")} aria-label="Grid view" aria-pressed={view === "grid"}><Grid2X2 size={16} /></button><button className={view === "list" ? "selected" : ""} onClick={() => setView("list")} aria-label="List view" aria-pressed={view === "list"}><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>{folders.length} folders</small></div><div className={`folder-grid ${view === "list" ? "folder-list-view" : ""}`}>{folders.map((folder) => <button className={`folder-card ${selectedFolder === folder.name ? "selected" : ""}`} data-folder-name={folder.name} key={folder.name} onClick={() => selectFolder(folder)} aria-pressed={selectedFolder === folder.name}><span className={`folder-icon folder-${folder.color}`}><FolderOpen size={21} /></span><strong>{folder.name}</strong><small>{folder.items} items</small><MoreHorizontal size={17} /></button>)}</div>{activeFolder && <div className="drive-folder-detail"><span className={`folder-icon folder-${activeFolder.color}`}><FolderOpen size={18} /></span><div><strong>{activeFolder.name} selected</strong><small>{activeFolder.items} items · saved in this browser</small></div><button className="text-link" onClick={() => setSelectedFolder(null)}>Clear selection</button></div>}</div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link" onClick={() => onNavigate("recent")}>See all <ArrowRight size={14} /></button></div><div className={`drive-file-grid ${view === "list" ? "drive-list-view" : ""}`}>{recentFiles.slice(0, 6).map((file) => <button className="drive-file" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), { title: file.title })}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
+  return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={createFolder}><FolderPlus size={16} />New folder</button><button className="primary-button" onClick={createFile}><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>{activeFolder ? activeFolder.name : "Everything in one place."}</h1><p>{activeFolder ? "A local folder ready for the work you want to keep together." : "Organize your work without losing the thread."}</p></div><div className="drive-view"><button className={view === "grid" ? "selected" : ""} onClick={() => setView("grid")} aria-label="Grid view" aria-pressed={view === "grid"}><Grid2X2 size={16} /></button><button className={view === "list" ? "selected" : ""} onClick={() => setView("list")} aria-label="List view" aria-pressed={view === "list"}><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>{folders.length} folders</small></div><div className={`folder-grid ${view === "list" ? "folder-list-view" : ""}`}>{folders.map((folder) => <button className={`folder-card ${selectedFolder === folder.name ? "selected" : ""}`} data-folder-name={folder.name} key={folder.name} onClick={() => selectFolder(folder)} aria-pressed={selectedFolder === folder.name}><span className={`folder-icon folder-${folder.color}`}><FolderOpen size={21} /></span><strong>{folder.name}</strong><small>{folder.items} items</small><MoreHorizontal size={17} /></button>)}</div>{activeFolder && <div className="drive-folder-detail"><span className={`folder-icon folder-${activeFolder.color}`}><FolderOpen size={18} /></span><div><strong>{activeFolder.name} selected</strong><small>{activeFolder.items} items · saved in this browser</small></div><button className="text-link" onClick={() => setSelectedFolder(null)}>Clear selection</button></div>}</div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link" onClick={() => onNavigate("recent")}>See all <ArrowRight size={14} /></button></div><div className={`drive-file-grid ${view === "list" ? "drive-list-view" : ""}`}>{displayRecentFiles.map((file) => <button className={`drive-file ${selectedRecentTitle === file.title ? "selected" : ""}`} data-file-title={file.title} key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), fileNavigationContext(file))} aria-pressed={selectedRecentTitle === file.title}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
 }
 
 function _FormsViewLegacy({ workspace, update, onNavigate }) {
@@ -893,7 +915,7 @@ function UtilityView({ id, workspace, update, onNavigate }) {
       emitNotice("Note restored to Notes.");
     }
   };
-  const fileRows = files.map((file) => id === "trash" ? <div className="utility-file-row" key={file.id ?? file.title}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} /><div><strong>{file.title}</strong><small>{file.type} · {file.opened} · {file.owner}</small></div><button className="secondary-button" onClick={() => restoreFile(file)}>Restore</button></div> : <button className="utility-file-row" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), { title: file.title })}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} /><div><strong>{file.title}</strong><small>{file.type} · {file.opened} · {file.owner}</small></div><ArrowRight size={16} /></button>);
+  const fileRows = files.map((file) => id === "trash" ? <div className="utility-file-row" key={file.id ?? file.title}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} /><div><strong>{file.title}</strong><small>{file.type} · {file.opened} · {file.owner}</small></div><button className="secondary-button" onClick={() => restoreFile(file)}>Restore</button></div> : <button className="utility-file-row" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), fileNavigationContext(file))}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} /><div><strong>{file.title}</strong><small>{file.type} · {file.opened} · {file.owner}</small></div><ArrowRight size={16} /></button>);
   return <div className="utility-page page-enter"><div className="utility-heading"><div><span className="utility-kicker"><Sparkles size={14} />Crescent workspace</span><h1>{title}</h1><p>{description}</p></div><button className="primary-button" onClick={() => onNavigate("home")}><Home size={16} />Back home</button></div><div className="utility-panel">{id === "settings" ? <><div className="settings-row"><div><strong>Appearance</strong><small>Keep Crescent quiet after dark.</small></div><button className="theme-toggle"><MoonIcon /><span>Night</span><Check size={15} /></button></div><div className="settings-row"><div><strong>Local workspace</strong><small>Your work is saved in this browser. No account connection required.</small></div><span className="local-status"><span />Active</span></div><div className="settings-row"><div><strong>Workspace backup</strong><small>Export your local work or restore it on this device later.</small></div><div className="settings-actions"><button className="secondary-button" onClick={exportWorkspace}><Download size={15} />Download</button><button className="secondary-button" onClick={() => backupInputRef.current?.click()}><FolderOpen size={15} />Import</button><input ref={backupInputRef} className="backup-input" type="file" accept="application/json,.json" aria-label="Import workspace backup" onChange={importWorkspace} /></div></div><div className="settings-row"><div><strong>Keyboard shortcuts</strong><small>Open search with Command + K, then type any file or app.</small></div><kbd><Command size={13} />K</kbd></div></> : files.length ? fileRows : <div className="utility-empty"><Trash2 size={19} /><strong>{emptyTitle}</strong><small>{emptyDescription}</small></div>}</div></div>;
 }
 
@@ -1047,7 +1069,7 @@ export default function App() {
     if (activeApp === "notes") return <NotesView workspace={workspace} update={update} onNavigate={navigate} initialNoteTitle={navigationContext?.title} />;
     if (activeApp === "tasks") return <TasksView workspace={workspace} update={update} onNavigate={navigate} initialTaskTitle={navigationContext?.title} initialProject={navigationContext?.project} />;
     if (activeApp === "calendar") return <CalendarView workspace={workspace} update={update} onNavigate={navigate} initialEventTitle={navigationContext?.title} />;
-    if (activeApp === "drive") return <DriveView workspace={workspace} update={update} onNavigate={navigate} initialFolderName={navigationContext?.title} />;
+    if (activeApp === "drive") return <DriveView workspace={workspace} update={update} onNavigate={navigate} initialFolderName={navigationContext?.folderName ?? navigationContext?.title} initialFileTitle={navigationContext?.fileTitle ?? (navigationContext?.folderName ? undefined : navigationContext?.title)} />;
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} initialQuestionId={navigationContext?.questionId} />;
     return <UtilityView id={activeApp} workspace={workspace} update={update} onNavigate={navigate} />;
   }, [activeApp, navigationContext, workspace, update]);

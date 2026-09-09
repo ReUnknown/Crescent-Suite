@@ -269,4 +269,5 @@ input, textarea { color: var(--text); }
 .search-result { pointer-events: auto; }
 .form-question.selected { border-color: rgba(197, 185, 255, .62); background: rgba(125, 108, 210, .16); box-shadow: 0 0 0 2px rgba(161, 145, 237, .10); }
 .document-inner .search-target { margin-left: -12px; padding-left: 10px; border-left: 2px solid #8d79d8; color: #302848; background: #eeeafb; }
+.drive-file.selected { border-color: rgba(190, 174, 255, .72); box-shadow: 0 0 0 2px rgba(145, 124, 224, .16); background: rgba(39, 35, 68, .88); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }

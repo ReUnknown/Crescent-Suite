@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.4.1 — Exact Drive file destinations
+
+Published September 9, 2026.
+
+### Fixed
+
+- Drive search now distinguishes folders, Workspaces, Projects, and Drive files instead of treating every result as a folder.
+- Project search results now open Tasks with the matching Project filter selected.
+- Home, Recent, utility, and Drive cards now preserve exact Drive-file context.
+- Drive can surface and highlight a targeted recent file even when it falls outside the default six-card window.
+- Added a committed visual capture of the exact Drive-file destination.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.4.0 — Accessibility and motion preferences
 
 Published September 9, 2026.

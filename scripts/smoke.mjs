@@ -317,6 +317,11 @@ try {
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
     const migratedFolders = await behaviorPage.locator(".folder-grid").innerText();
     if (!migratedFolders.includes("Folder 1") || !migratedFolders.includes("Archive")) failures.push({ route: "settings", controls: "legacy folder backup normalization" });
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Launch assets");
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
+    await behaviorPage.waitForSelector('[data-file-title="Launch assets"].selected');
+    if (behaviorPage.url().split("#")[1] !== "drive") failures.push({ route: "search", controls: "open exact Drive file result", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
     const liveDriveTitle = "Smoke restore";
     await behaviorPage.locator(".drive-file").filter({ hasText: liveDriveTitle }).click();
