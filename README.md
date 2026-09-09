@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.29 — Forms builder can shape questions**
+**v0.1.30 — Forms titles are workspace files**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -38,6 +38,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - The Docs cover title follows renamed or newly created drafts instead of showing seeded copy
 - Forms builder question labels are editable and persist in the local workspace
 - Preview mode renders respondent-facing text without exposing builder inputs
+- Forms titles are editable, saved locally, and discoverable through Global Search
 - Starred, Shared with me, and Trash now show filtered or empty states instead of duplicating Recent files
 - Home Recent filters now include Calendar and Drive alongside the core editors
 - Drive’s New file action now opens a real blank local Docs draft instead of reopening seeded content

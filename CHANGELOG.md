@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.30 — Forms titles are workspace files
+
+Published September 8, 2026.
+
+### Changed
+
+- Added a persisted `formTitle` workspace field.
+- Forms now uses the shared editable file-title breadcrumb and live heading.
+- Global Search indexes the current form title with the Forms app route.
+
+### Verification
+
+- Renamed the form to “Customer pulse,” searched for that title, and confirmed the result reopened Forms with the saved title.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.29 — Forms builder can shape questions
 
 Published September 8, 2026.
