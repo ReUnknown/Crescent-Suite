@@ -558,6 +558,10 @@ export default function App() {
       const button = event.target.closest("button");
       const label = button?.textContent?.trim() ?? "";
       if (label === "Share") emitNotice("Share links will be available when Crescent Cloud is connected.");
+      if (label === "Night") emitNotice("Night mode is active for this local preview.");
+      if (label.includes("Invite someone")) emitNotice("Inviting people will be available when Crescent Cloud is connected.");
+      if (button?.getAttribute("aria-label") === "Insert link") emitNotice("Cell links will be available in a connected workspace.");
+      if (button?.getAttribute("aria-label") === "Design options") emitNotice("Slide design options are coming to this local preview.");
       if (label.includes("New folder")) emitNotice("Folder added to this local workspace.");
       if (label.includes("New file")) emitNotice("Docs opened. Rename the breadcrumb title to start a new draft.");
     };
