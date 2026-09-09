@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.58 — Sheets formatting persists per selected cell**
+**v0.1.59 — Sheets formatting has a committed visual preview**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 

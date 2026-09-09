@@ -4,6 +4,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 
 - `home.png` — desktop home dashboard
 - `sheets.png` — editable Sheets surface with formula bar, populated grid, and persistent tabs
+- `sheets-formatting.png` — Sheets with persistent Bold and Italic state on the selected cell
 - `sheets-insights.png` — Sheets Insights view calculated from the grid
 - `docs.png` — working Docs editor implementation
 - `docs-concept.png` — editor design reference used for the implementation pass
