@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.37 — Sheets visual checkpoint refreshed
+
+Published September 9, 2026.
+
+### Changed
+
+- Refreshed `docs/preview/sheets.png` to show the persistent tab strip with Sheet 2 selected and local cell content.
+
+### Verification
+
+- Captured the screenshot from the running Vite app after creating Sheet 2 and entering a value in A1, then visually reviewed it.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.36 — Sheets has local undo and redo
 
 Published September 9, 2026.

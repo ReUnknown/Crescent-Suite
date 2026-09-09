@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.36 — Sheets has local undo and redo**
+**v0.1.37 — Sheets visual checkpoint refreshed**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -36,6 +36,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Calendar Previous and Today controls now move and reset the displayed week/month context while preserving local events
 - Sheets Add sheet creates a real local tab with independent cells and restores the active tab after reload
 - Sheets Undo and Redo now track recent workbook edits, including cell edits and tab creation
+- Updated the committed Sheets preview with the new Sheet 2 tab and independent cell surface
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
