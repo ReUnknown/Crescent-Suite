@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.1 — A little more light
+
+Published September 8, 2026.
+
+### Added
+
+- Keyboard shortcut support for `Command/Ctrl + K` to focus global search.
+- Accessible presentation-mode close control.
+- Crescent favicon and installable web manifest metadata.
+
+### Verification
+
+- Production build passes after the polish pass.
+- Command palette shortcut and presentation close control verified with Playwright.
+
 ## v0.1.0 — The first light
 
 Published September 8, 2026.

@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.0 — The first light**
+**v0.1.1 — A little more light**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
