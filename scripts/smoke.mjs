@@ -61,7 +61,7 @@ try {
     await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("textbox", { name: "Cell B9" }).fill("=AVERAGE(B2:B4)");
     const averageValue = await behaviorPage.evaluate(() => document.querySelector('[aria-label="Cell B9"]')?.parentElement?.querySelector(".sheet-display")?.textContent);
-    if (averageValue !== "5196.666666666667") failures.push({ route: "sheets", formula: "AVERAGE", averageValue });
+    if (averageValue !== "5196.67") failures.push({ route: "sheets", formula: "AVERAGE", averageValue });
     await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: "Change question 1 type" }).click();
     const typeAfterCycle = await behaviorPage.getByRole("button", { name: "Change question 1 type" }).innerText();

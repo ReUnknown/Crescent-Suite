@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.108 — Slides presentation mode has keyboard controls**
+**v0.1.109 — Sheets formula output is presentation-ready**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -50,6 +50,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Renaming a starred Docs, Sheets, Slides, Forms, or Notes record now carries its local favorite state to the new title
 - CI smoke now verifies that a renamed starred Docs record appears under its new title in Starred
 - Slides presentation mode now advances with ArrowRight/Space, moves back with ArrowLeft, and exits with Escape; CI smoke covers the interaction
+- Sheets AVERAGE results now display to two decimals for readable local analysis output
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

@@ -349,7 +349,7 @@ function evaluateCell(value, cells) {
     const startRow = Number(start.slice(1));
     const endRow = Number(end.slice(1));
     const values = Array.from({ length: endRow - startRow + 1 }, (_, index) => Number(evaluateCell(cells[`${column}${startRow + index}`] ?? "", cells)) || 0);
-    if (operation.toUpperCase() === "AVERAGE") return values.reduce((sum, item) => sum + item, 0) / values.length;
+    if (operation.toUpperCase() === "AVERAGE") return Number((values.reduce((sum, item) => sum + item, 0) / values.length).toFixed(2));
     if (operation.toUpperCase() === "MIN") return Math.min(...values);
     if (operation.toUpperCase() === "MAX") return Math.max(...values);
     return values.reduce((sum, item) => sum + item, 0);
