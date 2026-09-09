@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.60 — Starred files are locally actionable**
+**v0.1.61 — Docs outline sections are actionable**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -60,6 +60,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Sheets Bold and Italic now apply to the selected cell and persist across reloads
 - Sheets alignment state is stored alongside the cell style for future formatting expansion
 - Home file rows can add or remove local favorites, and Starred reflects those changes after reload
+- Docs’ Outline “+” now appends a real editable section and persists it in the document body
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device

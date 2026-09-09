@@ -7,6 +7,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `sheets-formatting.png` — Sheets with persistent Bold and Italic state on the selected cell
 - `sheets-insights.png` — Sheets Insights view calculated from the grid
 - `docs.png` — working Docs editor implementation
+- `docs-outline-section.png` — Docs with a newly added outline section persisted in the editor
 - `docs-concept.png` — editor design reference used for the implementation pass
 - `slides-statement.png` — Slides Big statement layout with persisted notes
 - `drive.png` — Drive surface with folders and recent files
