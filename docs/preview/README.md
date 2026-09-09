@@ -1,4 +1,4 @@
-# v3.0.0 visual preview
+# v3.1.0 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -41,6 +41,8 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `trash-cleanup.png` — Trash with confirmed cleanup controls for restore, permanent deletion, and Empty Trash
 - `forms-mobile-actions.png` — mobile Forms header retaining export, response, preview, Trash, and Publish actions
 - `drive-cross-app-file-create.png` — Drive’s cross-app New file flow for starting named work in each suite editor
+- `drive-create-modal.png` — desktop Crescent modal for choosing a suite editor and naming a new file
+- `drive-create-modal-mobile.png` — mobile creation modal with a responsive two-column app picker
 - `forms-preview.png` — Forms respondent-facing Preview mode with email collection enabled
 - `forms-theme-blue.png` — Forms with a persisted blue theme selected from the inspector
 - `forms-required.png` — Forms builder with a locally toggled Required question state

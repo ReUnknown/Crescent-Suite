@@ -1,5 +1,20 @@
 # Changelog
 
+## v3.1.0 — Guided file creation
+
+Published September 9, 2026.
+
+### Improved
+
+- Replaced browser prompts with a styled, accessible Crescent file-creation dialog.
+- App cards make Docs, Sheets, Slides, Notes, and Forms destinations visible before creation.
+- Added keyboard Escape dismissal, backdrop dismissal, Enter-to-create, and responsive mobile layout.
+- Added committed desktop and mobile visual previews for the creation flow.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v3.0.0 — Cross-app file creation
 
 Published September 9, 2026.
