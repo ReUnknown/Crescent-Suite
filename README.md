@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.110 — Docs text styles are actionable**
+**v0.1.111 — CI covers Docs text styles**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -53,6 +53,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Sheets AVERAGE results now display to two decimals for readable local analysis output
 - Docs’ Body toolbar control is now a real local style selector for Body, Heading, and Quote blocks
 - Refreshed the committed Docs preview after the editor toolbar polish
+- CI smoke now verifies the Docs Text style selector in addition to the route and editor surfaces
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

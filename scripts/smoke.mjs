@@ -82,6 +82,10 @@ try {
     if (slideBefore === slideAfter) failures.push({ route: "slides", controls: "keyboard presentation navigation" });
     await behaviorPage.keyboard.press("Escape");
     if (await behaviorPage.locator(".presentation-overlay").count()) failures.push({ route: "slides", controls: "presentation escape" });
+    await behaviorPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("combobox", { name: "Text style" }).selectOption("blockquote");
+    const styleValue = await behaviorPage.getByRole("combobox", { name: "Text style" }).inputValue();
+    if (styleValue !== "blockquote") failures.push({ route: "docs", controls: "text style", styleValue });
   } finally {
     await behaviorPage.close();
   }
