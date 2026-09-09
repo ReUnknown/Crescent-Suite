@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.5.2 — Project search regression coverage
+
+Published September 9, 2026.
+
+### Improved
+
+- Added a production regression assertion for Project search destinations.
+- Search now remains verified as a cross-suite router: a Project result opens Tasks with the matching Project filter selected.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.5.1 — Safe imported history and Trash
 
 Published September 9, 2026.
