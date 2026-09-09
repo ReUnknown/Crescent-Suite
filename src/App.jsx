@@ -169,6 +169,14 @@ const SCHEDULE = [
 
 function normalizeWorkspace(source) {
   const merged = { ...INITIAL_WORKSPACE, ...(source ?? {}) };
+  const workspaces = Array.isArray(source?.workspaces) && source.workspaces.length
+    ? source.workspaces.map((item, index) => typeof item === "string"
+      ? { name: item, color: index % 5 }
+      : { ...item, name: String(item?.name ?? `Workspace ${index + 1}`), color: Number.isFinite(item?.color) ? item.color : index % 5 })
+    : INITIAL_WORKSPACE.workspaces;
+  const projects = Array.isArray(source?.projects)
+    ? source.projects.map((item) => typeof item === "string" ? item : String(item?.name ?? "")).filter(Boolean)
+    : INITIAL_WORKSPACE.projects;
   return {
     ...merged,
     docs: { ...INITIAL_WORKSPACE.docs, ...(source?.docs ?? {}) },
@@ -178,8 +186,8 @@ function normalizeWorkspace(source) {
     tasks: Array.isArray(source?.tasks) ? source.tasks : INITIAL_WORKSPACE.tasks,
     forms: Array.isArray(source?.forms) ? source.forms : INITIAL_WORKSPACE.forms,
     driveFolders: Array.isArray(source?.driveFolders) ? source.driveFolders : INITIAL_WORKSPACE.driveFolders,
-    workspaces: Array.isArray(source?.workspaces) && source.workspaces.length ? source.workspaces : INITIAL_WORKSPACE.workspaces,
-    projects: Array.isArray(source?.projects) ? source.projects : INITIAL_WORKSPACE.projects,
+    workspaces,
+    projects,
     calendarEvents: Array.isArray(source?.calendarEvents) ? source.calendarEvents : [],
     deletedFiles: Array.isArray(source?.deletedFiles) ? source.deletedFiles : [],
     formSettings: { ...INITIAL_WORKSPACE.formSettings, ...(source?.formSettings ?? {}) },

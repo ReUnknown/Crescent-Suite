@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.138 — Safer workspace backup migration
+
+Published September 9, 2026.
+
+### Fixed
+
+- Workspace and Project records imported from older or hand-edited backups are normalized before the sidebar reads them.
+- String workspace names and object-style project records now migrate into the current local navigation model without runtime errors.
+
+### Verification
+
+- Smoke coverage restores legacy-shaped workspace/project entries and verifies they render after import.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.137 — Local workspace and project creation
 
 Published September 9, 2026.

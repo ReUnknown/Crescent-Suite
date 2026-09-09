@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.137 — Local workspace and project creation**
+**v0.1.138 — Safer workspace backup migration**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -60,6 +60,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Respondent text and Long answer controls now expose their question text as accessible labels
 - Calendar ICS export now writes `DTSTART` times for local events such as “3:00 PM,” with an all-day fallback when no time is entered
 - Sidebar Workspaces and Projects can now be created locally, persisted in the workspace backup, and restored on this device
+- Workspace backups normalize older string-style workspace/project entries before rendering them in the sidebar
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges
