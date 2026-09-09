@@ -142,6 +142,11 @@ input, textarea { color: var(--text); }
 .calendar-event-edit-actions button { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 6px; }
 .calendar-event-save { color: #172119; background: var(--green); }
 .calendar-event-cancel { color: #b8bfd2; background: rgba(135, 145, 175, .13); }
+@media (max-width: 780px) {
+  .task-row:has(.task-title-edit) { gap: 8px; }
+  .task-row:has(.task-title-edit) .task-due,
+  .task-row:has(.task-title-edit) > .icon-button.muted:not(.task-edit-button) { display: none; }
+}
 
 /* Grid cell positioning keeps spreadsheet values anchored to their own cells. */
 .sheet-grid > .sheet-row > div { min-height: 42px; position: relative; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }

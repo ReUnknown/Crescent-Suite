@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.0.3 — Responsive task editing
+
+Published September 9, 2026.
+
+### Fixed
+
+- Kept the mobile task title editor focused by hiding secondary row actions while a title is being edited.
+- Verified the 390px task editing state has no horizontal overflow.
+- Added a committed mobile preview for the responsive editing state.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.0.2 — Editable calendar events
 
 Published September 9, 2026.
