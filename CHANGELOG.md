@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.139 — Accessible Recent file rows
+
+Published September 9, 2026.
+
+### Changed
+
+- Home Recent rows now use keyboard-operable link containers, keeping the nested Starred action valid for assistive technology.
+- Enter and Space open the focused Recent file, while the favorite control retains its independent action.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.138 — Safer workspace backup migration
 
 Published September 9, 2026.
