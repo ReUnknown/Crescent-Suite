@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.36 — Sheets has local undo and redo
+
+Published September 9, 2026.
+
+### Changed
+
+- Added a bounded in-memory history for Sheets workbook edits.
+- Undo and Redo now work for cell changes, title changes, and new-sheet creation during the current editing session.
+- The toolbar disables each direction when its history is empty.
+
+### Verification
+
+- Changed B2 from 8420 to 9000, confirmed Undo restored 8420, and Redo restored 9000.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.35 — Sheets can grow beyond one tab
 
 Published September 9, 2026.
