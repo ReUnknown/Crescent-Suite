@@ -6,6 +6,8 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 **v0.1.150 — Legacy folder names preserved**
 
+Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
+
 The first release establishes the Crescent product shell and a local-first suite experience:
 
 - Home dashboard with app launcher, recent work, activity, and a daily focus rail
@@ -143,7 +145,6 @@ The first release establishes the Crescent product shell and a local-first suite
 - Forms now rejects malformed email addresses before saving a response when email collection is enabled
 - Direct app paths such as `/forms` open the matching Crescent surface, while in-app navigation and browser Back/Forward remain coherent
 - Notes can be deleted into local Trash and restored with their original title, body, color, and id
-- The committed visual preview index now identifies the current v0.1.66 archive state
 - Direct app routing also recognizes repository-prefixed paths such as `/Crescent-Suite/forms`
 - The Pages artifact includes a `404.html` app fallback and base-aware favicon/manifest links for direct URL loads
 - Notes now export the selected note as a plain-text `.txt` file alongside Docs HTML and Sheets CSV export

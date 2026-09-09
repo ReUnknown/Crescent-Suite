@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.151 — Preview archive link cleanup
+
+Published September 9, 2026.
+
+### Documentation
+
+- README now links directly to the committed visual preview archive.
+- Removed a stale historical note that incorrectly described the archive as v0.1.66.
+
+### Verification
+
+- README and preview index references were audited against the current v0.1.150 milestone.
+
 ## v0.1.150 — Legacy folder names preserved
 
 Published September 9, 2026.
