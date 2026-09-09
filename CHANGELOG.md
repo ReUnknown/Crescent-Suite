@@ -1,5 +1,20 @@
 # Changelog
 
+## v3.5.0 — Guided document links
+
+Published September 9, 2026.
+
+### Improved
+
+- Replaced Docs’ link browser prompt with a consistent Crescent link dialog.
+- Selected text is preserved while the URL is entered, then converted into a local document link.
+- URLs must begin with `http://` or `https://`, with Enter-to-submit and Escape/backdrop dismissal.
+- Added a committed visual preview and smoke coverage for link insertion.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v3.4.0 — Guided Drive folders
 
 Published September 9, 2026.
