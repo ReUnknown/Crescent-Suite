@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.2.0 — Accessibility smoke guardrails
+
+Published September 9, 2026.
+
+### Improved
+
+- Every desktop and mobile smoke route now checks for unnamed buttons and form/editing fields.
+- The same route pass now catches horizontal overflow and page errors alongside accessibility failures.
+- Added a permanent regression guard for the suite’s keyboard and screen-reader surface contracts.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v2.1.0 — Trash cleanup controls
 
 Published September 9, 2026.

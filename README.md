@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v2.1.0 — Trash cleanup controls**
+**v2.2.0 — Accessibility smoke guardrails**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -90,6 +90,8 @@ The first major release establishes a usable Crescent product shell and a local-
 - Trash supports confirmed permanent deletion for individual items
 - Trash supports a confirmed Empty Trash action for local cleanup
 - Added production smoke coverage for permanent deletion and full Trash cleanup
+- Route smoke checks now fail on unnamed buttons or fields across desktop and mobile
+- Route smoke checks retain page-error and horizontal-overflow protection in the same pass
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

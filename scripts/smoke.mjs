@@ -51,7 +51,11 @@ try {
       try {
         await page.goto(`${baseUrl}/${route}`, { waitUntil: "networkidle" });
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
-        if (pageErrors.length || overflow) failures.push({ viewport: viewport.name, route, pageErrors, overflow });
+        const accessibility = await page.evaluate(() => ({
+          unnamedButtons: [...document.querySelectorAll("button")].filter((node) => !((node.innerText || node.getAttribute("aria-label") || node.getAttribute("title") || "").trim())).length,
+          unnamedFields: [...document.querySelectorAll("input,textarea,select,[contenteditable=true]")].filter((node) => !((node.getAttribute("aria-label") || node.getAttribute("title") || node.getAttribute("placeholder") || node.labels?.length || node.getAttribute("role") || "").toString().trim())).length,
+        }));
+        if (pageErrors.length || overflow || accessibility.unnamedButtons || accessibility.unnamedFields) failures.push({ viewport: viewport.name, route, pageErrors, overflow, accessibility });
         if (route === "docs" && await page.title() !== "Docs · Crescent Suite") failures.push({ viewport: viewport.name, route, title: await page.title() });
         if (route === "calendar") {
           await page.getByRole("button", { name: "Day", exact: true }).click();
