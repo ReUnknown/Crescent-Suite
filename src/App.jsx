@@ -532,16 +532,14 @@ function CalendarView({ workspace, update, onNavigate }) {
     if (!title?.trim()) return;
     const when = window.prompt("When should it happen?", "Tomorrow · 3:00 PM");
     if (!when?.trim()) return;
-    const eventDate = new Date(displayDate);
-    if (/\btomorrow\b/i.test(when)) eventDate.setDate(eventDate.getDate() + 1);
-    if (/\byesterday\b/i.test(when)) eventDate.setDate(eventDate.getDate() - 1);
-    update({ calendarEvents: [{ id: Date.now(), title: title.trim(), when: when.trim(), date: eventDate.toISOString().slice(0, 10) }, ...localEvents] });
+    const eventDate = resolveNaturalDate(when, displayDate);
+    update({ calendarEvents: [{ id: Date.now(), title: title.trim(), when: when.trim(), date: localDateKey(eventDate) }, ...localEvents] });
     emitNotice("Event saved in this local workspace.");
   };
   const removeEvent = (id) => update({ calendarEvents: localEvents.filter((event) => event.id !== id) });
   const exportCalendar = () => {
     const events = localEvents.map((event, index) => {
-      const date = (event.date ?? displayDate.toISOString().slice(0, 10)).replaceAll("-", "");
+      const date = (event.date ?? localDateKey(displayDate)).replaceAll("-", "");
       const timeMatch = String(event.when ?? "").match(/\b(\d{1,2})(?::(\d{2}))?\s*(AM|PM)\b/i);
       let startLine = `DTSTART;VALUE=DATE:${date}`;
       if (timeMatch) {
@@ -570,7 +568,7 @@ function CalendarView({ workspace, update, onNavigate }) {
   }
   const weekStart = new Date(displayDate);
   if (mode !== "day") weekStart.setDate(displayDate.getDate() - displayDate.getDay());
-  const todayKey = now.toISOString().slice(0, 10);
+  const todayKey = localDateKey(now);
   const displayHeading = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric" }).format(displayDate);
   const weekHeading = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric" }).format(weekStart);
   const displayMonth = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(displayDate);
@@ -583,13 +581,13 @@ function CalendarView({ workspace, update, onNavigate }) {
     if (match[3].toUpperCase() === "AM" && hour === 12) hour = 0;
     return Math.max(4, Math.min(520, ((hour - 9) + (Number(match[2] ?? 0) / 60)) * 64));
   };
-  const weekDates = Array.from({ length: 7 }, (_, dayOffset) => { const date = new Date(weekStart); date.setDate(weekStart.getDate() + dayOffset); return { date: date.getDate(), dateKey: date.toISOString().slice(0, 10), label: new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date) }; });
-  const localEventsForDay = (dateKey) => localEvents.filter((event) => (event.date ?? displayDate.toISOString().slice(0, 10)) === dateKey);
-  const localEventsForDate = (date) => localEventsForDay(date.toISOString().slice(0, 10)).map((event) => event.title);
-  const seedDate = (dayOffset) => { const date = new Date(displayDate); date.setDate(displayDate.getDate() - displayDate.getDay() + dayOffset); return date.toISOString().slice(0, 10); };
+  const weekDates = Array.from({ length: 7 }, (_, dayOffset) => { const date = new Date(weekStart); date.setDate(weekStart.getDate() + dayOffset); return { date: date.getDate(), dateKey: localDateKey(date), label: new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date) }; });
+  const localEventsForDay = (dateKey) => localEvents.filter((event) => (event.date ?? localDateKey(displayDate)) === dateKey);
+  const localEventsForDate = (date) => localEventsForDay(localDateKey(date)).map((event) => event.title);
+  const seedDate = (dayOffset) => { const date = new Date(displayDate); date.setDate(displayDate.getDate() - displayDate.getDay() + dayOffset); return localDateKey(date); };
   const seededMonthEvents = new Map([[seedDate(2), ["Product sync", "Design review", "Focus time"]], [seedDate(3), ["Customer interview"]], [seedDate(4), ["Launch review"]]]);
   const monthStart = new Date(displayDate.getFullYear(), displayDate.getMonth(), 1);
-  const monthDays = Array.from({ length: 42 }, (_, index) => { const date = new Date(monthStart); date.setDate(index - monthStart.getDay() + 1); const dateKey = date.toISOString().slice(0, 10); return { label: new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date), date: date.getDate(), dateKey, currentMonth: date.getMonth() === displayDate.getMonth(), events: [...(seededMonthEvents.get(dateKey) ?? []), ...localEventsForDate(date)] }; });
+  const monthDays = Array.from({ length: 42 }, (_, index) => { const date = new Date(monthStart); date.setDate(index - monthStart.getDay() + 1); const dateKey = localDateKey(date); return { label: new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date), date: date.getDate(), dateKey, currentMonth: date.getMonth() === displayDate.getMonth(), events: [...(seededMonthEvents.get(dateKey) ?? []), ...localEventsForDate(date)] }; });
   const monthCalendar = <div className="calendar-month-grid">{monthDays.map((day) => <div className={`calendar-month-cell ${day.currentMonth ? "" : "muted"} ${day.dateKey === todayKey ? "today" : ""}`} key={day.dateKey}><div className="calendar-month-head"><span>{day.label}</span><strong>{day.date}</strong></div><div className="calendar-month-events">{day.events.map((event, index) => <span className={`calendar-month-event month-event-${index % 4}`} key={`${day.dateKey}-${event}`}>{event}</span>)}</div></div>)}</div>;
   const weekCalendar = <div className={"calendar-grid " + (mode === "day" ? "calendar-grid-day" : "")}><div className="calendar-axis"><span /><span>9 AM</span><span>10 AM</span><span>11 AM</span><span>12 PM</span><span>1 PM</span><span>2 PM</span><span>3 PM</span><span>4 PM</span><span>5 PM</span></div>{weekDates.map((day, index) => <div className={"calendar-day " + (mode === "day" && index > 0 ? "muted-day" : "")} key={day.dateKey}><div className="calendar-day-head"><span>{day.dateKey === todayKey ? "Today" : day.label}</span><strong>{day.date}</strong></div><div className="calendar-lines">{Array.from({ length: 9 }, (_, lineIndex) => <span key={lineIndex} />)}{index === 0 && <><div className="calendar-event event-one"><strong>Product sync</strong><small>Team · 9:00–9:45</small></div><div className="calendar-event event-two"><strong>Design review</strong><small>Design · 10:00–11:00</small></div><div className="calendar-event event-three"><strong>Focus time</strong><small>Personal · 1:00–3:00</small></div><div className="calendar-event event-four"><strong>Marketing check-in</strong><small>Marketing · 4:00–4:30</small></div></>}{index === 1 && <div className="calendar-event event-five"><strong>Customer interview</strong><small>Research · 11:00–12:00</small></div>}{index === 2 && <div className="calendar-event event-six"><strong>Launch review</strong><small>Product · 2:00–3:00</small></div>}{localEventsForDay(day.dateKey).map((event, eventIndex) => <div className="calendar-event calendar-event-local" style={{ top: `${localEventTop(event.when, eventIndex)}px` }} key={`local-${event.id ?? event.title}`}><strong>{event.title}</strong><small>{event.when}</small></div>)}</div></div>)}</div>;
   return <div className="calendar-page page-enter"><EditorHeader title="Calendar" icon={APP_META.find((app) => app.id === "calendar")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={exportCalendar} disabled={!localEvents.length}><Download size={16} />Export ICS</button><button className="secondary-button" onClick={() => mode === "month" ? setMonthOffset((current) => current - 1) : setWeekOffset((current) => current - 1)}><ChevronLeft size={16} />Previous</button><button className="secondary-button" onClick={() => { setWeekOffset(0); setMonthOffset(0); }}>Today</button><button className="secondary-button" onClick={() => mode === "month" ? setMonthOffset((current) => current + 1) : setWeekOffset((current) => current + 1)}><ChevronRight size={16} />Next</button><button className="primary-button" onClick={addEvent}><Plus size={16} />Event</button></EditorHeader><div className="calendar-content"><div className="calendar-heading"><div><h1>{mode === "month" ? displayMonth : mode === "week" ? weekHeading : displayHeading}</h1><p>{mode === "month" ? `${displayMonth} · Product workspace` : mode === "day" ? `${shortDisplayDay} · Product workspace` : `Week of ${weekHeading} · Product workspace`}</p></div><div className="calendar-switch"><button className={mode === "day" ? "selected" : ""} onClick={() => setMode("day")} aria-pressed={mode === "day"}>Day</button><button className={mode === "week" ? "selected" : ""} onClick={() => setMode("week")} aria-pressed={mode === "week"}>Week</button><button className={mode === "month" ? "selected" : ""} onClick={() => setMode("month")} aria-pressed={mode === "month"}>Month</button></div></div>{localEvents.length > 0 && <section className="calendar-local-events" aria-label="Saved local events"><div className="calendar-local-heading"><div><span className="utility-kicker"><CalendarCheck2 size={14} />Saved locally</span><h2>Your Crescent events</h2></div><small>{localEvents.length} event{localEvents.length === 1 ? "" : "s"}</small></div><div className="calendar-local-list">{localEvents.map((event) => <div className="calendar-local-card" key={event.id}><span className="calendar-local-dot" /><div><strong>{event.title}</strong><small>{event.when}</small></div><button className="icon-button muted" onClick={() => removeEvent(event.id)} aria-label={`Remove ${event.title}`}><Trash2 size={15} /></button></div>)}</div></section>}{mode === "month" ? monthCalendar : weekCalendar}</div></div>;
@@ -718,6 +716,39 @@ function escapeIcs(value) {
 
 function icsTimestamp(date) {
   return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+}
+
+function localDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function resolveNaturalDate(input, baseDate) {
+  const text = String(input ?? "").trim().toLowerCase();
+  const eventDate = new Date(baseDate);
+  eventDate.setHours(0, 0, 0, 0);
+  if (/\btomorrow\b/.test(text)) eventDate.setDate(eventDate.getDate() + 1);
+  else if (/\byesterday\b/.test(text)) eventDate.setDate(eventDate.getDate() - 1);
+  else if (!/\btoday\b/.test(text)) {
+    const weekdayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+    const weekdayIndex = weekdayNames.findIndex((day) => new RegExp(`\\b${day}\\b`).test(text));
+    const explicitDate = text.match(/\b(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?\b/);
+    if (weekdayIndex >= 0) {
+      const daysAhead = (weekdayIndex - eventDate.getDay() + 7) % 7 || 7;
+      eventDate.setDate(eventDate.getDate() + daysAhead);
+    } else if (explicitDate) {
+      const [, month, day, rawYear] = explicitDate;
+      const year = rawYear ? Number(rawYear.length === 2 ? `20${rawYear}` : rawYear) : eventDate.getFullYear();
+      const candidate = new Date(year, Number(month) - 1, Number(day));
+      if (candidate.getFullYear() === year && candidate.getMonth() === Number(month) - 1 && candidate.getDate() === Number(day)) {
+        if (!rawYear && candidate < eventDate) candidate.setFullYear(year + 1);
+        eventDate.setTime(candidate.getTime());
+      }
+    }
+  }
+  return eventDate;
 }
 
 function safeFileName(value) {

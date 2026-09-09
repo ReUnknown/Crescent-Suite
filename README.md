@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.157 — Project-linked smoke reporting**
+**v0.1.158 — Local calendar date fidelity**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -19,6 +19,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Pages-ready workflow builds a visual preview on every `main` milestone and deploys when repository Pages is enabled
 - Calendar events can be created, saved, reviewed, and removed in the local workspace
 - Calendar events can be exported as a standard `.ics` calendar file for use in other calendar apps
+- Calendar event dates now use the browser’s local calendar day, recognize weekday names and explicit numeric dates, and keep ICS exports aligned with the saved day
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

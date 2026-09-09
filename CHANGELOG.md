@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.158 — Local calendar date fidelity
+
+Published September 9, 2026.
+
+### Fixed
+
+- Calendar event dates now use local browser date keys instead of UTC-derived strings, preventing late-evening events from shifting into the previous day.
+- Natural-language event dates now recognize weekday names such as “Friday” and explicit `M/D` or `M/D/YYYY` dates in addition to Today, Tomorrow, and Yesterday.
+- Week, Day, Month, Recent, and ICS views now share the same local calendar-day interpretation.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.157 — Project-linked smoke reporting
 
 Published September 9, 2026.

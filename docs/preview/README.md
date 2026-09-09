@@ -1,4 +1,4 @@
-# v0.1.157 visual preview
+# v0.1.158 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -26,6 +26,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `forms-responses.png` — Forms response history with locally saved answers
 - `calendar.png` — full seven-day Calendar Week timeline
 - `calendar-local-event.png` — Calendar with a locally saved event positioned at its entered time
+- `calendar-natural-dates.png` — Calendar with a saved event created from a weekday date phrase
 - `tasks-due-dates.png` — Tasks with an edited Tomorrow due chip
 - `forms-long-answer.png` — Forms Preview with a multi-line Long answer textarea
 - `calendar-month.png` — Calendar Month mode with event pills
