@@ -101,6 +101,13 @@ try {
     await behaviorPage.getByRole("button", { name: "Export" }).click();
     const exportFilename = (await exportDownloadPromise).suggestedFilename();
     if (exportFilename.includes("/")) failures.push({ route: "forms", controls: "safe export filename", exportFilename });
+    await behaviorPage.getByRole("button", { name: "Preview" }).click();
+    await behaviorPage.locator(".form-input").first().fill("Smoke response");
+    await behaviorPage.locator(".scale-input button").last().click();
+    await behaviorPage.getByRole("button", { name: "Submit response" }).click();
+    await behaviorPage.getByRole("button", { name: /Responses/ }).click();
+    if (await behaviorPage.locator(".response-card").count() !== 1) failures.push({ route: "forms", controls: "response history" });
+    await behaviorPage.getByRole("button", { name: "Back to form" }).click();
     const previousDocTitle = "Crescent smoke favorite";
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
     behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke new file"));
@@ -126,7 +133,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; Month has 42 cells; content search, local formulas, Forms controls, favorite continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; Month has 42 cells; content search, local formulas, Forms controls, response history, favorite continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

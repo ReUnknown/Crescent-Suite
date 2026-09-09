@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.122 — Forms keep a local response history
+
+Published September 9, 2026.
+
+### Changed
+
+- Form submissions now append to a local response history with timestamps instead of replacing the previous response.
+- Added a dedicated Responses view with answer cards and a clear return path to the form editor or Preview mode.
+- Form JSON exports now include the full local response history.
+
+### Verification
+
+- Added a committed response-history preview and browser smoke coverage for submit → Responses → Back to form.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.121 — Smoke coverage waits for backup confirmation
 
 Published September 9, 2026.
