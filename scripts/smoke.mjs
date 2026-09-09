@@ -45,6 +45,11 @@ try {
           const monthCells = await page.locator(".calendar-month-cell").count();
           if (monthCells !== 42) failures.push({ viewport: viewport.name, route, monthCells });
         }
+        if (route === "home" && viewport.name === "desktop") {
+          await page.getByRole("textbox", { name: "Search across Crescent" }).fill("North star");
+          const searchHits = await page.locator(".search-results .search-result").count();
+          if (!searchHits) failures.push({ viewport: viewport.name, route, search: "North star" });
+        }
       } finally {
         await page.close();
       }
@@ -56,7 +61,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Month has 42 cells.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Month has 42 cells; content search is active.`);
   }
 } finally {
   server.kill("SIGTERM");
