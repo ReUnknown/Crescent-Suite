@@ -41,6 +41,8 @@ try {
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
         if (pageErrors.length || overflow) failures.push({ viewport: viewport.name, route, pageErrors, overflow });
         if (route === "calendar") {
+          const weekDays = await page.locator(".calendar-day").count();
+          if (weekDays !== 7) failures.push({ viewport: viewport.name, route, weekDays });
           await page.getByRole("button", { name: "Month", exact: true }).click();
           const monthCells = await page.locator(".calendar-month-cell").count();
           if (monthCells !== 42) failures.push({ viewport: viewport.name, route, monthCells });
@@ -95,7 +97,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Month has 42 cells; content search, local formulas, Forms controls, favorite continuity, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; Month has 42 cells; content search, local formulas, Forms controls, favorite continuity, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

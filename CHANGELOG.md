@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.113 — Calendar Week is a full seven-day view
+
+Published September 9, 2026.
+
+### Changed
+
+- Calendar Week now renders all seven days from Sunday through Saturday.
+- Day mode still hides the additional columns, and Calendar Month keeps the existing 42-cell grid.
+- Refreshed the committed Calendar preview with the current browser date and seven-day timeline.
+
+### Verification
+
+- CI smoke now asserts seven Week day columns and 42 Month cells on desktop and mobile routes.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.112 — Overnight progress recorded
 
 Published September 9, 2026.
