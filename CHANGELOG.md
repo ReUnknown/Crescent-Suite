@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.6 — Forms that listen
+
+Published September 8, 2026.
+
+### Added
+
+- Forms now has real local response fields, scale selection, publishing state, and a saved-response success state.
+- Form response feedback uses the same toast and status language as the rest of Crescent.
+- Forms preview added to the GitHub visual evidence set.
+
+### Verification
+
+- Filled a response, selected scale 4, published the form, and submitted the response in Playwright.
+- Production build passes after the Forms interaction pass.
+
 ## v0.1.5 — Persistent Drive
 
 Published September 8, 2026.

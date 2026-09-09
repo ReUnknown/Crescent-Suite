@@ -132,3 +132,9 @@ input, textarea { color: var(--text); }
 .toast { position: fixed; z-index: 80; right: 28px; bottom: 24px; display: inline-flex; align-items: center; gap: 8px; max-width: min(420px, calc(100vw - 32px)); padding: 12px 15px; border: 1px solid rgba(184, 170, 255, .38); border-radius: 10px; color: #f5f2ff; background: rgba(35, 31, 65, .96); box-shadow: 0 15px 45px rgba(0, 0, 0, .35); font-size: 12px; opacity: 0; pointer-events: none; transform: translateY(9px); transition: opacity .2s ease, transform .2s ease; }
 .toast svg { color: var(--green); }
 .toast-visible { opacity: 1; transform: translateY(0); }
+.form-input { width: 100%; min-height: 39px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 7px; outline: 0; color: #d8dbea; background: rgba(11, 15, 24, .35); font-size: 11px; }
+.form-input::placeholder { color: #717c95; }
+.scale-input { gap: 8px; }
+.scale-input button.selected { color: #171528; border-color: var(--lilac); background: var(--lilac); }
+.form-submit { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 35px; margin: 18px 0 0 37px; padding: 0 13px; border-radius: 8px; color: #181527; background: linear-gradient(145deg, #c6b9ff, #9888ee); font-size: 12px; }
+.form-success { display: inline-flex; align-items: center; gap: 6px; margin: 14px 0 0 37px; color: var(--green); font-size: 11px; }
