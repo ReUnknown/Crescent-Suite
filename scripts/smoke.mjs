@@ -286,6 +286,10 @@ try {
     await behaviorPage.getByRole("button", { name: "Change question 1 type" }).click();
     if (await behaviorPage.locator("textarea.form-textarea").count() !== 1) failures.push({ route: "forms", controls: "long answer textarea" });
     await behaviorPage.getByRole("button", { name: "Change question 1 type" }).click();
+    const independentScaleChoices = behaviorPage.locator(".scale-input button");
+    await independentScaleChoices.nth(4).click();
+    await independentScaleChoices.nth(5).click();
+    if (await independentScaleChoices.count() !== 10 || await independentScaleChoices.nth(4).getAttribute("aria-pressed") !== "true" || await independentScaleChoices.nth(5).getAttribute("aria-pressed") !== "true" || await independentScaleChoices.nth(0).getAttribute("aria-pressed") !== "false") failures.push({ route: "forms", controls: "independent scale answers" });
     await behaviorPage.getByRole("button", { name: "Delete question 1" }).click();
     const questionCount = await behaviorPage.locator(".question-label-input").count();
     if (questionCount !== 2) failures.push({ route: "forms", controls: "question delete", questionCount });
@@ -428,7 +432,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; timed local events with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; local workspace/project creation and project-linked task creation; Calendar Week has 7 days; timed local events with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; independent Form Scale answers; editable task titles and due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

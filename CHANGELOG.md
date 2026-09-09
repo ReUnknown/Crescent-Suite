@@ -1,5 +1,20 @@
 # Changelog
 
+## v2.4.0 — Independent Form Scale answers
+
+Published September 9, 2026.
+
+### Fixed
+
+- Each Form Scale question now stores its answer by question ID instead of sharing one global value.
+- Response history and CSV exports now read the matching Scale answer for every question.
+- Existing single-Scale response backups remain readable through the legacy `scale` field.
+- Added production smoke coverage for two simultaneous Scale questions with independent selections.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v2.3.0 — Mobile editor actions
 
 Published September 9, 2026.
