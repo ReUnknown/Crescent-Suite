@@ -591,7 +591,13 @@ function DriveView({ workspace, update, onNavigate }) {
   const createFolder = () => {
     const name = window.prompt("Folder name", "New workspace");
     if (!name?.trim()) return;
-    update({ driveFolders: [...folders, { name: name.trim(), items: 0, color: folders.length % 4 }] });
+    const trimmedName = name.trim();
+    if (folders.some((folder) => folder.name.toLowerCase() === trimmedName.toLowerCase())) {
+      emitNotice("That folder already exists.");
+      return;
+    }
+    update({ driveFolders: [...folders, { name: trimmedName, items: 0, color: folders.length % 4 }] });
+    emitNotice(`${trimmedName} folder added locally.`);
   };
   const activeFolder = folders.find((folder) => folder.name === selectedFolder);
   const selectFolder = (folder) => { setSelectedFolder((current) => current === folder.name ? null : folder.name); emitNotice(`${folder.name} folder selected locally.`); };

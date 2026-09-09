@@ -82,6 +82,12 @@ try {
     if (!(await behaviorPage.locator(".workspace-list").innerText()).includes("Smoke workspace") || !(await behaviorPage.locator(".project-list").innerText()).includes("Smoke project")) failures.push({ route: "home", controls: "workspace/project persistence" });
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".folder-grid").innerText()).includes("Smoke workspace")) failures.push({ route: "drive", controls: "workspace folder creation" });
+    behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke folder"));
+    await behaviorPage.getByRole("button", { name: "New folder" }).click();
+    if (!(await behaviorPage.locator(".folder-grid").innerText()).includes("Smoke folder")) failures.push({ route: "drive", controls: "new folder creation" });
+    behaviorPage.once("dialog", (dialog) => dialog.accept("Smoke folder"));
+    await behaviorPage.getByRole("button", { name: "New folder" }).click();
+    if (await behaviorPage.locator(".folder-card").filter({ hasText: "Smoke folder" }).count() !== 1) failures.push({ route: "drive", controls: "duplicate folder guard" });
     await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
     let calendarPrompt = 0;
     const acceptCalendarPrompts = async (dialog) => { calendarPrompt += 1; await dialog.accept(calendarPrompt === 1 ? "Smoke focus block" : "Tomorrow · 3:00 PM"); };

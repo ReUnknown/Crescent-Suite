@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.145 — Safer Drive folder creation
+
+Published September 9, 2026.
+
+### Changed
+
+- Drive New folder now rejects duplicate names case-insensitively and reports the local creation result.
+
+### Verification
+
+- Smoke coverage creates a folder, then attempts the same name again and verifies that only one card remains.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.144 — Normalized custom folder colors
 
 Published September 9, 2026.
