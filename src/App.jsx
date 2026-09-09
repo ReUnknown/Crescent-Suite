@@ -260,7 +260,7 @@ function SearchResults({ query, onNavigate, workspace }) {
   return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.type.toLowerCase())}><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
-function HomeView({ workspace, update, onNavigate }) {
+function HomeView({ workspace, update, onNavigate, onFocusSearch }) {
   const [filter, setFilter] = useState("All");
   const recentFiles = getLiveRecentFiles(workspace);
   const files = filter === "All" ? recentFiles : recentFiles.filter((file) => file.type === filter);
@@ -287,7 +287,7 @@ function HomeView({ workspace, update, onNavigate }) {
     <aside className="home-rail">
       <section className="rail-card day-card"><div className="rail-heading"><div><h3>My day</h3><p>{new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(new Date())}</p></div><button className="text-link" onClick={() => onNavigate("calendar")}>View calendar</button></div>{[...SCHEDULE, ...localSchedule].map((event) => <div className="schedule-row" key={`${event.title}-${event.time}`}><div className="schedule-time"><span>{event.time}</span><span>{event.end}</span></div><span className={`schedule-bar bar-${event.color}`} /><strong>{event.title}</strong></div>)}</section>
       <section className="rail-card activity-card"><div className="rail-heading"><h3>Activity</h3><button className="text-link" onClick={() => onNavigate("recent")}>See all <ArrowRight size={14} /></button></div>{[{ initials: "TK", color: "lilac", text: "Taylor Kim commented on", target: "Design review deck", time: "10 minutes ago" }, { initials: "JL", color: "green", text: "Jordan Lee edited", target: "Growth metrics", time: "1 hour ago" }, { initials: "SC", color: "violet", text: "Sam Chen shared", target: "Launch assets with you", time: "3 hours ago" }].map((item) => <div className="activity-row" key={item.initials}><span className={`avatar avatar-${item.color}`}>{item.initials}</span><p>{item.text} <strong>{item.target}</strong><small>{item.time}</small></p></div>)}<div className="activity-task"><CalendarCheck2 size={18} /><p>You have <strong>3 tasks due tomorrow</strong><small>5 hours ago</small></p></div></section>
-      <button className="ask-card" onClick={() => onNavigate("notes")}><span className="ask-icon"><Sparkles size={16} /></span><span className="ask-copy"><strong>Ask Crescent anything...</strong><small>Find files, draft content, set reminders...</small></span><ArrowRight size={18} /></button>
+      <button className="ask-card" onClick={onFocusSearch}><span className="ask-icon"><Sparkles size={16} /></span><span className="ask-copy"><strong>Ask Crescent anything...</strong><small>Search files, notes, tasks, and events...</small></span><ArrowRight size={18} /></button>
     </aside>
   </div>;
 }
@@ -627,8 +627,9 @@ export default function App() {
     return () => window.removeEventListener("keydown", handleShortcut);
   }, []);
   const navigate = (id) => { setActiveApp(id); setQuery(""); setSidebarOpen(false); if (window.location.hash !== `#${id}`) window.history.pushState({ app: id }, "", `#${id}`); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const focusSearch = () => { setQuery(""); window.setTimeout(() => document.querySelector(".global-search input")?.focus(), 0); };
   const currentView = useMemo(() => {
-    if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} />;
+    if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} onFocusSearch={focusSearch} />;
     if (activeApp === "docs") return <DocsView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "sheets") return <SheetsView workspace={workspace} update={update} onNavigate={navigate} />;
     if (activeApp === "slides") return <SlidesView workspace={workspace} update={update} onNavigate={navigate} />;

@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.101 — Forms builder preview is archived**
+**v0.1.102 — Home search prompt is connected**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -43,6 +43,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Forms builders can now remove questions locally while keeping one safe question in the form; respondent Preview stays focused and hides builder controls
 - Forms builders can cycle each question between Short answer, Long answer, and Scale while preserving the local response flow
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
+- Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header
