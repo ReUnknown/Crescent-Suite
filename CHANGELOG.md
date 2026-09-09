@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.41 — Tasks can move to Trash
+
+Published September 9, 2026.
+
+### Changed
+
+- Added a task delete action that removes the task from the active list and records a lightweight local Trash item.
+- Trash now renders deleted task records with the correct Tasks icon and remains populated after reload.
+- Deletion feedback uses the existing local toast channel.
+
+### Verification
+
+- Deleted “Review the launch brief,” confirmed it appeared in Trash immediately, reloaded, and confirmed it remained there.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.40 — Forms settings change responses
 
 Published September 9, 2026.
