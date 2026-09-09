@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.40 — Forms settings change responses
+
+Published September 9, 2026.
+
+### Changed
+
+- Collect email addresses now adds a persisted email field to the form response surface.
+- Allow one response now disables the submit action after a response has been saved locally.
+- Response answers include the collected email value in the existing local draft record.
+
+### Verification
+
+- Enabled email collection, confirmed the email field appeared, submitted `alex@example.com`, confirmed the submit control became disabled, and confirmed the field remained visible in Preview.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.39 — Docs outline links are live
 
 Published September 9, 2026.
