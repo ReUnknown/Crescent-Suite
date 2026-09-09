@@ -33,6 +33,7 @@ jobs:
         with:
           path: ./dist
   deploy:
+    if: ${{ vars.CRESCENT_PAGES_ENABLED == 'true' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

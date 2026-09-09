@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.19 — A calmer GitHub check
+
+Published September 8, 2026.
+
+### Changed
+
+- Pages preview still builds and uploads on every `main` push.
+- Deployment now waits for the repository variable `CRESCENT_PAGES_ENABLED=true`, preventing a known Pages-disabled 404 from masking green product CI.
+
+### Verification
+
+- The workflow configuration remains scoped to the Crescent repository and preserves the deploy path for when Pages is enabled.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.18 — A steadier workspace loop
 
 Published September 8, 2026.
@@ -161,7 +176,7 @@ Published September 8, 2026.
 
 ### Added
 
-- GitHub Pages workflow builds and deploys the Vite app from `main`.
+- GitHub Pages workflow builds the Vite app from `main` and deploys when the repository Pages gate is enabled.
 - Vite uses the repository base path in Actions so the hosted app resolves assets correctly.
 - Preview documentation now includes the Forms evidence screenshot alongside the other milestone captures.
 

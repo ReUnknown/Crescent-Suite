@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.18 — A steadier workspace loop**
+**v0.1.19 — A calmer GitHub check**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -14,7 +14,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Slides editor with slide management, themes, and presentation mode
 - Notes, Tasks, Calendar, Drive, and Forms surfaces with working local interactions
 - Shared navigation, command-style search, responsive layouts, and a night-sky design system
-- GitHub Pages workflow for a published visual preview on every `main` milestone
+- Pages-ready workflow builds a visual preview on every `main` milestone and deploys when repository Pages is enabled
 - Calendar events can be created, saved, reviewed, and removed in the local workspace
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
@@ -25,6 +25,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Sheets’ Insights view summarizes totals, conversion, and visits by channel from the editable grid
 - Forms has a true Preview/Edit toggle that centers the respondent experience and hides builder controls
 - Shared workspace updates now keep a stable callback so app views do less unnecessary recomputation while searching and switching
+- Pages deployment is gated until the repository explicitly enables Pages, while the preview artifact still builds on every milestone
 
 Everything is stored in this browser under a versioned local workspace key. No external account connection is required for this release.
 
