@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.8.0 — Complete mobile editor actions
+
+Published September 9, 2026.
+
+### Improved
+
+- Mobile editor headers now retain all secondary actions as compact icon controls, including export, preview, response, and local cleanup actions.
+- Accessible names remain intact even when button labels collapse visually for narrow screens.
+- Added mobile smoke coverage across all eight editor routes for visible secondary actions.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v2.7.0 — Mobile Calendar navigation
 
 Published September 9, 2026.

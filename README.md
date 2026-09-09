@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v2.7.0 — Mobile Calendar navigation**
+**v2.8.0 — Complete mobile editor actions**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -104,6 +104,8 @@ The first major release establishes a usable Crescent product shell and a local-
 - Added malformed-response coverage for Scale imports
 - Calendar Export, Previous, Today, and Next controls remain available on mobile
 - Added mobile smoke coverage for Calendar navigation
+- Mobile editor headers retain export, preview, response, and cleanup actions as compact controls
+- Added mobile smoke coverage across all eight editor routes
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback
