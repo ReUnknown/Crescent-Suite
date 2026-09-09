@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.124 — Calendar local events land on the timeline**
+**v0.1.125 — Calendar natural-language dates are respected**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -47,6 +47,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Forms retain a local response history, show saved answers and timestamps in a dedicated Responses view, and include the history in JSON exports
 - Sheets now support COUNT and COUNTA over visible ranges alongside SUM, AVERAGE, MIN, MAX, and ratio formulas
 - Calendar events created in the local workspace now render in the Week/Day timeline at the time entered in the event prompt
+- Calendar event prompts recognize “Tomorrow” and “Yesterday” when assigning the saved event date
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges

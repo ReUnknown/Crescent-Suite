@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.125 — Calendar natural-language dates are respected
+
+Published September 9, 2026.
+
+### Changed
+
+- Calendar local-event creation now shifts the stored date for prompts containing “Tomorrow” or “Yesterday,” matching the wording users entered.
+
+### Verification
+
+- Smoke coverage checks a “Tomorrow · 3:00 PM” event stores tomorrow’s date and renders at the 3 PM slot.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.124 — Calendar local events land on the timeline
 
 Published September 9, 2026.

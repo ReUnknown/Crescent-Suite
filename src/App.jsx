@@ -460,7 +460,10 @@ function CalendarView({ workspace, update, onNavigate }) {
     if (!title?.trim()) return;
     const when = window.prompt("When should it happen?", "Tomorrow · 3:00 PM");
     if (!when?.trim()) return;
-    update({ calendarEvents: [{ id: Date.now(), title: title.trim(), when: when.trim(), date: displayDate.toISOString().slice(0, 10) }, ...localEvents] });
+    const eventDate = new Date(displayDate);
+    if (/\btomorrow\b/i.test(when)) eventDate.setDate(eventDate.getDate() + 1);
+    if (/\byesterday\b/i.test(when)) eventDate.setDate(eventDate.getDate() - 1);
+    update({ calendarEvents: [{ id: Date.now(), title: title.trim(), when: when.trim(), date: eventDate.toISOString().slice(0, 10) }, ...localEvents] });
     emitNotice("Event saved in this local workspace.");
   };
   const removeEvent = (id) => update({ calendarEvents: localEvents.filter((event) => event.id !== id) });
