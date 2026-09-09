@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.78 — Calendar Today follows the browser date**
+**v0.1.79 — Calendar Month view honors saved event dates**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -21,6 +21,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback
 - Calendar Today, Previous, and new-event dates now follow the browser’s actual date instead of the seeded demo date
+- Calendar Month view now places saved local events in the matching stored day column
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header
