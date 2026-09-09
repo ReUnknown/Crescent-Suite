@@ -114,6 +114,7 @@ try {
     if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== previousDocTitle) failures.push({ route: "docs", controls: "Docs restore" });
     await behaviorPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
     await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "partial-backup.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Smoke restore" }, sheets: { title: "Smoke sheet" }, forms: null, formSettings: { collectEmail: true } })) });
+    await behaviorPage.getByRole("status").filter({ hasText: "Workspace backup restored locally." }).waitFor({ state: "visible" });
     await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
     if (await behaviorPage.locator(".question-label-input").count() !== 3 || await behaviorPage.getByRole("button", { name: "Collect email addresses" }).getAttribute("aria-pressed") !== "true") failures.push({ route: "settings", controls: "partial backup restore" });
   } finally {

@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.121 — Smoke coverage waits for backup confirmation
+
+Published September 9, 2026.
+
+### Changed
+
+- Settings backup smoke coverage waits for the visible local restore confirmation before navigating to Forms.
+
+### Verification
+
+- GitHub CI for `v0.1.120` passes.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.120 — Drive file creation is recoverable
 
 Published September 9, 2026.
