@@ -287,6 +287,8 @@ try {
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     await behaviorPage.waitForSelector(".document-inner .search-target");
     if (behaviorPage.url().split("#")[1] !== "docs" || !(await behaviorPage.locator(".document-inner .search-target").innerText()).includes("North star")) failures.push({ route: "search", controls: "open exact Docs heading result", url: behaviorPage.url() });
+    await behaviorPage.locator(".document-inner").evaluate((editor) => editor.blur());
+    await behaviorPage.waitForFunction(() => !JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").docs?.body?.includes("search-target"));
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Launch ideas");
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     if (behaviorPage.url().split("#")[1] !== "notes" || await behaviorPage.getByRole("textbox", { name: "Note title" }).inputValue() !== "Launch ideas") failures.push({ route: "search", controls: "open exact note result", url: behaviorPage.url() });

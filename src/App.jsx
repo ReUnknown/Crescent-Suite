@@ -446,7 +446,12 @@ function DocsView({ workspace, update, onNavigate, initialHeading }) {
       targetHeading?.scrollIntoView({ block: "center" });
     }, 0);
   }, [initialHeading, workspace.docs.body]);
-  const updateDoc = (nextBody = editorRef.current?.innerHTML ?? workspace.docs.body) => update({ docs: { ...workspace.docs, title, body: nextBody, updatedAt: "just now" } });
+  const updateDoc = (nextBody) => {
+    const searchTarget = editorRef.current?.querySelector(".search-target");
+    searchTarget?.classList.remove("search-target");
+    const body = nextBody ?? editorRef.current?.innerHTML ?? workspace.docs.body;
+    update({ docs: { ...workspace.docs, title, body, updatedAt: "just now" } });
+  };
   const exec = (command, value = undefined) => { editorRef.current?.focus(); document.execCommand(command, false, value); if (command === "formatBlock") setBlockStyle(String(value)); updateDoc(); };
   const exportDocument = () => {
     const body = editorRef.current?.innerHTML ?? workspace.docs.body ?? "";

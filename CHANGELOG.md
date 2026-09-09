@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.3.6 — Clean Docs search markers
+
+Published September 9, 2026.
+
+### Fixed
+
+- Transient Docs search highlights are now removed before content-editable autosave.
+- Search-only styling can no longer contaminate exported or persisted document HTML.
+- Added production smoke coverage for clean saved document content after the destination highlight is blurred.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.3.5 — Browser tab context
 
 Published September 9, 2026.

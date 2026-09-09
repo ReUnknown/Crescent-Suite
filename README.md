@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.3.5 — Browser tab context**
+**v1.3.6 — Clean Docs search markers**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -53,6 +53,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Shared editor title editability now follows the actual surface identity, so file names matching app labels remain editable
 - Universal Search exposes its open state and results region through `aria-expanded` and `aria-controls`
 - Route navigation now updates the browser tab title with the current Crescent surface
+- Transient Docs search highlights are removed before autosave so they never enter document HTML
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback
