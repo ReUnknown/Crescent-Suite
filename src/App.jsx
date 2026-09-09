@@ -331,13 +331,17 @@ const SHEET_ROWS = Array.from({ length: 9 }, (_, index) => index + 1);
 
 function evaluateCell(value, cells) {
   if (typeof value !== "string" || !value.startsWith("=")) return value;
-  const sumMatch = value.match(/^=SUM\(([A-F]\d+):([A-F]\d+)\)$/i);
-  if (sumMatch) {
-    const [, start, end] = sumMatch;
+  const rangeMatch = value.match(/^=(SUM|AVERAGE|MIN|MAX)\(([A-F]\d+):([A-F]\d+)\)$/i);
+  if (rangeMatch) {
+    const [, operation, start, end] = rangeMatch;
     const column = start[0].toUpperCase();
     const startRow = Number(start.slice(1));
     const endRow = Number(end.slice(1));
-    return Array.from({ length: endRow - startRow + 1 }, (_, index) => Number(evaluateCell(cells[`${column}${startRow + index}`] ?? "", cells)) || 0).reduce((sum, item) => sum + item, 0);
+    const values = Array.from({ length: endRow - startRow + 1 }, (_, index) => Number(evaluateCell(cells[`${column}${startRow + index}`] ?? "", cells)) || 0);
+    if (operation.toUpperCase() === "AVERAGE") return values.reduce((sum, item) => sum + item, 0) / values.length;
+    if (operation.toUpperCase() === "MIN") return Math.min(...values);
+    if (operation.toUpperCase() === "MAX") return Math.max(...values);
+    return values.reduce((sum, item) => sum + item, 0);
   }
   const ratio = value.match(/^=([A-F]\d+)\/([A-F]\d+)$/i);
   if (ratio) return ((Number(evaluateCell(cells[ratio[1].toUpperCase()] ?? "", cells)) || 0) / (Number(evaluateCell(cells[ratio[2].toUpperCase()] ?? "", cells)) || 1)).toFixed(2);

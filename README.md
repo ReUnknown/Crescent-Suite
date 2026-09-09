@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.102 — Home search prompt is connected**
+**v0.1.103 — Sheets supports more local formulas**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -44,6 +44,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Forms builders can cycle each question between Short answer, Long answer, and Scale while preserving the local response flow
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
+- Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header
