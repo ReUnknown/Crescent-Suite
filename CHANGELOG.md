@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.7.1 — Accessible Forms Scale choices
+
+Published September 9, 2026.
+
+### Improved
+
+- Forms Scale buttons now expose labels such as “How clear is the next step?: 1”.
+- The selected Scale value now exposes its state with `aria-pressed`.
+- Added production smoke coverage for Scale choice semantics across route viewports.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.7.0 — Persistent exact navigation history
 
 Published September 9, 2026.

@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.7.0 — Persistent exact navigation history**
+**v1.7.1 — Accessible Forms Scale choices**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -76,6 +76,8 @@ The first major release establishes a usable Crescent product shell and a local-
 - Added malformed-timestamp coverage to the backup recovery smoke path
 - Exact navigation context now travels through browser history, so Back and Forward restore the matching heading, file, cell, question, event, folder, or Project state
 - Added production smoke coverage for restoring exact search context through browser Back and Forward
+- Forms Scale choices now announce their question context and expose the selected value with `aria-pressed`
+- Added production smoke coverage for Scale choice semantics
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

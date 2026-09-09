@@ -65,6 +65,7 @@ try {
           if (monthCells !== 42) failures.push({ viewport: viewport.name, route, monthCells });
         }
         if (route === "slides" && await page.getByRole("textbox", { name: "Speaker notes for From ideas to impact" }).count() !== 1) failures.push({ viewport: viewport.name, route, accessibility: "speaker notes label" });
+        if (route === "forms" && await page.getByRole("button", { name: "How clear is the next step?: 1" }).getAttribute("aria-pressed") !== "false") failures.push({ viewport: viewport.name, route, accessibility: "scale choice semantics" });
         if (route === "home" && await page.getByRole("button", { name: "All", exact: true }).getAttribute("aria-pressed") !== "true") failures.push({ viewport: viewport.name, route, accessibility: "Recent filter state" });
         if (route === "drive" && await page.getByRole("button", { name: "Grid view" }).getAttribute("aria-pressed") !== "true") failures.push({ viewport: viewport.name, route, accessibility: "Drive view state" });
         if (route === "trash" && !(await page.locator(".utility-panel").innerText()).includes("Trash is empty.")) failures.push({ viewport: viewport.name, route, emptyState: "Trash is empty." });
