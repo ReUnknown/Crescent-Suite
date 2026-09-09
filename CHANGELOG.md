@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.3.9 — Consistent selection semantics
+
+Published September 9, 2026.
+
+### Improved
+
+- Home Recent filters now expose the active filter with `aria-pressed`.
+- Drive Grid/List controls now expose the active view with `aria-pressed`.
+- Slides thumbnails and layout choices now expose their current selection state.
+- Added production smoke coverage for the key selected-state contracts.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.3.8 — Accessible Slides speaker notes
 
 Published September 9, 2026.
