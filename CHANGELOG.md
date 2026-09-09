@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.7.0 — Persistent exact navigation history
+
+Published September 9, 2026.
+
+### Improved
+
+- Navigation context is now stored with each Crescent browser history entry.
+- Back and Forward restore exact search destinations instead of reopening only the containing app.
+- Existing direct hash routes continue to work without requiring an account or server session.
+- Added production smoke coverage for exact search-context restoration through browser history.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.6.1 — Safe response timestamps
 
 Published September 9, 2026.

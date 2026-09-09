@@ -1059,7 +1059,7 @@ export default function App() {
     return () => window.removeEventListener("crescent:notice", handleNotice);
   }, []);
   useEffect(() => {
-    const handleLocationChange = () => { setActiveApp(appFromLocation()); setNavigationContext(null); };
+    const handleLocationChange = () => { setActiveApp(appFromLocation()); setNavigationContext(window.history.state?.context ?? null); };
     window.addEventListener("popstate", handleLocationChange);
     window.addEventListener("hashchange", handleLocationChange);
     return () => { window.removeEventListener("popstate", handleLocationChange); window.removeEventListener("hashchange", handleLocationChange); };
@@ -1108,7 +1108,7 @@ export default function App() {
     document.addEventListener("pointerdown", handleOutsideSearch);
     return () => document.removeEventListener("pointerdown", handleOutsideSearch);
   }, [query]);
-  const navigate = (id, context = null) => { setActiveApp(id); setNavigationContext(context); setQuery(""); setSidebarOpen(false); if (window.location.hash !== `#${id}`) window.history.pushState({ app: id }, "", `#${id}`); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const navigate = (id, context = null) => { setActiveApp(id); setNavigationContext(context); setQuery(""); setSidebarOpen(false); const nextHash = `#${id}`; const currentContext = window.history.state?.context ?? null; if (window.location.hash !== nextHash || JSON.stringify(currentContext) !== JSON.stringify(context)) window.history.pushState({ app: id, context }, "", nextHash); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const focusSearch = () => { setQuery(""); window.setTimeout(() => document.querySelector(".global-search input")?.focus(), 0); };
   const currentView = useMemo(() => {
     if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} onFocusSearch={focusSearch} />;

@@ -330,6 +330,15 @@ try {
     const liveDriveTitle = "Smoke restore";
     await behaviorPage.locator(".drive-file").filter({ hasText: liveDriveTitle }).click();
     if (behaviorPage.url().split("#")[1] !== "docs" || await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== liveDriveTitle) failures.push({ route: "drive", controls: "exact recent-file destination", url: behaviorPage.url() });
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("North star");
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
+    await behaviorPage.waitForSelector(".document-inner .search-target");
+    await behaviorPage.goBack();
+    await behaviorPage.waitForURL(/\/home$/);
+    await behaviorPage.goForward();
+    await behaviorPage.waitForSelector(".document-inner .search-target");
+    if (behaviorPage.url().split("#")[1] !== "docs") failures.push({ route: "history", controls: "restore exact search context", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
     await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "malformed-records.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Safe import" }, sheets: { title: "Safe sheet" }, slides: [null], notes: [null], tasks: [null], forms: [null], calendarEvents: [null], driveFolders: [null], deletedFiles: [null], formResponses: [{ submittedAt: "not a date", answers: null }] })) });
     await behaviorPage.getByRole("status").filter({ hasText: "Workspace backup restored locally." }).waitFor({ state: "visible" });

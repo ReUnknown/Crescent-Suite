@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.6.1 — Safe response timestamps**
+**v1.7.0 — Persistent exact navigation history**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -74,6 +74,8 @@ The first major release establishes a usable Crescent product shell and a local-
 - Extended production smoke coverage for the search result region alongside the existing keyboard navigation contract
 - Imported Form responses now normalize invalid timestamps to the safe local-history fallback instead of throwing during rendering
 - Added malformed-timestamp coverage to the backup recovery smoke path
+- Exact navigation context now travels through browser history, so Back and Forward restore the matching heading, file, cell, question, event, folder, or Project state
+- Added production smoke coverage for restoring exact search context through browser Back and Forward
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback
