@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.3 — Responsive feedback
+
+Published September 8, 2026.
+
+### Added
+
+- Shared Crescent toast feedback for local-first actions that need a clear next step.
+- Share, Calendar event, and Drive creation controls no longer fail silently.
+- The feedback layer respects the same night-sky surface and status colors as the rest of the suite.
+
+### Verification
+
+- Production build passes.
+- Share and Calendar action feedback verified in the rendered app.
+- GitHub CI is configured to build every push to `main`.
+
 ## v0.1.2 — Editor direction
 
 Published September 8, 2026.

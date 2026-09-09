@@ -337,6 +337,10 @@ function UtilityView({ id, onNavigate }) {
 
 function MoonIcon() { return <span className="moon-icon" />; }
 
+function emitNotice(message) {
+  window.dispatchEvent(new CustomEvent("crescent:notice", { detail: message }));
+}
+
 function downloadText(name, content, type) {
   const blob = new Blob([content], { type });
   const url = URL.createObjectURL(blob);
@@ -352,6 +356,29 @@ export default function App() {
   const [activeApp, setActiveApp] = useState("home");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [notice, setNotice] = useState("");
+  useEffect(() => {
+    const handleNotice = (event) => setNotice(event.detail);
+    window.addEventListener("crescent:notice", handleNotice);
+    return () => window.removeEventListener("crescent:notice", handleNotice);
+  }, []);
+  useEffect(() => {
+    if (!notice) return undefined;
+    const timeout = window.setTimeout(() => setNotice(""), 2600);
+    return () => window.clearTimeout(timeout);
+  }, [notice]);
+  useEffect(() => {
+    const handleActionFeedback = (event) => {
+      const button = event.target.closest("button");
+      const label = button?.textContent?.trim() ?? "";
+      if (label === "Share") emitNotice("Share links will be available when Crescent Cloud is connected.");
+      if (label === "Event") emitNotice("Calendar is local-first for now; this event stays in your Crescent workspace.");
+      if (label.includes("New folder")) emitNotice("Drive folder creation is queued for the next storage pass.");
+      if (label.includes("New file")) emitNotice("Choose an app from Home to start a new piece of work.");
+    };
+    document.addEventListener("click", handleActionFeedback);
+    return () => document.removeEventListener("click", handleActionFeedback);
+  }, []);
   useEffect(() => {
     const handleShortcut = (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
@@ -375,5 +402,5 @@ export default function App() {
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} />;
     return <UtilityView id={activeApp} onNavigate={navigate} />;
   }, [activeApp, workspace]);
-  return <div className="app-shell"><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} query={query} onQueryChange={setQuery} onNavigate={navigate} /><div className="app-content">{currentView}</div></div></div>;
+  return <div className="app-shell"><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} query={query} onQueryChange={setQuery} onNavigate={navigate} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div></div>;
 }
