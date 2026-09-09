@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.17 — Forms you can preview
+
+Published September 8, 2026.
+
+### Added
+
+- Forms Preview now switches into a centered respondent view.
+- Builder-only settings and Add question controls hide during Preview and return in Edit form mode.
+- Added a committed Forms Preview screenshot to the visual evidence set.
+
+### Verification
+
+- Toggled Preview → Edit form and confirmed builder settings hide and return in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.16 — Sheets with a signal
 
 Published September 8, 2026.

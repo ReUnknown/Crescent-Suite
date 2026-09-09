@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.16 — Sheets with a signal**
+**v0.1.17 — Forms you can preview**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -23,6 +23,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Slides saves speaker notes and keeps its page counter accurate after adding slides
 - Drive’s Grid/List toggle now changes folders and recent files into a compact scan-friendly list
 - Sheets’ Insights view summarizes totals, conversion, and visits by channel from the editable grid
+- Forms has a true Preview/Edit toggle that centers the respondent experience and hides builder controls
 
 Everything is stored in this browser under a versioned local workspace key. No external account connection is required for this release.
 

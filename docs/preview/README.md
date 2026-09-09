@@ -11,5 +11,6 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `drive-list.png` — Drive in its compact list view
 - `forms.png` — Forms builder with published and saved-response states
 - `forms-persisted.png` — Forms with restored answer text, scale, and saved-response confirmation
+- `forms-preview.png` — Forms respondent-facing Preview mode
 - `calendar.png` — Calendar with a saved local event
 - `mobile.png` — responsive home dashboard at a mobile viewport

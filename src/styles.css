@@ -178,3 +178,6 @@ input, textarea { color: var(--text); }
 .insight-bar-row i { display: block; height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--lilac), #6c90ec); }
 .insight-bar-row strong { color: #d9d9e9; font-size: 11px; font-weight: 500; text-align: right; }
 @media (max-width: 780px) { .sheet-insights { padding: 30px 15px 50px; }.sheet-insights-heading { align-items: flex-start; flex-direction: column; }.insight-cards { grid-template-columns: 1fr; }.insight-bar-row { grid-template-columns: 85px minmax(0, 1fr) 52px; } }
+.forms-preview-mode .form-builder { display: block; max-width: 760px; margin: 36px auto 0; }
+.forms-preview-mode .form-preview { max-width: none; }
+.forms-preview-mode .form-settings, .forms-preview-mode .add-question { display: none; }
