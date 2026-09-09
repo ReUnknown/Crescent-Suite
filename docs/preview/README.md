@@ -1,4 +1,4 @@
-# v3.9.0 visual preview
+# v4.0.0 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -51,6 +51,9 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `trash-confirmation-modal.png` — Trash permanent deletion confirmation with explicit irreversible-action language
 - `trash-confirmation-modal-mobile.png` — Compact mobile Trash confirmation with full-width actions
 - `trash-empty-cta.png` — Empty Trash state with a quiet link back to Recent files
+- `mail-inbox.png` — Local Mail inbox with unread state, message selection, and a readable detail pane
+- `mail-compose.png` — Local Mail compose dialog with recipient, subject, and message fields
+- `mail-mobile.png` — Responsive Mail inbox and message detail at a compact mobile viewport
 - Recovery behavior is covered in the committed Trash and editor previews above; displaced active files remain recoverable after restore
 - `forms-preview.png` — Forms respondent-facing Preview mode with email collection enabled
 - `forms-theme-blue.png` — Forms with a persisted blue theme selected from the inspector

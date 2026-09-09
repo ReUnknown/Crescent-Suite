@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v3.9.0 — Actionable empty states**
+**v4.0.0 — Local Mail**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -14,7 +14,8 @@ The first major release establishes a usable Crescent product shell and a local-
 - Docs editor with local autosave, formatting controls, outline, and HTML export
 - Sheets grid with editable cells, basic formulas, and CSV export
 - Slides editor with slide management, themes, and presentation mode
-- Notes, Tasks, Calendar, Drive, and Forms surfaces with working local interactions
+- Notes, Tasks, Calendar, Drive, Forms, and Mail surfaces with working local interactions
+- Mail inbox with unread and Starred state, message selection, local reply prefill, and a browser-saved compose/send flow
 - Shared navigation, command-style search, responsive layouts, and a night-sky design system
 - Pages-ready workflow builds a visual preview on every `main` milestone and deploys when repository Pages is enabled
 - Drive’s New file action now creates named Docs, Sheets, Slides, Notes, or Forms records and opens the selected editor
@@ -34,12 +35,12 @@ The first major release establishes a usable Crescent product shell and a local-
 - Tasks can now be filtered to a persistent local Project while retaining the existing status and due-date controls
 - Command+K search can now be dismissed with Escape without leaving the current route
 - Recent, Starred, Shared, Trash, and Settings now keep their correct mobile page titles and contextual empty-state copy
-- Home now presents all eight suite apps in a visible 4×2 launcher so Forms remains discoverable beside the other core tools
+- Home now presents all nine suite apps in a visible launcher, including the new Mail surface
 - Home’s My day rail now includes only saved events on the current local day; future events remain available in Calendar and Recent
 - The committed preview archive header and Home screenshot description now match the current published shell
 - Tasks now explain when a status or Project filter has no matches, with a clear next-step message instead of an empty list
 - Settings’ hidden workspace-backup input now has an explicit accessible name for assistive technology
-- `v1.0.0` marks the first major, reviewable Crescent baseline with the full suite shell, eight working apps, committed visual previews, and green CI smoke coverage
+- `v1.0.0` marks the first major, reviewable Crescent baseline with the full suite shell, committed visual previews, and green CI smoke coverage
 - Tasks now support inline title editing with Enter/Escape keyboard controls, explicit save/cancel actions, and local persistence
 - Calendar events now support inline title and time editing with natural-language date recalculation and local persistence
 - Task title editing now collapses to a compact save/cancel state on small screens without horizontal overflow
@@ -49,7 +50,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Search context now applies once per destination so later local editing and manual selection stay stable
 - Search results now open the matching task with its existing Project filter selected
 - Search results now highlight the matching local Calendar event or Drive folder in its destination surface
-- Universal Search now includes direct destinations for all eight Crescent apps, even before they have local files
+- Universal Search now includes direct destinations for all nine Crescent apps, even before they have local files
 - Sidebar Workspaces now select their matching Drive folder, and Projects open Tasks with the matching Project filter selected
 - Home Continue working and Recent rows now preserve the exact local file destination when opening Notes, Slides, Tasks, or Calendar
 - Recent, Starred, and Shared utility rows now preserve the exact local file destination as well
@@ -116,7 +117,7 @@ The first major release establishes a usable Crescent product shell and a local-
 - Calendar Export, Previous, Today, and Next controls remain available on mobile
 - Added mobile smoke coverage for Calendar navigation
 - Mobile editor headers retain export, preview, response, and cleanup actions as compact controls
-- Added mobile smoke coverage across all eight editor routes
+- Added mobile smoke coverage across all suite routes with compact app-aware actions
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

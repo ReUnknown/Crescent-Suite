@@ -1,5 +1,19 @@
 # Changelog
 
+## v4.0.0 — Local Mail
+
+Published September 9, 2026.
+
+### Added
+
+- Added a local-first Mail app to round out Crescent’s communication and productivity surfaces.
+- Added inbox message selection, unread/read state, Starred state, reply prefill, and local compose/send behavior.
+- Added Mail to Home, Recent, Universal Search, responsive navigation, and the committed visual preview archive.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 route checks.
+
 ## v3.9.0 — Actionable empty states
 
 Published September 9, 2026.

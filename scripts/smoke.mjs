@@ -5,7 +5,7 @@ import { chromium } from "playwright";
 
 const port = 4173;
 const baseUrl = process.env.SMOKE_URL ?? `http://127.0.0.1:${port}`;
-const routes = ["home", "recent", "starred", "shared", "trash", "docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "settings", "Crescent-Suite/forms"];
+const routes = ["home", "recent", "starred", "shared", "trash", "mail", "docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "settings", "Crescent-Suite/forms"];
 const viewports = [
   { name: "desktop", width: 1440, height: 1000 },
   { name: "mobile", width: 390, height: 844 },
@@ -89,7 +89,7 @@ try {
         }
         if (route === "home" && viewport.name === "desktop") {
           const launchers = page.locator(".app-launch");
-          if (await launchers.count() !== 8) failures.push({ viewport: viewport.name, route, launcherCount: await launchers.count() });
+          if (await launchers.count() !== 9) failures.push({ viewport: viewport.name, route, launcherCount: await launchers.count() });
           const railBox = await page.locator(".home-rail").boundingBox();
           const formsBox = await launchers.filter({ hasText: "Forms" }).boundingBox();
           if (!formsBox || (railBox && formsBox.right > railBox.left)) failures.push({ viewport: viewport.name, route, formsLauncher: formsBox, homeRail: railBox });
@@ -115,6 +115,22 @@ try {
 
   const behaviorPage = await browser.newPage({ viewport: viewports[0] });
   try {
+    await behaviorPage.goto(`${baseUrl}/mail`, { waitUntil: "networkidle" });
+    if (await behaviorPage.getByRole("button", { name: "Open message Design review tomorrow" }).count() !== 1) failures.push({ route: "mail", controls: "inbox message" });
+    await behaviorPage.getByRole("button", { name: "Open message Growth metrics are ready" }).click();
+    await behaviorPage.getByRole("button", { name: "Mark unread" }).click();
+    if (await behaviorPage.getByRole("button", { name: "Mark read" }).count() !== 1) failures.push({ route: "mail", controls: "mark unread" });
+    await behaviorPage.getByRole("button", { name: "Reply" }).click();
+    const replyDialog = behaviorPage.getByRole("dialog", { name: "Write something clear." });
+    if (await replyDialog.getByRole("textbox", { name: "To" }).inputValue() !== "jordan@crescent.local" || await replyDialog.getByRole("textbox", { name: "Subject" }).inputValue() !== "Re: Growth metrics are ready") failures.push({ route: "mail", controls: "reply prefill" });
+    await replyDialog.getByRole("button", { name: "Cancel" }).click();
+    await behaviorPage.getByRole("button", { name: "New message" }).click();
+    const composeDialog = behaviorPage.getByRole("dialog", { name: "Write something clear." });
+    await composeDialog.getByRole("textbox", { name: "To" }).fill("casey@crescent.local");
+    await composeDialog.getByRole("textbox", { name: "Subject" }).fill("Smoke message");
+    await composeDialog.getByRole("textbox", { name: "Message" }).fill("A local smoke-test message.");
+    await composeDialog.getByRole("button", { name: "Send message" }).click();
+    if (await behaviorPage.getByRole("button", { name: "Open message Smoke message" }).count() !== 1) failures.push({ route: "mail", controls: "local message send" });
     await behaviorPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });
     const documentBody = behaviorPage.getByRole("textbox", { name: "Document body" });
     await documentBody.evaluate((node) => { const textNode = document.createTreeWalker(node, globalThis.NodeFilter.SHOW_TEXT).nextNode(); const range = document.createRange(); range.setStart(textNode, 0); range.setEnd(textNode, Math.min(8, textNode.textContent.length)); const selection = globalThis.getSelection(); selection.removeAllRanges(); selection.addRange(range); });

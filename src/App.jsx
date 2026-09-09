@@ -31,6 +31,8 @@ import {
   List,
   ListChecks,
   Menu,
+  Mail,
+  MailOpen,
   MoreHorizontal,
   NotebookPen,
   Pencil,
@@ -39,6 +41,7 @@ import {
   Presentation,
   Redo2,
   Search,
+  Send,
   Settings2,
   Share2,
   Sparkles,
@@ -61,6 +64,7 @@ const APP_META = [
   { id: "calendar", label: "Calendar", icon: CalendarDays, color: "periwinkle", description: "Own your time" },
   { id: "drive", label: "Drive", icon: HardDrive, color: "rainbow", description: "Keep it together" },
   { id: "forms", label: "Forms", icon: FormInput, color: "peach", description: "Ask better questions" },
+  { id: "mail", label: "Mail", icon: Mail, color: "peach", description: "Keep the thread" },
 ];
 
 const INITIAL_WORKSPACE = {
@@ -120,6 +124,11 @@ const INITIAL_WORKSPACE = {
     { name: "Personal", color: 4 },
   ],
   projects: ["Q3 Planning", "Website Redesign", "Product Launch", "Team Offsite"],
+  mail: [
+    { id: 1, from: "Taylor Kim", email: "taylor@crescent.local", subject: "Design review tomorrow", preview: "The latest pass is ready whenever you are.", body: "Hi Alex,\n\nThe latest pass on the design review deck is ready whenever you are. I tightened the story around the three moves and left a note on slide two.\n\nCould you take a look before our 10:00 AM review?\n\nTaylor", time: "10:24 AM", read: false, starred: true, tag: "Design" },
+    { id: 2, from: "Jordan Lee", email: "jordan@crescent.local", subject: "Growth metrics are ready", preview: "I added the partner channel numbers to the shared sheet.", body: "Hey Alex,\n\nI added the partner channel numbers to Growth metrics and flagged the conversion row for our next check-in.\n\nJordan", time: "9:12 AM", read: true, starred: false, tag: "Q3 planning" },
+    { id: 3, from: "Crescent Updates", email: "updates@crescent.local", subject: "A calmer way to start the week", preview: "Three small rituals for making room for momentum.", body: "A short note from the Crescent team:\n\nStart with one clear next step, keep the supporting context nearby, and leave a little room for the work to surprise you.\n\nCrescent", time: "Yesterday", read: true, starred: false, tag: "Updates" },
+  ],
 };
 
 const RECENT_FILES = [
@@ -130,6 +139,7 @@ const RECENT_FILES = [
   { title: "Q3 planning", type: "Tasks", icon: ListChecks, color: "violet", opened: "2 days ago", owner: "Jordan Lee", starred: false },
   { title: "Editorial calendar", type: "Calendar", icon: CalendarDays, color: "periwinkle", opened: "3 days ago", owner: "Me", starred: true },
   { title: "Launch assets", type: "Drive", icon: HardDrive, color: "rainbow", opened: "3 days ago", owner: "Me", starred: false },
+  { title: "Design review tomorrow", type: "Mail", icon: Mail, color: "peach", opened: "10 minutes ago", owner: "Taylor Kim", starred: true },
 ];
 
 const DRIVE_FILE_TYPES = [
@@ -163,6 +173,7 @@ function getLiveRecentFiles(workspace) {
     workspace.tasks?.[0]?.title && { ...sourceFor("Tasks"), title: workspace.tasks[0].title, opened: workspace.tasks[0].due ?? "just now", owner: "Me" },
     workspace.calendarEvents?.[0]?.title && { ...sourceFor("Calendar"), title: workspace.calendarEvents[0].title, opened: workspace.calendarEvents[0].when ?? "just now", owner: "Me" },
     workspace.formTitle && { ...sourceFor("Forms", { type: "Forms", icon: FormInput, color: "peach", owner: "Me", starred: false }), title: workspace.formTitle, opened: "just now", owner: "Me" },
+    workspace.mail?.[0]?.subject && { ...sourceFor("Mail"), title: workspace.mail[0].subject, opened: workspace.mail[0].time ?? "just now", owner: workspace.mail[0].from ?? "Me" },
   ].filter(Boolean);
   const liveTypes = new Set(liveFiles.map((file) => file.type));
   const suppressedTypes = new Set();
@@ -231,6 +242,13 @@ function normalizeWorkspace(source) {
       return { ...record, id: record.id ?? index + 1, label: String(record.label ?? `Question ${index + 1}`), type: ["Short answer", "Long answer", "Scale"].includes(record.type) ? record.type : "Short answer", required: Boolean(record.required) };
     })
     : INITIAL_WORKSPACE.forms;
+  const mail = Array.isArray(source?.mail) && source.mail.length
+    ? source.mail.map((message, index) => {
+      const record = message && typeof message === "object" ? message : {};
+      const seed = INITIAL_WORKSPACE.mail[index % INITIAL_WORKSPACE.mail.length];
+      return { ...seed, ...record, id: record.id ?? index + 1, from: String(record.from ?? seed.from), email: String(record.email ?? seed.email), subject: String(record.subject ?? seed.subject), preview: String(record.preview ?? seed.preview), body: String(record.body ?? seed.body), time: String(record.time ?? "Just now"), read: Boolean(record.read), starred: Boolean(record.starred), tag: String(record.tag ?? seed.tag), sent: Boolean(record.sent), to: String(record.to ?? "") };
+    })
+    : INITIAL_WORKSPACE.mail;
   const calendarEvents = Array.isArray(source?.calendarEvents)
     ? source.calendarEvents.map((event, index) => {
       const record = event && typeof event === "object" ? event : {};
@@ -265,6 +283,7 @@ function normalizeWorkspace(source) {
     notes,
     tasks,
     forms,
+    mail,
     driveFolders,
     workspaces,
     projects,
@@ -403,6 +422,7 @@ function SearchResults({ query, onNavigate, workspace }) {
     ...(workspace.slides ?? []).map((slide) => ({ title: slide.title, type: "Slides", opened: "just now", owner: "Me", icon: Presentation, color: "gold" })),
     ...(workspace.notes ?? []).map((note) => ({ title: note.title, type: "Notes", opened: note.updatedAt ?? "just now", owner: "Me", icon: StickyNote, color: "lilac" })),
     workspace.formTitle && { title: workspace.formTitle, type: "Forms", opened: "just now", owner: "Me", icon: FormInput, color: "peach" },
+    ...(workspace.mail ?? []).map((message) => ({ title: message.subject, type: "Mail", appId: "mail", opened: message.time ?? "just now", owner: message.from, icon: Mail, color: "peach" })),
   ].filter(Boolean);
   const localResults = [
     ...workspaceFiles,
@@ -421,13 +441,17 @@ function SearchResults({ query, onNavigate, workspace }) {
     }
     if (file.type === "Notes") return workspace.notes?.find((note) => note.title === file.title)?.body ?? "";
     if (file.type === "Forms") return (workspace.forms ?? []).map((question) => question.label).join(" ");
+    if (file.type === "Mail") {
+      const message = workspace.mail?.find((item) => item.subject === file.title);
+      return message ? `${message.from} ${message.email} ${message.to ?? ""} ${message.body}` : "";
+    }
     if (file.type === "App") return file.opened;
     return "";
   };
   const mergedResults = new Map([...appResults, ...getLiveRecentFiles(workspace), ...localResults].map((file) => [`${file.type}-${file.title}`, file]));
   const results = [...mergedResults.values()].filter((file) => `${file.title} ${file.type} ${file.opened} ${searchTextFor(file)}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
   const navigationFor = (file) => {
-    if (file.appId) return file.appId === "tasks" ? { project: file.title } : null;
+    if (file.appId) return file.appId === "tasks" ? { project: file.title } : file.appId === "mail" ? { title: file.title } : null;
     if (file.type === "Drive") {
       const isFolder = [...(workspace.driveFolders ?? []), ...(workspace.workspaces ?? [])].some((folder) => folder.name?.toLowerCase() === file.title.toLowerCase());
       return isFolder ? { folderName: file.title } : { fileTitle: file.title };
@@ -480,8 +504,8 @@ function HomeView({ workspace, update, onNavigate, onFocusSearch }) {
         <div className="continue-row">{recentFiles.slice(0, 4).map((file) => <button className="continue-card" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), fileNavigationContext(file))}><div className={`file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div className="file-meta"><span><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={14} />{file.type}</span><MoreHorizontal size={15} /></div><strong>{file.title}</strong><small>Edited {file.opened}</small></button>)}</div>
       </section>
       <section className="workspace-section recent-section">
-        <div className="section-heading"><div><h2>Recent</h2><p>The latest files across your workspaces.</p></div><div className="filter-row">{["All", "Docs", "Sheets", "Slides", "Notes", "Tasks", "Calendar", "Drive", "Forms"].map((item) => <button className={filter === item ? "filter-button selected" : "filter-button"} key={item} onClick={() => setFilter(item)} aria-pressed={filter === item}>{item}</button>)}</div></div>
-        <div className="recent-table"><div className="recent-table-head"><span>Name</span><span>Type</span><span>Last opened</span><span>Owner</span><span aria-label="Actions" /></div>{files.map((file) => <div className="recent-row" role="link" tabIndex="0" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), { title: file.title })} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onNavigate(file.type.toLowerCase(), { title: file.title }); } }}><span className="file-name"><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={18} /><strong>{file.title}</strong></span><span>{file.type}</span><span>{file.opened}</span><span>{file.owner}</span><span className="row-actions"><span className="row-action" role="button" tabIndex="0" aria-label={`${file.starred ? "Remove" : "Add"} ${file.title} ${file.starred ? "from" : "to"} Starred`} onClick={(event) => toggleStar(event, file)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") toggleStar(event, file); }}>{file.starred ? <Star size={16} fill="currentColor" /> : <Star size={16} />}</span><MoreHorizontal size={17} /></span></div>)}</div>
+        <div className="section-heading"><div><h2>Recent</h2><p>The latest files across your workspaces.</p></div><div className="filter-row">{["All", "Docs", "Sheets", "Slides", "Notes", "Tasks", "Calendar", "Drive", "Forms", "Mail"].map((item) => <button className={filter === item ? "filter-button selected" : "filter-button"} key={item} onClick={() => setFilter(item)} aria-pressed={filter === item}>{item}</button>)}</div></div>
+        <div className="recent-table"><div className="recent-table-head"><span>Name</span><span>Type</span><span>Last opened</span><span>Owner</span><span aria-label="Actions" /></div>{files.map((file) => <div className="recent-row" role="link" tabIndex="0" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), file.type === "Mail" ? { title: file.title } : { title: file.title })} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onNavigate(file.type.toLowerCase(), file.type === "Mail" ? { title: file.title } : { title: file.title }); } }}><span className="file-name"><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={18} /><strong>{file.title}</strong></span><span>{file.type}</span><span>{file.opened}</span><span>{file.owner}</span><span className="row-actions"><span className="row-action" role="button" tabIndex="0" aria-label={`${file.starred ? "Remove" : "Add"} ${file.title} ${file.starred ? "from" : "to"} Starred`} onClick={(event) => toggleStar(event, file)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") toggleStar(event, file); }}>{file.starred ? <Star size={16} fill="currentColor" /> : <Star size={16} />}</span><MoreHorizontal size={17} /></span></div>)}</div>
       </section>
     </main>
     <aside className="home-rail">
@@ -500,8 +524,60 @@ function PreviewArt({ type }) {
 }
 
 function EditorHeader({ title, icon, onChangeTitle, children, onNavigate }) {
-  const titleEditable = !["notes", "tasks", "calendar", "drive"].includes(icon?.id);
+  const titleEditable = !["notes", "tasks", "calendar", "drive", "mail"].includes(icon?.id);
   return <div className="editor-header"><div className="editor-breadcrumb"><button onClick={() => onNavigate("home")} className="crumb-home" aria-label="Back to Home"><Home size={15} /></button><ChevronRight size={14} /><span className="editor-app-label"><AppIcon app={icon} size={15} />{icon.label}</span><ChevronRight size={14} /><input value={title} onChange={(event) => onChangeTitle(event.target.value)} readOnly={!titleEditable} aria-label="File title" aria-readonly={!titleEditable} /></div><div className="editor-actions"><span className="saved-status"><Check size={14} />Saved locally</span>{children}</div></div>;
+}
+
+function MailView({ workspace, update, onNavigate, initialSubject }) {
+  const messages = useMemo(() => (Array.isArray(workspace.mail) ? workspace.mail : []), [workspace.mail]);
+  const [selectedId, setSelectedId] = useState(messages[0]?.id ?? null);
+  const [composeOpen, setComposeOpen] = useState(false);
+  const [draft, setDraft] = useState({ to: "", subject: "", body: "" });
+  const appliedSubjectNavigation = useRef(null);
+  const selected = messages.find((message) => message.id === selectedId) ?? messages[0];
+  const unreadCount = messages.filter((message) => !message.read).length;
+  useEffect(() => {
+    if (!initialSubject || initialSubject === appliedSubjectNavigation.current) return;
+    appliedSubjectNavigation.current = initialSubject;
+    const target = messages.find((message) => message.subject === initialSubject);
+    if (target) setSelectedId(target.id);
+  }, [initialSubject, messages]);
+  useEffect(() => {
+    if (!composeOpen) return undefined;
+    const closeOnEscape = (event) => { if (event.key === "Escape") setComposeOpen(false); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [composeOpen]);
+  const selectMessage = (message) => {
+    setSelectedId(message.id);
+    if (!message.read) update({ mail: messages.map((item) => item.id === message.id ? { ...item, read: true } : item) });
+  };
+  const toggleStar = () => {
+    if (!selected) return;
+    update({ mail: messages.map((item) => item.id === selected.id ? { ...item, starred: !item.starred } : item) });
+    emitNotice(selected.starred ? "Message removed from Starred." : "Message added to Starred.");
+  };
+  const toggleRead = () => {
+    if (!selected) return;
+    update({ mail: messages.map((item) => item.id === selected.id ? { ...item, read: !item.read } : item) });
+    emitNotice(selected.read ? "Message marked unread." : "Message marked read.");
+  };
+  const openCompose = (replyTo) => {
+    setDraft(replyTo ? { to: replyTo.email, subject: `Re: ${replyTo.subject}`, body: `\n\n—\n${replyTo.from} wrote:\n${replyTo.body}` } : { to: "", subject: "", body: "" });
+    setComposeOpen(true);
+  };
+  const sendMessage = () => {
+    const to = draft.to.trim();
+    const subject = draft.subject.trim();
+    const body = draft.body.trim();
+    if (!to || !subject || !body) { emitNotice("Add a recipient, subject, and message before sending."); return; }
+    const sentMessage = { id: Date.now(), from: "Alex Morgan", email: "alex@crescent.local", to, subject, preview: body.slice(0, 92), body, time: "just now", read: true, starred: false, tag: "Sent", sent: true };
+    update({ mail: [sentMessage, ...messages] });
+    setSelectedId(sentMessage.id);
+    setComposeOpen(false);
+    emitNotice("Message saved to this local inbox.");
+  };
+  return <div className="mail-page page-enter"><EditorHeader title="Inbox" icon={APP_META.find((app) => app.id === "mail")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="primary-button" onClick={() => openCompose()}><Plus size={16} />New message</button></EditorHeader><div className="mail-content"><div className="mail-heading"><div><span className="utility-kicker"><Mail size={14} />Local inbox</span><h1>Keep the thread.</h1><p>Read, reply, and draft messages without leaving your Crescent workspace.</p></div><div className="mail-heading-count"><strong>{unreadCount}</strong><span>unread</span></div></div><div className="mail-workspace"><section className="mail-list-panel" aria-label="Inbox messages"><div className="mail-list-heading"><div><strong>Inbox</strong><small>{messages.length} message{messages.length === 1 ? "" : "s"}</small></div><button className="icon-button muted" onClick={() => emitNotice("Inbox is already up to date.")} aria-label="Refresh inbox"><Redo2 size={16} /></button></div><div className="mail-list">{messages.map((message) => <button className={`mail-row ${selected?.id === message.id ? "selected" : ""} ${message.read ? "" : "unread"}`} key={message.id} onClick={() => selectMessage(message)} aria-label={`Open message ${message.subject}`} aria-pressed={selected?.id === message.id}><span className={`mail-avatar ${message.sent ? "mail-avatar-sent" : ""}`}>{message.sent ? "A" : message.from.slice(0, 1)}</span><span className="mail-row-copy"><span className="mail-row-top"><strong>{message.from}</strong><small>{message.time}</small></span><span className="mail-row-subject">{message.subject}</span><span className="mail-row-preview">{message.preview}</span></span><span className="mail-row-star" aria-hidden="true">{message.starred ? <Star size={14} fill="currentColor" /> : <Star size={14} />}</span></button>)}</div></section><article className="mail-detail" aria-label={selected ? `Message ${selected.subject}` : "No message selected"}>{selected ? <><div className="mail-detail-heading"><div><span className="mail-tag">{selected.tag}</span><h2>{selected.subject}</h2></div><button className="icon-button muted" onClick={toggleStar} aria-label={selected.starred ? "Remove message from Starred" : "Add message to Starred"}><Star size={17} fill={selected.starred ? "currentColor" : "none"} /></button></div><div className="mail-sender"><span className={`mail-avatar ${selected.sent ? "mail-avatar-sent" : ""}`}>{selected.sent ? "A" : selected.from.slice(0, 1)}</span><div><strong>{selected.from}</strong><small>{selected.email}{selected.to ? ` · to ${selected.to}` : ""}</small></div><span className="mail-detail-time">{selected.time}</span></div><div className="mail-body">{selected.body}</div><div className="mail-detail-actions"><button className="secondary-button" onClick={() => openCompose(selected)}><Undo2 size={15} />Reply</button><button className="secondary-button" onClick={toggleRead}><MailOpen size={15} />{selected.read ? "Mark unread" : "Mark read"}</button></div></> : <div className="mail-detail-empty"><Mail size={22} /><strong>Select a message</strong><small>Your local inbox will appear here.</small></div>}</article></div></div>{composeOpen && <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setComposeOpen(false); }}><section className="file-create-dialog mail-compose-dialog" role="dialog" aria-modal="true" aria-labelledby="mail-compose-title"><div className="file-create-heading"><div><span className="utility-kicker"><Send size={14} />New local message</span><h2 id="mail-compose-title">Write something clear.</h2><p>Messages are saved in this browser so you can keep the thread moving.</p></div><button className="icon-button muted" onClick={() => setComposeOpen(false)} aria-label="Close compose dialog"><X size={18} /></button></div><div className="mail-compose-fields"><label className="file-name-field"><span>To</span><input autoFocus value={draft.to} aria-label="To" placeholder="name@example.com" onChange={(event) => setDraft((current) => ({ ...current, to: event.target.value }))} /></label><label className="file-name-field"><span>Subject</span><input value={draft.subject} aria-label="Subject" placeholder="A clear subject" onChange={(event) => setDraft((current) => ({ ...current, subject: event.target.value }))} /></label><label className="file-name-field"><span>Message</span><textarea value={draft.body} aria-label="Message" placeholder="Write your message..." onChange={(event) => setDraft((current) => ({ ...current, body: event.target.value }))} onKeyDown={(event) => { if ((event.metaKey || event.ctrlKey) && event.key === "Enter") sendMessage(); }} /></label></div><div className="file-create-footer"><span><Mail size={14} />Saved locally in this browser</span><div><button className="secondary-button" onClick={() => setComposeOpen(false)}>Cancel</button><button className="primary-button" onClick={sendMessage}><Send size={16} />Send message</button></div></div></section></div>}</div>;
 }
 
 function DocsView({ workspace, update, onNavigate, initialHeading }) {
@@ -1307,6 +1383,7 @@ export default function App() {
   const focusSearch = () => { setQuery(""); window.setTimeout(() => document.querySelector(".global-search input")?.focus(), 0); };
   const currentView = useMemo(() => {
     if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} onFocusSearch={focusSearch} />;
+    if (activeApp === "mail") return <MailView workspace={workspace} update={update} onNavigate={navigate} initialSubject={navigationContext?.title} />;
     if (activeApp === "docs") return <DocsView workspace={workspace} update={update} onNavigate={navigate} initialHeading={navigationContext?.heading} />;
     if (activeApp === "sheets") return <SheetsView workspace={workspace} update={update} onNavigate={navigate} initialCell={navigationContext?.cell} />;
     if (activeApp === "slides") return <SlidesView workspace={workspace} update={update} onNavigate={navigate} initialSlideTitle={navigationContext?.title} />;
