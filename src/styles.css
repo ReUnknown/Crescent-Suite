@@ -209,3 +209,6 @@ input, textarea { color: var(--text); }
 .form-theme-gold .form-cover { background: linear-gradient(145deg, #604833, #211c25); }
 .form-theme-gold .form-cover-orbit { background: rgba(255, 211, 139, .76); box-shadow: 0 0 50px rgba(255, 211, 139, .22); }
 .form-theme-gold .form-cover span { color: #f8d9a4; }
+.folder-card.selected { border-color: rgba(197, 185, 255, .58); background: rgba(125, 108, 210, .16); box-shadow: 0 0 0 2px rgba(161, 145, 237, .10); }
+.drive-folder-detail { display: flex; align-items: center; gap: 11px; margin-top: 13px; padding: 12px 14px; border: 1px solid rgba(176, 164, 242, .20); border-radius: 9px; background: rgba(40, 34, 71, .24); }
+.drive-folder-detail > div { display: grid; gap: 3px; flex: 1; min-width: 0; }.drive-folder-detail strong { color: #e9e7f6; font-size: 12px; }.drive-folder-detail small { color: #8d96ad; font-size: 10px; }

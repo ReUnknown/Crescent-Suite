@@ -10,6 +10,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `slides-statement.png` — Slides Big statement layout with persisted notes
 - `drive.png` — Drive surface with folders and recent files
 - `drive-list.png` — Drive in its compact list view
+- `drive-folder-selected.png` — Drive with a local folder selected and its context panel visible
 - `forms.png` — Forms builder with published and saved-response states
 - `forms-persisted.png` — Forms with restored answer text, scale, and saved-response confirmation
 - `forms-preview.png` — Forms respondent-facing Preview mode with email collection enabled
