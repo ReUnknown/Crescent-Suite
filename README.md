@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.41 — Tasks can move to Trash**
+**v0.1.42 — Forms response preview refreshed**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -41,6 +41,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Docs outline buttons now scroll to the matching saved heading in the document
 - Forms email collection adds a respondent email field, and one-response mode disables duplicate submission after saving
 - Tasks now have a real delete action that moves the item to the local Trash surface and survives reloads
+- Refreshed the committed Forms Preview screenshot to show email collection and respondent-facing controls
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device

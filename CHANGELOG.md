@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.42 — Forms response preview refreshed
+
+Published September 9, 2026.
+
+### Changed
+
+- Refreshed `docs/preview/forms-preview.png` with email collection enabled in the respondent-facing Preview mode.
+
+### Verification
+
+- Captured the screenshot from the running Vite app after enabling email collection and entering Preview, then visually reviewed it.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.41 — Tasks can move to Trash
 
 Published September 9, 2026.
