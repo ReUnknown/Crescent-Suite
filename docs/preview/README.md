@@ -1,4 +1,4 @@
-# v0.1.73 visual preview
+# v0.1.74 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -20,6 +20,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `forms-required.png` — Forms builder with a locally toggled Required question state
 - `calendar.png` — Calendar with a saved local event
 - `calendar-month.png` — Calendar Month mode with event pills
+- `calendar-ics.png` — Calendar with the standard ICS export control and saved event state
 - `trash.png` — local Trash with a recoverable deleted task
 - `trash-note.png` — local Trash with a recoverable deleted note
 - `starred.png` — Starred utility view with locally persisted favorites

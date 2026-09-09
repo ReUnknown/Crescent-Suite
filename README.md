@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.73 — Forms Required state has a visual archive preview**
+**v0.1.74 — Calendar events export to standard ICS**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -16,6 +16,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Shared navigation, command-style search, responsive layouts, and a night-sky design system
 - Pages-ready workflow builds a visual preview on every `main` milestone and deploys when repository Pages is enabled
 - Calendar events can be created, saved, reviewed, and removed in the local workspace
+- Calendar events can be exported as a standard `.ics` calendar file for use in other calendar apps
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header
