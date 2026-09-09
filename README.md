@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.96 — Empty editor backups stay safe**
+**v0.1.97 — Docs exports travel cleanly**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -38,6 +38,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Local reloads now normalize partial version-1 workspace data so newer suite surfaces retain safe defaults
 - Settings backup restores now use the same workspace normalizer, keeping partial or older local backups safe to import
 - Empty Slides or Notes arrays in an imported backup now fall back to a safe starter item instead of leaving an editor without a current record
+- Docs Export now downloads a standalone responsive HTML document with the current content, title, and a safe filename
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header
