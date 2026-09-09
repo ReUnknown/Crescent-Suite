@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.140 — Searchable local navigation
+
+Published September 9, 2026.
+
+### Changed
+
+- Global Search now includes locally created Workspaces and Projects alongside files, tasks, folders, and events.
+- Search results route custom navigation records to Drive so they remain useful even before team connectivity exists.
+
+### Verification
+
+- Smoke coverage restores a legacy workspace and project backup, then finds the workspace through Global Search.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.139 — Accessible Recent file rows
 
 Published September 9, 2026.

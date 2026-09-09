@@ -304,6 +304,8 @@ function SearchResults({ query, onNavigate, workspace }) {
     ...workspaceFiles,
     ...(workspace.tasks ?? []).map((task) => ({ title: task.title, type: "Tasks", opened: task.due, owner: "Me", icon: ListChecks, color: "violet" })),
     ...(workspace.driveFolders ?? []).map((folder) => ({ title: folder.name, type: "Drive", opened: `${folder.items} items`, owner: "Me", icon: HardDrive, color: "rainbow" })),
+    ...(workspace.workspaces ?? []).map((item) => ({ title: item.name, type: "Drive", opened: "workspace", owner: "Me", icon: HardDrive, color: "rainbow" })),
+    ...(workspace.projects ?? []).map((project) => ({ title: project, type: "Drive", opened: "project", owner: "Me", icon: HardDrive, color: "rainbow" })),
     ...(workspace.calendarEvents ?? []).map((event) => ({ title: event.title, type: "Calendar", opened: event.when, owner: "Me", icon: CalendarDays, color: "periwinkle" })),
   ];
   const searchTextFor = (file) => file.type === "Docs" ? workspace.docs?.body?.replace(/<[^>]+>/g, " ") ?? "" : file.type === "Sheets" ? Object.values(workspace.sheets?.cells ?? {}).join(" ") : file.type === "Slides" ? (workspace.slides ?? []).map((slide) => `${slide.title} ${slide.body}`).join(" ") : file.type === "Notes" ? workspace.notes?.find((note) => note.title === file.title)?.body ?? "" : file.type === "Forms" ? (workspace.forms ?? []).map((question) => question.label).join(" ") : "";

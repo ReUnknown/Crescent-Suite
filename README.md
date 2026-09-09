@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.139 — Accessible Recent file rows**
+**v0.1.140 — Searchable local navigation**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -62,6 +62,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Sidebar Workspaces and Projects can now be created locally, persisted in the workspace backup, and restored on this device
 - Workspace backups normalize older string-style workspace/project entries before rendering them in the sidebar
 - Home Recent rows are keyboard-operable without nesting a favorite control inside another interactive button
+- Global Search now finds custom Workspaces and Projects and routes them back to Drive
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges

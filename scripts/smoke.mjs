@@ -183,6 +183,8 @@ try {
     if (await behaviorPage.locator(".question-label-input").count() !== 3 || await behaviorPage.getByRole("button", { name: "Collect email addresses" }).getAttribute("aria-pressed") !== "true") failures.push({ route: "settings", controls: "partial backup restore" });
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".workspace-list").innerText()).includes("Research") || !(await behaviorPage.locator(".project-list").innerText()).includes("Migration")) failures.push({ route: "settings", controls: "legacy workspace/project backup normalization" });
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Research");
+    if (await behaviorPage.locator(".search-results .search-result").count() !== 1) failures.push({ route: "home", controls: "workspace/project global search" });
   } finally {
     await behaviorPage.close();
   }
