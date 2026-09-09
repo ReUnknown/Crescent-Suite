@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.2.2 — Search regression coverage
+
+Published September 9, 2026.
+
+### Fixed
+
+- Committed the outside-click Universal Search smoke assertion that accompanies the v1.2.0 overlay behavior.
+- Kept the release metadata and checked-in verification suite aligned with the published app behavior.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.2.1 — Navigation semantics
 
 Published September 9, 2026.

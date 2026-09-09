@@ -67,6 +67,9 @@ try {
           await page.keyboard.press("Escape");
           if (await page.locator(".search-results").count()) failures.push({ viewport: viewport.name, route, search: "Escape dismiss" });
           await page.getByRole("textbox", { name: "Search across Crescent" }).fill("North star");
+          await page.locator(".home-hero").click();
+          if (await page.locator(".search-results").count()) failures.push({ viewport: viewport.name, route, search: "outside-click dismiss" });
+          await page.getByRole("textbox", { name: "Search across Crescent" }).fill("North star");
           await page.keyboard.press("ArrowDown");
           if (!(await page.evaluate(() => document.activeElement?.classList.contains("search-result")))) failures.push({ viewport: viewport.name, route, search: "ArrowDown result focus" });
           await page.keyboard.press("Enter");
