@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.98 — Sheets exports the full visible range**
+**v0.1.99 — Forms questions are easier to shape**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -40,6 +40,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Empty Slides or Notes arrays in an imported backup now fall back to a safe starter item instead of leaving an editor without a current record
 - Docs Export now downloads a standalone responsive HTML document with the current content, title, and a safe filename
 - Sheets CSV export now includes the full nine-row visible range instead of truncating lower-row edits
+- Forms builders can now remove questions locally while keeping one safe question in the form; respondent Preview stays focused and hides builder controls
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

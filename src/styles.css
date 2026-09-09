@@ -212,6 +212,7 @@ input, textarea { color: var(--text); }
 .form-theme-gold .form-cover span { color: #f8d9a4; }
 .row-action { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 5px; cursor: pointer; }.row-action:hover, .row-action:focus-visible { color: white; background: rgba(152, 160, 214, .14); outline: none; }
 .question-required-toggle { justify-self: start; padding: 2px 6px; border: 1px solid rgba(164, 151, 236, .24); border-radius: 5px; color: #9f95df; background: rgba(133, 116, 210, .10); font-size: 10px; }.question-required-toggle:hover, .question-required-toggle[aria-pressed="true"] { color: white; border-color: rgba(197, 185, 255, .50); background: rgba(133, 116, 210, .22); }
+.question-edit-actions { display: flex; align-items: center; gap: 8px; }
 .filter-row { min-width: 0; }
 @media (max-width: 780px) { .filter-row { width: 100%; max-width: 100%; } }
 .folder-card.selected { border-color: rgba(197, 185, 255, .58); background: rgba(125, 108, 210, .16); box-shadow: 0 0 0 2px rgba(161, 145, 237, .10); }
