@@ -56,12 +56,29 @@ try {
     }
   }
 
+  const behaviorPage = await browser.newPage({ viewport: viewports[0] });
+  try {
+    await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("textbox", { name: "Cell B9" }).fill("=AVERAGE(B2:B4)");
+    const averageValue = await behaviorPage.evaluate(() => document.querySelector('[aria-label="Cell B9"]')?.parentElement?.querySelector(".sheet-display")?.textContent);
+    if (averageValue !== "5196.666666666667") failures.push({ route: "sheets", formula: "AVERAGE", averageValue });
+    await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("button", { name: "Change question 1 type" }).click();
+    const typeAfterCycle = await behaviorPage.getByRole("button", { name: "Change question 1 type" }).innerText();
+    if (!typeAfterCycle) failures.push({ route: "forms", controls: "question type cycle" });
+    await behaviorPage.getByRole("button", { name: "Delete question 1" }).click();
+    const questionCount = await behaviorPage.locator(".question-label-input").count();
+    if (questionCount !== 2) failures.push({ route: "forms", controls: "question delete", questionCount });
+  } finally {
+    await behaviorPage.close();
+  }
+
   await browser.close();
   if (failures.length) {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Month has 42 cells; content search is active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Month has 42 cells; content search, local formulas, and Forms controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
