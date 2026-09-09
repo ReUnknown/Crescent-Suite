@@ -65,6 +65,8 @@ try {
           if (monthCells !== 42) failures.push({ viewport: viewport.name, route, monthCells });
         }
         if (route === "slides" && await page.getByRole("textbox", { name: "Speaker notes for From ideas to impact" }).count() !== 1) failures.push({ viewport: viewport.name, route, accessibility: "speaker notes label" });
+        if (route === "docs" && await page.getByRole("textbox", { name: "Document body" }).count() !== 1) failures.push({ viewport: viewport.name, route, accessibility: "document body label" });
+        if (route === "slides" && (await page.getByRole("textbox", { name: "Slide title" }).count() !== 1 || await page.getByRole("textbox", { name: "Slide body" }).count() !== 1)) failures.push({ viewport: viewport.name, route, accessibility: "slide editing labels" });
         if (route === "forms" && await page.getByRole("button", { name: "How clear is the next step?: 1" }).getAttribute("aria-pressed") !== "false") failures.push({ viewport: viewport.name, route, accessibility: "scale choice semantics" });
         if (route === "home" && await page.getByRole("button", { name: "All", exact: true }).getAttribute("aria-pressed") !== "true") failures.push({ viewport: viewport.name, route, accessibility: "Recent filter state" });
         if (route === "drive" && await page.getByRole("button", { name: "Grid view" }).getAttribute("aria-pressed") !== "true") failures.push({ viewport: viewport.name, route, accessibility: "Drive view state" });

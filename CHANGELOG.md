@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.8.0 — Accessible rich-text editing
+
+Published September 9, 2026.
+
+### Improved
+
+- Docs’ editable body now exposes an explicit multiline textbox name to assistive technology.
+- Slides’ editable title and body now expose stable textbox roles and labels for keyboard and screen-reader editing.
+- Added production smoke coverage for the rich-text editing surfaces.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.7.1 — Accessible Forms Scale choices
 
 Published September 9, 2026.

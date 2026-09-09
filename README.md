@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v1.7.1 — Accessible Forms Scale choices**
+**v1.8.0 — Accessible rich-text editing**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -78,6 +78,9 @@ The first major release establishes a usable Crescent product shell and a local-
 - Added production smoke coverage for restoring exact search context through browser Back and Forward
 - Forms Scale choices now announce their question context and expose the selected value with `aria-pressed`
 - Added production smoke coverage for Scale choice semantics
+- Docs’ editable body now exposes an explicit multiline textbox name for assistive technology
+- Slides’ editable title and body now expose stable textbox roles and labels for accessible editing
+- Added production smoke coverage for Docs and Slides rich-text editing semantics
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback
