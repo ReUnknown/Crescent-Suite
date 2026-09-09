@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.25 — Search follows your workspace**
+**v0.1.26 — Recent work stays current**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -30,6 +30,8 @@ The first release establishes the Crescent product shell and a local-first suite
 - Slides’ Big statement layout now changes the canvas, persists per slide, and remains available in presentation mode
 - Global Search now indexes the current Docs, Sheets, Slides, and Notes workspace content alongside tasks, folders, and events
 - Creating a blank document in Drive makes that new title immediately discoverable through Search
+- Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
+- Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Starred, Shared with me, and Trash now show filtered or empty states instead of duplicating Recent files
 - Home Recent filters now include Calendar and Drive alongside the core editors
 - Drive’s New file action now opens a real blank local Docs draft instead of reopening seeded content

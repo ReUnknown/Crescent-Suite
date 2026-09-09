@@ -119,6 +119,18 @@ const RECENT_FILES = [
   { title: "Launch assets", type: "Drive", icon: HardDrive, color: "rainbow", opened: "3 days ago", owner: "Me", starred: false },
 ];
 
+function getLiveRecentFiles(workspace) {
+  const sourceFor = (type) => RECENT_FILES.find((file) => file.type === type);
+  const liveFiles = [
+    workspace.docs?.title && { ...sourceFor("Docs"), title: workspace.docs.title, opened: workspace.docs.updatedAt ?? "just now", owner: "Me" },
+    workspace.sheets?.title && { ...sourceFor("Sheets"), title: workspace.sheets.title, opened: workspace.sheets.updatedAt ?? "just now", owner: "Me" },
+    workspace.slides?.[0]?.title && { ...sourceFor("Slides"), title: workspace.slides[0].title, opened: "just now", owner: "Me" },
+    workspace.notes?.[0]?.title && { ...sourceFor("Notes"), title: workspace.notes[0].title, opened: workspace.notes[0].updatedAt ?? "just now", owner: "Me" },
+  ].filter(Boolean);
+  const liveTypes = new Set(liveFiles.map((file) => file.type));
+  return [...liveFiles, ...RECENT_FILES.filter((file) => !liveTypes.has(file.type))];
+}
+
 const SCHEDULE = [
   { time: "9:00 AM", end: "9:45 AM", title: "Product sync", color: "lilac" },
   { time: "10:00 AM", end: "11:00 AM", title: "Design review", color: "blue" },
@@ -219,7 +231,8 @@ function SearchResults({ query, onNavigate, workspace }) {
 
 function HomeView({ workspace, onNavigate }) {
   const [filter, setFilter] = useState("All");
-  const files = filter === "All" ? RECENT_FILES : RECENT_FILES.filter((file) => file.type === filter);
+  const recentFiles = getLiveRecentFiles(workspace);
+  const files = filter === "All" ? recentFiles : recentFiles.filter((file) => file.type === filter);
   const localSchedule = (workspace.calendarEvents ?? []).slice(0, 2).map((event) => ({ ...event, time: "Saved", end: "Local", color: "periwinkle" }));
   return <div className="home-layout page-enter">
     <main className="home-main">
@@ -232,7 +245,7 @@ function HomeView({ workspace, onNavigate }) {
       </section>
       <section className="workspace-section">
         <div className="section-heading"><div><h2>Continue working</h2><p>Jump back into the work that is already in motion.</p></div><button className="quiet-button" onClick={() => onNavigate("recent")}>See all <ArrowRight size={15} /></button></div>
-        <div className="continue-row">{RECENT_FILES.slice(0, 4).map((file) => <button className="continue-card" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div className="file-meta"><span><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={14} />{file.type}</span><MoreHorizontal size={15} /></div><strong>{file.title}</strong><small>Edited {file.opened}</small></button>)}</div>
+        <div className="continue-row">{recentFiles.slice(0, 4).map((file) => <button className="continue-card" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div className="file-meta"><span><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={14} />{file.type}</span><MoreHorizontal size={15} /></div><strong>{file.title}</strong><small>Edited {file.opened}</small></button>)}</div>
       </section>
       <section className="workspace-section recent-section">
         <div className="section-heading"><div><h2>Recent</h2><p>The latest files across your workspaces.</p></div><div className="filter-row">{["All", "Docs", "Sheets", "Slides", "Notes", "Tasks", "Calendar", "Drive"].map((item) => <button className={filter === item ? "filter-button selected" : "filter-button"} key={item} onClick={() => setFilter(item)}>{item}</button>)}</div></div>
@@ -374,6 +387,7 @@ function _DriveViewLegacy({ onNavigate }) {
 
 function DriveView({ workspace, update, onNavigate }) {
   const [view, setView] = useState("grid");
+  const recentFiles = getLiveRecentFiles(workspace);
   const folders = workspace.driveFolders ?? [
     { name: "Product", items: 12, color: 0 },
     { name: "Marketing", items: 8, color: 1 },
@@ -386,7 +400,7 @@ function DriveView({ workspace, update, onNavigate }) {
     update({ driveFolders: [...folders, { name: name.trim(), items: 0, color: folders.length % 4 }] });
   };
   const createFile = () => { update({ docs: { title: "Untitled document", body: "<h1>Untitled document</h1><p>Start writing your next idea here.</p>", updatedAt: "just now" } }); onNavigate("docs"); };
-  return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={createFolder}><FolderPlus size={16} />New folder</button><button className="primary-button" onClick={createFile}><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>Everything in one place.</h1><p>Organize your work without losing the thread.</p></div><div className="drive-view"><button className={view === "grid" ? "selected" : ""} onClick={() => setView("grid")} aria-label="Grid view"><Grid2X2 size={16} /></button><button className={view === "list" ? "selected" : ""} onClick={() => setView("list")} aria-label="List view"><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>{folders.length} folders</small></div><div className={`folder-grid ${view === "list" ? "folder-list-view" : ""}`}>{folders.map((folder) => <button className="folder-card" key={folder.name}><span className={`folder-icon folder-${folder.color}`}><FolderOpen size={21} /></span><strong>{folder.name}</strong><small>{folder.items} items</small><MoreHorizontal size={17} /></button>)}</div></div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link">See all <ArrowRight size={14} /></button></div><div className={`drive-file-grid ${view === "list" ? "drive-list-view" : ""}`}>{RECENT_FILES.slice(0, 6).map((file) => <button className="drive-file" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
+  return <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={createFolder}><FolderPlus size={16} />New folder</button><button className="primary-button" onClick={createFile}><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>Everything in one place.</h1><p>Organize your work without losing the thread.</p></div><div className="drive-view"><button className={view === "grid" ? "selected" : ""} onClick={() => setView("grid")} aria-label="Grid view"><Grid2X2 size={16} /></button><button className={view === "list" ? "selected" : ""} onClick={() => setView("list")} aria-label="List view"><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>{folders.length} folders</small></div><div className={`folder-grid ${view === "list" ? "folder-list-view" : ""}`}>{folders.map((folder) => <button className="folder-card" key={folder.name}><span className={`folder-icon folder-${folder.color}`}><FolderOpen size={21} /></span><strong>{folder.name}</strong><small>{folder.items} items</small><MoreHorizontal size={17} /></button>)}</div></div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link">See all <ArrowRight size={14} /></button></div><div className={`drive-file-grid ${view === "list" ? "drive-list-view" : ""}`}>{recentFiles.slice(0, 6).map((file) => <button className="drive-file" key={file.title} onClick={() => onNavigate(file.type.toLowerCase())}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>;
 }
 
 function _FormsViewLegacy({ workspace, update, onNavigate }) {

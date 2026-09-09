@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.1.26 — Recent work stays current
+
+Published September 8, 2026.
+
+### Changed
+
+- Added a shared live-recent record builder for the core workspace apps.
+- Home’s Continue working and Recent tables now reflect current local titles and timestamps.
+- Drive’s Recent files cards use the same live records, keeping the suite consistent after creating or renaming content.
+
+### Verification
+
+- Created a blank document in Drive, returned Home, and confirmed both Home shelves showed “Untitled document.”
+- Confirmed Drive Recent files showed the same live title and current core workspace items.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.25 — Search follows your workspace
 
 Published September 8, 2026.
