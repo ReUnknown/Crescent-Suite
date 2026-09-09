@@ -1,4 +1,4 @@
-# v3.5.0 visual preview
+# v3.6.0 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -47,6 +47,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `sidebar-create-modal.png` — Home with the local Workspace creation dialog open
 - `drive-folder-modal.png` — Drive’s local folder creation dialog with duplicate-safe naming
 - `docs-link-modal.png` — Docs preserving a selected text range while adding a validated local link
+- Recovery behavior is covered in the committed Trash and editor previews above; displaced active files remain recoverable after restore
 - `forms-preview.png` — Forms respondent-facing Preview mode with email collection enabled
 - `forms-theme-blue.png` — Forms with a persisted blue theme selected from the inspector
 - `forms-required.png` — Forms builder with a locally toggled Required question state

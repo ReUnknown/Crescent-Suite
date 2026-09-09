@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.6.0 — Reversible editor recovery
+
+Published September 9, 2026.
+
+### Fixed
+
+- Restoring a trashed Docs, Sheets, Slides, or Forms file no longer discards the active file it replaces.
+- Displaced editor records now retain their content, title, styles, settings, responses, and starred state in local Trash.
+- Added smoke coverage proving displaced Sheets, Slides, and Forms files remain recoverable after a restore.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v3.5.0 — Guided document links
 
 Published September 9, 2026.

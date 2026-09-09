@@ -1078,26 +1078,33 @@ function UtilityView({ id, workspace, update, onNavigate }) {
     if (file.type === "Docs") {
       const currentDoc = workspace.docs;
       const restoredDoc = { title: file.title, body: file.body ?? "<h1>Recovered document</h1><p>Continue writing here.</p>", updatedAt: "Recovered" };
-      const archivedCurrent = { id: `doc-${Date.now()}`, title: currentDoc.title, body: currentDoc.body, updatedAt: currentDoc.updatedAt, type: "Docs", appId: "docs", opened: "just now", owner: "Me" };
       const starredTitles = getStarredTitles(workspace);
+      const archivedCurrent = { id: `doc-${Date.now()}`, title: currentDoc.title, body: currentDoc.body, updatedAt: currentDoc.updatedAt, type: "Docs", appId: "docs", opened: "just now", owner: "Me", starred: starredTitles.has(currentDoc.title) };
+      starredTitles.delete(currentDoc.title);
       if (file.starred) starredTitles.add(file.title); else starredTitles.delete(file.title);
       update({ docs: restoredDoc, starredFiles: [...starredTitles], deletedFiles: [archivedCurrent, ...(workspace.deletedFiles ?? []).filter((item) => item.id !== file.id)] });
       emitNotice("Document restored to Docs.");
       return;
     }
     if (file.type === "Sheets") {
+      const currentSheet = workspace.sheets;
       const restoredSheet = { ...INITIAL_WORKSPACE.sheets, title: file.title, cells: file.cells ?? {}, tabs: file.tabs, styles: file.styles, activeSheet: file.activeSheet ?? 0, updatedAt: "Recovered" };
       const starredTitles = getStarredTitles(workspace);
+      const archivedCurrent = { id: `sheet-${Date.now()}`, title: currentSheet.title, cells: currentSheet.cells, tabs: currentSheet.tabs, styles: currentSheet.styles, activeSheet: currentSheet.activeSheet, type: "Sheets", appId: "sheets", opened: "just now", owner: "Me", starred: starredTitles.has(currentSheet.title) };
+      starredTitles.delete(currentSheet.title);
       if (file.starred) starredTitles.add(file.title); else starredTitles.delete(file.title);
-      update({ sheets: restoredSheet, starredFiles: [...starredTitles], deletedFiles: (workspace.deletedFiles ?? []).filter((item) => item.id !== file.id) });
+      update({ sheets: restoredSheet, starredFiles: [...starredTitles], deletedFiles: [archivedCurrent, ...(workspace.deletedFiles ?? []).filter((item) => item.id !== file.id)] });
       emitNotice("Spreadsheet restored to Sheets.");
       return;
     }
     if (file.type === "Slides") {
+      const currentTitle = workspace.slidesTitle;
       const restoredSlides = Array.isArray(file.slides) && file.slides.length ? file.slides : INITIAL_WORKSPACE.slides;
       const starredTitles = getStarredTitles(workspace);
+      const archivedCurrent = { id: `slides-${Date.now()}`, title: currentTitle, slides: workspace.slides, type: "Slides", appId: "slides", opened: "just now", owner: "Me", starred: starredTitles.has(currentTitle) };
+      starredTitles.delete(currentTitle);
       if (file.starred) starredTitles.add(file.title); else starredTitles.delete(file.title);
-      update({ slidesTitle: file.title, slides: restoredSlides, starredFiles: [...starredTitles], deletedFiles: (workspace.deletedFiles ?? []).filter((item) => item.id !== file.id) });
+      update({ slidesTitle: file.title, slides: restoredSlides, starredFiles: [...starredTitles], deletedFiles: [archivedCurrent, ...(workspace.deletedFiles ?? []).filter((item) => item.id !== file.id)] });
       emitNotice("Presentation restored to Slides.");
       return;
     }
@@ -1126,10 +1133,13 @@ function UtilityView({ id, workspace, update, onNavigate }) {
       return;
     }
     if (file.type === "Forms") {
+      const currentTitle = workspace.formTitle;
       const restoredForms = Array.isArray(file.forms) && file.forms.length ? file.forms : INITIAL_WORKSPACE.forms;
       const starredTitles = getStarredTitles(workspace);
+      const archivedCurrent = { id: `form-${Date.now()}`, title: currentTitle, formTitle: currentTitle, formTheme: workspace.formTheme, formSettings: workspace.formSettings, forms: workspace.forms, formPublished: workspace.formPublished, formResponses: workspace.formResponses, lastFormResponse: workspace.lastFormResponse, type: "Forms", appId: "forms", opened: "just now", owner: "Me", starred: starredTitles.has(currentTitle) };
+      starredTitles.delete(currentTitle);
       if (file.starred) starredTitles.add(file.title); else starredTitles.delete(file.title);
-      update({ formTitle: file.formTitle ?? file.title, formTheme: file.formTheme ?? "lilac", formSettings: file.formSettings ?? INITIAL_WORKSPACE.formSettings, forms: restoredForms, formPublished: Boolean(file.formPublished), formResponses: Array.isArray(file.formResponses) ? file.formResponses : [], lastFormResponse: file.lastFormResponse, starredFiles: [...starredTitles], deletedFiles: (workspace.deletedFiles ?? []).filter((item) => item.id !== file.id) });
+      update({ formTitle: file.formTitle ?? file.title, formTheme: file.formTheme ?? "lilac", formSettings: file.formSettings ?? INITIAL_WORKSPACE.formSettings, forms: restoredForms, formPublished: Boolean(file.formPublished), formResponses: Array.isArray(file.formResponses) ? file.formResponses : [], lastFormResponse: file.lastFormResponse, starredFiles: [...starredTitles], deletedFiles: [archivedCurrent, ...(workspace.deletedFiles ?? []).filter((item) => item.id !== file.id)] });
       emitNotice("Form restored to Forms.");
     }
   };

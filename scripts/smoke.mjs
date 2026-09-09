@@ -366,7 +366,7 @@ try {
     await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
     const archivedSheet = behaviorPage.locator(".utility-file-row").filter({ hasText: "Growth metrics" });
     if (await archivedSheet.count() !== 1) failures.push({ route: "trash", controls: "archived Sheets file from Drive" });
-    else await archivedSheet.getByRole("button", { name: "Restore" }).click();
+    else { await archivedSheet.getByRole("button", { name: "Restore" }).click(); if (await behaviorPage.locator(".utility-file-row").filter({ hasText: "Smoke sheet" }).count() !== 1) failures.push({ route: "trash", controls: "recoverable displaced Sheets file" }); }
     await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
     if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== "Growth metrics") failures.push({ route: "sheets", controls: "Drive Sheets restore" });
     await createDriveFile("Slides", "Smoke deck");
@@ -375,7 +375,7 @@ try {
     await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
     const archivedSlides = behaviorPage.locator(".utility-file-row").filter({ hasText: "Design review deck" });
     if (await archivedSlides.count() !== 1) failures.push({ route: "trash", controls: "archived Slides file from Drive" });
-    else await archivedSlides.getByRole("button", { name: "Restore" }).click();
+    else { await archivedSlides.getByRole("button", { name: "Restore" }).click(); if (await behaviorPage.locator(".utility-file-row").filter({ hasText: "Smoke deck" }).count() !== 1) failures.push({ route: "trash", controls: "recoverable displaced Slides file" }); }
     await behaviorPage.goto(`${baseUrl}/slides`, { waitUntil: "networkidle" });
     if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== "Design review deck") failures.push({ route: "slides", controls: "Drive Slides restore" });
     await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
@@ -386,7 +386,7 @@ try {
     await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
     const archivedForm = behaviorPage.locator(".utility-file-row").filter({ hasText: previousFormTitle });
     if (await archivedForm.count() !== 1) failures.push({ route: "trash", controls: "archived Forms file from Drive" });
-    else await archivedForm.getByRole("button", { name: "Restore" }).click();
+    else { await archivedForm.getByRole("button", { name: "Restore" }).click(); if (await behaviorPage.locator(".utility-file-row").filter({ hasText: "Smoke form" }).count() !== 1) failures.push({ route: "trash", controls: "recoverable displaced Forms file" }); }
     await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
     if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== previousFormTitle) failures.push({ route: "forms", controls: "Drive Forms restore" });
     await behaviorPage.goto(`${baseUrl}/starred`, { waitUntil: "networkidle" });
@@ -485,7 +485,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, recoverable Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
