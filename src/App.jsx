@@ -344,13 +344,16 @@ const SHEET_ROWS = Array.from({ length: 9 }, (_, index) => index + 1);
 
 function evaluateCell(value, cells) {
   if (typeof value !== "string" || !value.startsWith("=")) return value;
-  const rangeMatch = value.match(/^=(SUM|AVERAGE|MIN|MAX)\(([A-F]\d+):([A-F]\d+)\)$/i);
+  const rangeMatch = value.match(/^=(SUM|AVERAGE|MIN|MAX|COUNT|COUNTA)\(([A-F]\d+):([A-F]\d+)\)$/i);
   if (rangeMatch) {
     const [, operation, start, end] = rangeMatch;
     const column = start[0].toUpperCase();
     const startRow = Number(start.slice(1));
     const endRow = Number(end.slice(1));
-    const values = Array.from({ length: endRow - startRow + 1 }, (_, index) => Number(evaluateCell(cells[`${column}${startRow + index}`] ?? "", cells)) || 0);
+    const rawValues = Array.from({ length: endRow - startRow + 1 }, (_, index) => evaluateCell(cells[`${column}${startRow + index}`] ?? "", cells));
+    const values = rawValues.map((item) => Number(item) || 0);
+    if (operation.toUpperCase() === "COUNT") return rawValues.filter((item) => String(item).trim() !== "" && Number.isFinite(Number(item))).length;
+    if (operation.toUpperCase() === "COUNTA") return rawValues.filter((item) => String(item).trim() !== "").length;
     if (operation.toUpperCase() === "AVERAGE") return Number((values.reduce((sum, item) => sum + item, 0) / values.length).toFixed(2));
     if (operation.toUpperCase() === "MIN") return Math.min(...values);
     if (operation.toUpperCase() === "MAX") return Math.max(...values);

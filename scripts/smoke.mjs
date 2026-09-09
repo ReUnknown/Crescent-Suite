@@ -71,6 +71,9 @@ try {
     await behaviorPage.getByRole("textbox", { name: "Cell B9" }).fill("=AVERAGE(B2:B4)");
     const averageValue = await behaviorPage.evaluate(() => document.querySelector('[aria-label="Cell B9"]')?.parentElement?.querySelector(".sheet-display")?.textContent);
     if (averageValue !== "5196.67") failures.push({ route: "sheets", formula: "AVERAGE", averageValue });
+    await behaviorPage.getByRole("textbox", { name: "Cell B8" }).fill("=COUNT(B2:B4)");
+    const countValue = await behaviorPage.evaluate(() => document.querySelector('[aria-label="Cell B8"]')?.parentElement?.querySelector(".sheet-display")?.textContent);
+    if (countValue !== "3") failures.push({ route: "sheets", formula: "COUNT", countValue });
     await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: "Change question 1 type" }).click();
     const typeAfterCycle = await behaviorPage.getByRole("button", { name: "Change question 1 type" }).innerText();
@@ -133,7 +136,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; Month has 42 cells; content search, local formulas, Forms controls, response history, favorite continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; Month has 42 cells; content search, local formulas (including COUNT), Forms controls, response history, favorite continuity, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

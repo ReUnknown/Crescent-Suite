@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.1.123 — Sheets add COUNT and COUNTA formulas
+
+Published September 9, 2026.
+
+### Changed
+
+- Sheets range formulas now support `COUNT` and `COUNTA` alongside the existing local aggregate and ratio formulas.
+
+### Verification
+
+- Smoke coverage checks `COUNT(B2:B4)` and expects three numeric cells.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.122 — Forms keep a local response history
 
 Published September 9, 2026.

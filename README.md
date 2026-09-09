@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.122 — Forms keep a local response history**
+**v0.1.123 — Sheets add COUNT and COUNTA formulas**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -45,6 +45,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Drive New file prompts for a title, preserves the previous Docs record in local Trash, and lets Restore recover it without silently discarding the replacement document
 - Settings backup smoke coverage waits for the local restore confirmation before checking the restored Forms defaults, keeping CI deterministic
 - Forms retain a local response history, show saved answers and timestamps in a dedicated Responses view, and include the history in JSON exports
+- Sheets now support COUNT and COUNTA over visible ranges alongside SUM, AVERAGE, MIN, MAX, and ratio formulas
 - Added a committed Forms builder screenshot showing editable question types, required state, delete controls, and Scale responses
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges
