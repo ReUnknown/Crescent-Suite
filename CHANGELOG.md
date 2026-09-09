@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.3.0 — Exact Sheets cell destinations
+
+Published September 9, 2026.
+
+### Added
+
+- Universal Search now carries matching Sheets cell coordinates into the workbook.
+- Searching for a cell value opens Sheets with that cell selected and visible in the formula bar.
+- Added a committed preview of the exact Sheets cell destination.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+- Smoke coverage verifies that searching for “Organic” selects cell A2.
+
 ## v1.2.2 — Search regression coverage
 
 Published September 9, 2026.

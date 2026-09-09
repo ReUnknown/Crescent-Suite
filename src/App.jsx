@@ -349,6 +349,11 @@ function SearchResults({ query, onNavigate, workspace }) {
   };
   const mergedResults = new Map([...appResults, ...getLiveRecentFiles(workspace), ...localResults].map((file) => [`${file.type}-${file.title}`, file]));
   const results = [...mergedResults.values()].filter((file) => `${file.title} ${file.type} ${file.opened} ${searchTextFor(file)}`.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
+  const navigationFor = (file) => {
+    if (file.type !== "Sheets") return file.appId ? null : { title: file.title };
+    const matchedCell = Object.entries(workspace.sheets?.cells ?? {}).find(([, value]) => String(value).toLowerCase().includes(query.toLowerCase()))?.[0];
+    return { title: file.title, ...(matchedCell ? { cell: matchedCell } : {}) };
+  };
   const handleResultKeyDown = (event) => {
     if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
     event.preventDefault();
@@ -358,7 +363,7 @@ function SearchResults({ query, onNavigate, workspace }) {
     if (nextIndex < 0) document.querySelector(".global-search input")?.focus();
     else resultButtons[nextIndex]?.focus();
   };
-  return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.appId ?? file.type.toLowerCase(), file.appId ? null : { title: file.title })} onKeyDown={handleResultKeyDown}><AppIcon app={{ ...file, id: file.appId ?? file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
+  return <div className="search-results"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" onClick={() => onNavigate(file.appId ?? file.type.toLowerCase(), navigationFor(file))} onKeyDown={handleResultKeyDown}><AppIcon app={{ ...file, id: file.appId ?? file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
 function HomeView({ workspace, update, onNavigate, onFocusSearch }) {
@@ -466,15 +471,21 @@ function SheetInsights({ cells }) {
   return <div className="sheet-insights"><div className="sheet-insights-heading"><div><span className="utility-kicker"><Sparkles size={14} />Crescent insight</span><h2>Growth at a glance</h2><p>Quick signals from the cells in this sheet.</p></div><span className="sheet-insights-status"><span />Calculated locally</span></div><div className="insight-cards"><div className="insight-card"><small>Total visits</small><strong>{totalVisits.toLocaleString()}</strong><span>Across {rows.length} channels</span></div><div className="insight-card"><small>Total leads</small><strong>{totalLeads.toLocaleString()}</strong><span>Qualified actions</span></div><div className="insight-card"><small>Conversion</small><strong>{conversion}%</strong><span>Leads ÷ visits</span></div></div><div className="insight-chart"><div className="insight-chart-head"><span>Visits by channel</span><small>Source: Growth metrics</small></div>{rows.map((row) => <div className="insight-bar-row" key={row.channel}><span>{row.channel}</span><div><i style={{ width: `${Math.max(6, (row.visits / maxVisits) * 100)}%` }} /></div><strong>{row.visits.toLocaleString()}</strong></div>)}</div></div>;
 }
 
-function SheetsView({ workspace, update, onNavigate }) {
-  const [selected, setSelected] = useState("B2");
+function SheetsView({ workspace, update, onNavigate, initialCell }) {
+  const [selected, setSelected] = useState(initialCell ?? "B2");
   const [view, setView] = useState("grid");
   const [past, setPast] = useState([]);
   const [future, setFuture] = useState([]);
   const icon = APP_META.find((app) => app.id === "sheets");
-  const sheetTabs = workspace.sheets.tabs ?? [{ name: "Sheet 1", cells: workspace.sheets.cells }];
+  const sheetTabs = useMemo(() => workspace.sheets.tabs ?? [{ name: "Sheet 1", cells: workspace.sheets.cells }], [workspace.sheets.cells, workspace.sheets.tabs]);
   const activeSheet = Math.min(workspace.sheets.activeSheet ?? 0, sheetTabs.length - 1);
-  const cells = sheetTabs[activeSheet]?.cells ?? {};
+  const cells = useMemo(() => sheetTabs[activeSheet]?.cells ?? {}, [activeSheet, sheetTabs]);
+  const appliedCellNavigation = useRef(null);
+  useEffect(() => {
+    if (!initialCell || initialCell === appliedCellNavigation.current || cells[initialCell] === undefined) return;
+    appliedCellNavigation.current = initialCell;
+    setSelected(initialCell);
+  }, [cells, initialCell]);
   const commitSheets = (nextSheets, extra = {}) => { setPast((current) => [...current, workspace.sheets].slice(-30)); setFuture([]); update({ sheets: nextSheets, ...extra }); };
   const persistCells = (nextCells) => { const nextTabs = sheetTabs.map((sheet, index) => index === activeSheet ? { ...sheet, cells: nextCells } : sheet); commitSheets({ ...workspace.sheets, tabs: nextTabs, activeSheet, cells: nextCells, updatedAt: "just now" }); };
   const updateCell = (cell, value) => persistCells({ ...cells, [cell]: value });
@@ -987,7 +998,7 @@ export default function App() {
   const currentView = useMemo(() => {
     if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} onFocusSearch={focusSearch} />;
     if (activeApp === "docs") return <DocsView workspace={workspace} update={update} onNavigate={navigate} />;
-    if (activeApp === "sheets") return <SheetsView workspace={workspace} update={update} onNavigate={navigate} />;
+    if (activeApp === "sheets") return <SheetsView workspace={workspace} update={update} onNavigate={navigate} initialCell={navigationContext?.cell} />;
     if (activeApp === "slides") return <SlidesView workspace={workspace} update={update} onNavigate={navigate} initialSlideTitle={navigationContext?.title} />;
     if (activeApp === "notes") return <NotesView workspace={workspace} update={update} onNavigate={navigate} initialNoteTitle={navigationContext?.title} />;
     if (activeApp === "tasks") return <TasksView workspace={workspace} update={update} onNavigate={navigate} initialTaskTitle={navigationContext?.title} initialProject={navigationContext?.project} />;

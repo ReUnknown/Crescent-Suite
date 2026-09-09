@@ -273,6 +273,11 @@ try {
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Calendar");
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     if (behaviorPage.url().split("#")[1] !== "calendar") failures.push({ route: "search", controls: "open exact app result", url: behaviorPage.url() });
+    await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Organic");
+    await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
+    await behaviorPage.waitForFunction(() => document.querySelector(".name-box")?.textContent === "A2");
+    if (behaviorPage.url().split("#")[1] !== "sheets" || await behaviorPage.getByRole("textbox", { name: "Formula bar" }).inputValue() !== "Organic") failures.push({ route: "search", controls: "open exact Sheets cell result", url: behaviorPage.url() });
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Launch ideas");
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     if (behaviorPage.url().split("#")[1] !== "notes" || await behaviorPage.getByRole("textbox", { name: "Note title" }).inputValue() !== "Launch ideas") failures.push({ route: "search", controls: "open exact note result", url: behaviorPage.url() });
