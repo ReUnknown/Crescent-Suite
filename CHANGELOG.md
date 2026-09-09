@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.4 — Local Drive
+
+Published September 8, 2026.
+
+### Added
+
+- Drive can now create a local folder with a name and immediately render it in the workspace.
+- Drive's New file action opens Docs with a clear next-step message for starting a draft.
+- A Drive preview screenshot is included with the GitHub progress evidence.
+
+### Verification
+
+- Folder creation and New file navigation passed in Playwright.
+- Production build passes after the Drive pass.
+
 ## v0.1.3 — Responsive feedback
 
 Published September 8, 2026.
