@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.104 — CI smoke covers core interactions**
+**v0.1.105 — Home greeting follows local time**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -46,6 +46,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Home’s “Ask Crescent anything…” card now focuses the shared global search and matches its real local-first behavior
 - Sheets local formulas now support SUM, AVERAGE, MIN, and MAX over visible cell ranges
 - CI smoke now verifies the new local formula path and Forms type/delete controls in addition to routes, layout, search, and Calendar Month
+- Home now greets the local browser with morning, afternoon, or evening language and the committed dashboard preview reflects the current time
 - Home reflects saved local calendar events, and Forms keeps its published/response state across navigation
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header

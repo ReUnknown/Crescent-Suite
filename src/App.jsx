@@ -263,13 +263,15 @@ function SearchResults({ query, onNavigate, workspace }) {
 function HomeView({ workspace, update, onNavigate, onFocusSearch }) {
   const [filter, setFilter] = useState("All");
   const recentFiles = getLiveRecentFiles(workspace);
+  const currentHour = new Date().getHours();
+  const greeting = currentHour < 12 ? "Good morning" : currentHour < 18 ? "Good afternoon" : "Good evening";
   const files = filter === "All" ? recentFiles : recentFiles.filter((file) => file.type === filter);
   const localSchedule = (workspace.calendarEvents ?? []).slice(0, 2).map((event) => ({ ...event, time: "Saved", end: "Local", color: "periwinkle" }));
   const toggleStar = (event, file) => { event.stopPropagation(); const starredTitles = getStarredTitles(workspace); if (starredTitles.has(file.title)) starredTitles.delete(file.title); else starredTitles.add(file.title); update({ starredFiles: [...starredTitles] }); emitNotice(starredTitles.has(file.title) ? `${file.title} added to Starred.` : `${file.title} removed from Starred.`); };
   return <div className="home-layout page-enter">
     <main className="home-main">
       <section className="home-hero">
-        <div><h1>Good evening, Alex</h1><p>Pick up where you left off, or start something new.</p></div>
+        <div><h1>{greeting}, Alex</h1><p>Pick up where you left off, or start something new.</p></div>
         <div className="hero-moon"><span className="hero-moon-shape" /><span>A calmer<br />brighter you</span></div>
       </section>
       <section className="app-launcher" aria-label="Crescent apps">
