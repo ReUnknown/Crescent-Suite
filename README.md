@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v2.5.0 — Required Form semantics**
+**v2.6.0 — Safe Scale response imports**
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -99,6 +99,9 @@ The first major release establishes a usable Crescent product shell and a local-
 - Added regression coverage for multiple simultaneous Scale questions
 - Required Form text, long-answer, and Scale controls now expose `aria-required`
 - Added smoke coverage for required-field semantics
+- Imported Form Scale answers are normalized to valid values from 1 through 5
+- Invalid legacy Scale values fall back safely without breaking response history
+- Added malformed-response coverage for Scale imports
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
 - Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback

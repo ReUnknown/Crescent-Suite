@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.6.0 — Safe Scale response imports
+
+Published September 9, 2026.
+
+### Fixed
+
+- Imported Form Scale answers are normalized to valid integer values from 1 through 5.
+- Invalid legacy `scale` values now fall back safely without breaking response history or form rendering.
+- Added malformed-response smoke coverage for invalid Scale values and per-question Scale maps.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v2.5.0 — Required Form semantics
 
 Published September 9, 2026.

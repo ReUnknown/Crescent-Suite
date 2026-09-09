@@ -408,8 +408,10 @@ try {
     await behaviorPage.waitForSelector(".document-inner .search-target");
     if (behaviorPage.url().split("#")[1] !== "docs") failures.push({ route: "history", controls: "restore exact search context", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
-    await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "malformed-records.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Safe import" }, sheets: { title: "Safe sheet" }, slides: [null], notes: [null], tasks: [null], forms: [null], calendarEvents: [null], driveFolders: [null], deletedFiles: [null], formResponses: [{ submittedAt: "not a date", answers: null }] })) });
+    await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "malformed-records.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Safe import" }, sheets: { title: "Safe sheet" }, slides: [null], notes: [null], tasks: [null], forms: [null], calendarEvents: [null], driveFolders: [null], deletedFiles: [null], formResponses: [{ submittedAt: "not a date", scaleAnswers: { 2: "invalid", 3: "5" }, scale: "9", answers: null }] })) });
     await behaviorPage.getByRole("status").filter({ hasText: "Workspace backup restored locally." }).waitFor({ state: "visible" });
+    const normalizedScaleResponse = await behaviorPage.evaluate(() => JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").formResponses?.[0] ?? {});
+    if (normalizedScaleResponse.scale !== null || Object.prototype.hasOwnProperty.call(normalizedScaleResponse.scaleAnswers ?? {}, "2") || normalizedScaleResponse.scaleAnswers?.[3] !== 5) failures.push({ route: "settings", controls: "malformed Scale response normalization", normalizedScaleResponse });
     await behaviorPage.goto(`${baseUrl}/slides`, { waitUntil: "networkidle" });
     if (await behaviorPage.locator(".slide-thumb").count() !== 1) failures.push({ route: "settings", controls: "malformed slide backup normalization" });
     await behaviorPage.goto(`${baseUrl}/notes`, { waitUntil: "networkidle" });
