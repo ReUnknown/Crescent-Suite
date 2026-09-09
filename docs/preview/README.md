@@ -1,4 +1,4 @@
-# v0.1.100 visual preview
+# v0.1.101 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -18,6 +18,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `forms-preview.png` — Forms respondent-facing Preview mode with email collection enabled
 - `forms-theme-blue.png` — Forms with a persisted blue theme selected from the inspector
 - `forms-required.png` — Forms builder with a locally toggled Required question state
+- `forms-builder-controls.png` — Forms builder with editable type chips and local delete controls
 - `calendar.png` — Calendar with a saved local event
 - `calendar-month.png` — Calendar Month mode with event pills
 - `calendar-ics.png` — Calendar with the standard ICS export control and saved event state
