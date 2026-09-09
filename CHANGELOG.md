@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.45 — Preview archive metadata refreshed
+
+Published September 9, 2026.
+
+### Changed
+
+- Updated `docs/preview/README.md` from the original v0.1.0 label to v0.1.44.
+- Clarified that the current Sheets preview includes persistent tabs and the Forms Preview includes email collection.
+
+### Verification
+
+- Confirmed all listed preview files exist in `docs/preview`.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.44 — Task restore preserves metadata
 
 Published September 9, 2026.

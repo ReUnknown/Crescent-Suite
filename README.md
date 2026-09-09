@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.44 — Task restore preserves metadata**
+**v0.1.45 — Preview archive metadata refreshed**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -44,6 +44,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Refreshed the committed Forms Preview screenshot to show email collection and respondent-facing controls
 - Trash now offers Restore for deleted Tasks, returning them to the active Tasks list and removing the Trash record
 - Task restore preserves the original project, due label, completion state, and task id
+- Updated the committed visual preview index to the current release and documented the latest Sheets and Forms captures
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles
 - Drive’s Recent files shelf mirrors the same live workspace records, so creating a draft no longer leaves stale demo cards behind
 - Settings can download a versioned JSON backup of the local workspace and restore it later on the same device
