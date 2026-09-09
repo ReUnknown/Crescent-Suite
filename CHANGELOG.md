@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.155 — Project-linked Tasks preview
+
+Published September 9, 2026.
+
+### Documentation
+
+- Added a committed Tasks screenshot showing the Project selector, local progress, due dates, and the shared sidebar vocabulary.
+- The visual preview index now includes `tasks-project-selector.png`.
+
+### Verification
+
+- Preview captured from the running local app after the project-linked Tasks implementation.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass on the underlying v0.1.154 implementation.
+
 ## v0.1.154 — Project-linked task creation
 
 Published September 9, 2026.
