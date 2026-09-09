@@ -201,3 +201,11 @@ input, textarea { color: var(--text); }
 .presentation-canvas .canvas-kicker, .presentation-stage .canvas-kicker { position: absolute; }
 .utility-empty { min-height: 180px; display: grid; place-items: center; align-content: center; gap: 9px; color: #7e899f; text-align: center; }.utility-empty svg { color: #9b8de8; }.utility-empty strong { color: #d9daea; font-size: 14px; }.utility-empty small { color: #7e899f; font-size: 11px; }
 .sheet-tabs { display: flex; align-items: center; gap: 4px; }.sheet-tabs button { padding: 5px 8px; border-radius: 5px; }.sheet-tabs button.selected { color: #eae7ff; background: rgba(158, 139, 239, .22); }
+.theme-swatch:hover, .theme-swatch.selected { border-color: white; }
+.theme-swatch.selected { box-shadow: 0 0 0 3px rgba(198, 185, 255, .18); }
+.form-theme-blue .form-cover { background: linear-gradient(145deg, #294d72, #141e31); }
+.form-theme-blue .form-cover-orbit { background: rgba(125, 190, 255, .76); box-shadow: 0 0 50px rgba(125, 190, 255, .22); }
+.form-theme-blue .form-cover span { color: #a6d4ff; }
+.form-theme-gold .form-cover { background: linear-gradient(145deg, #604833, #211c25); }
+.form-theme-gold .form-cover-orbit { background: rgba(255, 211, 139, .76); box-shadow: 0 0 50px rgba(255, 211, 139, .22); }
+.form-theme-gold .form-cover span { color: #f8d9a4; }

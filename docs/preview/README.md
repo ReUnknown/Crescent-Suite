@@ -1,4 +1,4 @@
-# v0.1.48 visual preview
+# v0.1.52 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -13,6 +13,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 - `forms.png` — Forms builder with published and saved-response states
 - `forms-persisted.png` — Forms with restored answer text, scale, and saved-response confirmation
 - `forms-preview.png` — Forms respondent-facing Preview mode with email collection enabled
+- `forms-theme-blue.png` — Forms with a persisted blue theme selected from the inspector
 - `calendar.png` — Calendar with a saved local event
 - `calendar-month.png` — Calendar Month mode with event pills
 - `trash.png` — local Trash with a recoverable deleted task
