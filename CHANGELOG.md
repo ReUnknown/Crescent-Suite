@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.14 — Slides that remember
+
+Published September 8, 2026.
+
+### Changed
+
+- Slide speaker notes are now stored with each slide and restored when reopening the deck.
+- New slides include their own empty notes field.
+- The visible deck counter now uses the actual slide count instead of a fixed value.
+
+### Verification
+
+- Wrote speaker notes, added a fourth slide, confirmed `04 — 04`, navigated away, and confirmed the notes restored in Playwright.
+- `npm run lint` passes with zero warnings.
+- `npm run build` passes.
+
 ## v0.1.13 — Responses that stay put
 
 Published September 8, 2026.

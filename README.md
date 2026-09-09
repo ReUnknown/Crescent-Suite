@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v0.1.13 — Responses that stay put**
+**v0.1.14 — Slides that remember**
 
 The first release establishes the Crescent product shell and a local-first suite experience:
 
@@ -20,6 +20,7 @@ The first release establishes the Crescent product shell and a local-first suite
 - Global Search includes locally created tasks, Drive folders, and Calendar events with correct app routing
 - Tasks now filters between All, Today, Open, and Done from the shared editor header
 - Forms saves answer text with the response and restores it across navigation
+- Slides saves speaker notes and keeps its page counter accurate after adding slides
 
 Everything is stored in this browser under a versioned local workspace key. No external account connection is required for this release.
 
