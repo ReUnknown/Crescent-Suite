@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.1.3 — Exact utility destinations
+
+Published September 9, 2026.
+
+### Improved
+
+- Recent, Starred, and Shared utility rows now preserve the exact local file context when opening an app.
+- Utility navigation now follows the same destination contract as Universal Search, Home, and the sidebar.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v1.1.2 — Exact Recent destinations
 
 Published September 9, 2026.
