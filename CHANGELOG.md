@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.136 — Calendar ICS export keeps event times
+
+Published September 9, 2026.
+
+### Changed
+
+- Calendar `.ics` export now preserves a local event’s entered time as a floating `DTSTART` value.
+- Events without a recognizable time remain valid all-day ICS events.
+
+### Verification
+
+- Smoke coverage checks a “Tomorrow · 3:00 PM” event exports as `T150000` on its stored date.
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass.
+
 ## v0.1.135 — Forms answer controls are accessible
 
 Published September 9, 2026.

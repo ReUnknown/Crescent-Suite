@@ -474,7 +474,15 @@ function CalendarView({ workspace, update, onNavigate }) {
   const exportCalendar = () => {
     const events = localEvents.map((event, index) => {
       const date = (event.date ?? displayDate.toISOString().slice(0, 10)).replaceAll("-", "");
-      return ["BEGIN:VEVENT", `UID:crescent-${event.id ?? index}@crescent-suite`, `DTSTAMP:${icsTimestamp(new Date())}`, `DTSTART;VALUE=DATE:${date}`, `SUMMARY:${escapeIcs(event.title)}`, `DESCRIPTION:${escapeIcs(event.when)}`, "END:VEVENT"].join("\r\n");
+      const timeMatch = String(event.when ?? "").match(/\b(\d{1,2})(?::(\d{2}))?\s*(AM|PM)\b/i);
+      let startLine = `DTSTART;VALUE=DATE:${date}`;
+      if (timeMatch) {
+        let hour = Number(timeMatch[1]);
+        if (timeMatch[3].toUpperCase() === "PM" && hour < 12) hour += 12;
+        if (timeMatch[3].toUpperCase() === "AM" && hour === 12) hour = 0;
+        startLine = `DTSTART:${date}T${String(hour).padStart(2, "0")}${timeMatch[2] ?? "00"}00`;
+      }
+      return ["BEGIN:VEVENT", `UID:crescent-${event.id ?? index}@crescent-suite`, `DTSTAMP:${icsTimestamp(new Date())}`, startLine, `SUMMARY:${escapeIcs(event.title)}`, `DESCRIPTION:${escapeIcs(event.when)}`, "END:VEVENT"].join("\r\n");
     });
     const calendar = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Crescent Suite//Calendar//EN", "CALSCALE:GREGORIAN", ...events, "END:VCALENDAR"].join("\r\n");
     downloadText("crescent-calendar.ics", `${calendar}\r\n`, "text/calendar");

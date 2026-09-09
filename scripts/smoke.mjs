@@ -78,6 +78,13 @@ try {
     const storedCalendarDate = await behaviorPage.evaluate(() => JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").calendarEvents?.[0]?.date);
     const expectedTomorrow = await behaviorPage.evaluate(() => { const date = new Date(); date.setDate(date.getDate() + 1); return date.toISOString().slice(0, 10); });
     if (storedCalendarDate !== expectedTomorrow) failures.push({ route: "calendar", controls: "natural language event date", storedCalendarDate, expectedTomorrow });
+    const icsDownloadPromise = behaviorPage.waitForEvent("download");
+    await behaviorPage.getByRole("button", { name: "Export ICS" }).click();
+    const icsStream = await (await icsDownloadPromise).createReadStream();
+    const icsChunks = [];
+    for await (const chunk of icsStream) icsChunks.push(chunk);
+    const icsText = Buffer.concat(icsChunks).toString();
+    if (!icsText.includes(`DTSTART:${expectedTomorrow.replaceAll("-", "")}T150000`)) failures.push({ route: "calendar", controls: "timed ICS export" });
     behaviorPage.off("dialog", acceptCalendarPrompts);
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".recent-table").innerText()).includes("Smoke focus block")) failures.push({ route: "home", controls: "live calendar recent file" });
@@ -174,7 +181,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed and natural-language local events; live Calendar Recent; Month has 42 cells; editable task due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; Calendar Week has 7 days; timed local events, natural-language dates, live Recent, and timed ICS export; Month has 42 cells; editable task due dates; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, Drive recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
