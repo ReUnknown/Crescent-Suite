@@ -1,6 +1,17 @@
-# v4.0.0 visual preview
+# v5.3.14 visual preview
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
+
+## Current first-run pass
+
+These four screenshots capture the blank-workspace experience published in the current release:
+
+- `mail-empty.png` — Mail with a useful local inbox state and direct New message action
+- `drive-empty.png` — Drive explaining both empty folders and empty recent files with direct actions
+- `docs-focus.png` — Docs Focus Mode prioritizing the writing surface while keeping Details one click away
+- `sheets-blank-a1.png` — a new blank spreadsheet starting at the familiar A1 cell
+
+The earlier screenshots below document the seeded preview and interaction milestones that led to the current local-first product shell.
 
 - `home.png` — desktop home dashboard with all eight apps visible and a focused local-day rail
 - `local-workspaces.png` — Home with the persistent Workspaces and Projects navigation shell
