@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.3.7 — Honest rendered content
+
+Published September 10, 2026.
+
+### Maintenance
+
+- Removed the obsolete local Forms CSS override that hid maintained text and recreated it with pseudo-elements.
+- Kept the live Forms surface’s visual and accessible content on the same source of truth.
+
+### Verification
+
+- Local lint, build, and smoke checks pass; GitHub CI and Pages will validate the pushed release.
+
 ## v5.3.6 — Truly blank documents
 
 Published September 10, 2026.
