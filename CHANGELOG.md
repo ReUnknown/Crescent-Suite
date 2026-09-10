@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.6 — Truly blank documents
+
+Published September 10, 2026.
+
+### Fixed
+
+- New Docs files created from Drive now have a blank editable body instead of seeded instructional copy.
+- Docs reset, empty recovery records, and new outline sections no longer inject placeholder prose.
+- Added smoke coverage proving a newly created Docs file starts blank.
+
+### Verification
+
+- Local lint, build, and smoke checks pass; GitHub CI and Pages will validate the pushed release.
+
 ## v5.3.5 — Current CI actions
 
 Published September 10, 2026.

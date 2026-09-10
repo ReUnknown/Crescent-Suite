@@ -685,7 +685,7 @@ function DocsView({ workspace, update, onNavigate, initialHeading }) {
     return [title || "Untitled document", ...Array.from(parsed.querySelectorAll("h2, h3")).map((heading) => heading.textContent.trim()).filter(Boolean)].slice(0, 6);
   }, [title, workspace.docs.body]);
   const jumpToOutline = (item) => { const target = Array.from(editorRef.current?.querySelectorAll("h1, h2, h3") ?? []).find((heading) => heading.textContent.trim() === item); target?.scrollIntoView({ behavior: "smooth", block: "center" }); };
-  const addSection = () => { const nextBody = `${workspace.docs.body}<h2>New section</h2><p>Start writing the next idea here.</p>`; update({ docs: { ...workspace.docs, title, body: nextBody, updatedAt: "just now" } }); emitNotice("New section added to the document."); };
+  const addSection = () => { const nextBody = `${workspace.docs.body}<h2>New section</h2>`; update({ docs: { ...workspace.docs, title, body: nextBody, updatedAt: "just now" } }); emitNotice("New section added to the document."); };
   useEffect(() => { if (editorRef.current && editorRef.current.innerHTML !== workspace.docs.body) editorRef.current.innerHTML = workspace.docs.body; }, [workspace.docs.body]);
   useEffect(() => {
     if (!initialHeading || initialHeading === appliedHeadingNavigation.current) return;
@@ -738,7 +738,7 @@ function DocsView({ workspace, update, onNavigate, initialHeading }) {
     const starredTitles = getStarredTitles(workspace);
     const deletedDoc = { id: `doc-${Date.now()}`, title, body: workspace.docs.body, updatedAt: workspace.docs.updatedAt, type: "Docs", appId: "docs", opened: "just now", owner: "Me", starred: starredTitles.has(title) };
     starredTitles.delete(title);
-    update({ docs: { ...INITIAL_WORKSPACE.docs, title: "Untitled document", body: "<h1>Untitled document</h1><p>Start writing your next idea here.</p>", updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles: [deletedDoc, ...(workspace.deletedFiles ?? [])] });
+    update({ docs: { ...INITIAL_WORKSPACE.docs, title: "Untitled document", body: "", updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles: [deletedDoc, ...(workspace.deletedFiles ?? [])] });
     emitNotice("Document moved to local Trash.");
     onNavigate("trash");
   };
@@ -1160,7 +1160,7 @@ function DriveView({ workspace, update, onNavigate, initialFolderName, initialFi
     if (type === "Docs") {
       const previous = workspace.docs;
       archive({ id: `doc-${Date.now()}`, title: previous.title, body: previous.body, updatedAt: previous.updatedAt, type, appId: "docs", opened: "just now", owner: "Me" });
-      update({ docs: { title, body: `<h1>${escapeHtml(title)}</h1><p>Start writing your next idea here.</p>`, updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles });
+      update({ docs: { title, body: "", updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles });
     } else if (type === "Sheets") {
       const previous = workspace.sheets;
       archive({ id: `sheet-${Date.now()}`, title: previous.title, cells: previous.cells, tabs: previous.tabs, styles: previous.styles, activeSheet: previous.activeSheet, type, appId: "sheets", opened: "just now", owner: "Me" });
@@ -1320,7 +1320,7 @@ function UtilityView({ id, workspace, update, onNavigate }) {
   const restoreFile = (file) => {
     if (file.type === "Docs") {
       const currentDoc = workspace.docs;
-      const restoredDoc = { title: file.title, body: file.body ?? "<h1>Recovered document</h1><p>Continue writing here.</p>", updatedAt: "Recovered" };
+      const restoredDoc = { title: file.title, body: file.body ?? "", updatedAt: "Recovered" };
       const starredTitles = getStarredTitles(workspace);
       const archivedCurrent = { id: `doc-${Date.now()}`, title: currentDoc.title, body: currentDoc.body, updatedAt: currentDoc.updatedAt, type: "Docs", appId: "docs", opened: "just now", owner: "Me", starred: starredTitles.has(currentDoc.title) };
       starredTitles.delete(currentDoc.title);

@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.5 — Current CI actions**
+**v5.3.6 — Truly blank documents**
 
-Published September 10, 2026. GitHub CI now uses the current checkout and Node setup actions, keeping the validation pipeline aligned with the Pages workflow.
+Published September 10, 2026. New Docs files now open with an actually blank body instead of seeded instructional copy; help remains available through the optional guide.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -48,6 +48,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Removed unreachable legacy Drive and Forms prototypes so the maintained source matches the live user experience
 - Docs no longer presents a Details toggle at widths where the Details panel is automatically hidden
 - CI now uses `actions/checkout@v5` and `actions/setup-node@v5` to avoid the older Node 20 action path
+- New Docs files, reset Docs, and empty recovery records no longer inject instructional body copy
 - Restoring a trashed editor file now archives the displaced active Docs, Sheets, Slides, or Forms record back into local Trash
 - Linked text in Docs now has a clear document-paper treatment with visible underline and hover contrast
 - Trash cleanup now uses accessible Crescent confirmation dialogs for permanent deletion and Empty Trash, with Escape/backdrop dismissal and clear irreversible-action language

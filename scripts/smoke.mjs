@@ -433,6 +433,7 @@ try {
     if (await behaviorPage.getByRole("dialog", { name: "Start something new" }).count()) failures.push({ route: "drive", controls: "new file Escape dismissal" });
     await createDriveFile("Docs", "Smoke new file");
     if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== "Smoke new file") failures.push({ route: "drive", controls: "new file title" });
+    if ((await behaviorPage.getByRole("textbox", { name: "Document body" }).innerText()).trim()) failures.push({ route: "drive", controls: "new Docs file starts blank" });
     await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
     const archivedDoc = behaviorPage.locator(".utility-file-row").filter({ hasText: previousDocTitle });
     if (await archivedDoc.count() !== 1) failures.push({ route: "trash", controls: "archived Docs file" });
