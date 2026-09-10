@@ -121,6 +121,10 @@ try {
           if (!page.url().endsWith("#recent")) failures.push({ viewport: viewport.name, route, emptyState: "Trash empty-state action", url: page.url() });
         }
         if (route === "home" && viewport.name === "desktop") {
+          await page.keyboard.press("Tab");
+          if (!(await page.evaluate(() => document.activeElement?.classList.contains("skip-link")))) failures.push({ viewport: viewport.name, route, accessibility: "skip-link focus" });
+          await page.keyboard.press("Enter");
+          if (await page.evaluate(() => document.activeElement?.id !== "main-content")) failures.push({ viewport: viewport.name, route, accessibility: "skip-link target" });
           await page.getByRole("button", { name: "Open Crescent guide" }).click();
           if (!(await page.evaluate(() => document.activeElement?.closest(".guide-dialog") !== null))) failures.push({ viewport: viewport.name, route, accessibility: "guide focus" });
           await page.keyboard.press("Shift+Tab");

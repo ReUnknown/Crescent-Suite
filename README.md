@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.14 — Consistent dialog keyboarding**
+**v5.3.15 — Keyboard-friendly work surfaces**
 
-Published September 10, 2026. Crescent dialogs now keep keyboard focus inside the active modal across the suite.
+Published September 10, 2026. Keyboard users can now skip straight to the active work surface, and Focus Mode exposes its Escape shortcut to assistive technology.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -47,6 +47,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Drive’s empty folders and recent-files sections now provide direct first-run actions instead of blank space
 - Blank editor headers now use app-specific “Untitled document/spreadsheet/presentation/form” hints for a more consistent first-run experience
 - Shared modal focus behavior now keeps Tab and Shift+Tab inside active dialogs, including Mail compose and local creation flows
+- Home now provides a low-profile Skip to content link for keyboard users, and the Focus Mode exit exposes its Escape shortcut semantically
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority

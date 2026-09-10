@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.15 — Keyboard-friendly work surfaces
+
+Published September 10, 2026.
+
+### Improved
+
+- Added a keyboard-only Skip to content link that lands on the active Crescent work surface.
+- Added `aria-keyshortcuts="Escape"` to the Focus Mode exit control.
+- Added smoke coverage for skip-link focus and target behavior.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.14 — Consistent dialog keyboarding
 
 Published September 10, 2026.
