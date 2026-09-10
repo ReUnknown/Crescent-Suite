@@ -349,3 +349,4 @@ input, textarea { color: var(--text); }
 .doc-workspace-details-hidden { grid-template-columns: minmax(480px, 740px); }
 @media (max-width: 1250px) { .doc-workspace-details-hidden { grid-template-columns: minmax(440px, 1fr); } }
 @media (max-width: 1050px) { .doc-workspace-details-hidden { grid-template-columns: 1fr; } }
+@media (max-width: 1250px) { .details-toggle { display: none !important; } }

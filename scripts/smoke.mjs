@@ -88,6 +88,7 @@ try {
         if (route === "docs" && await page.title() !== "Docs · Crescent Suite") failures.push({ viewport: viewport.name, route, title: await page.title() });
         if (viewport.name === "mobile" && ["docs", "sheets", "slides", "forms"].includes(route) && !(await page.getByRole("button", { name: "Move to Trash" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "mobile editor Trash action" });
         if (viewport.name === "mobile" && ["docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms"].includes(route) && !(await page.locator(".editor-actions > .secondary-button:visible").count())) failures.push({ viewport: viewport.name, route, controls: "mobile editor secondary actions" });
+        if (viewport.name === "mobile" && route === "docs" && await page.getByRole("button", { name: /details/i }).count()) failures.push({ viewport: viewport.name, route, controls: "hidden responsive details control" });
         if (viewport.name === "mobile" && route === "calendar") {
           const mobileCalendarNavigation = await Promise.all(["Previous", "Today", "Next"].map((name) => page.getByRole("button", { name, exact: true }).isVisible()));
           if (mobileCalendarNavigation.some((visible) => !visible)) failures.push({ viewport: viewport.name, route, controls: "mobile Calendar navigation" });

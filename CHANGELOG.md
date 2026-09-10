@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.3.4 — Responsive panel ergonomics
+
+Published September 10, 2026.
+
+### Improved
+
+- Removed the Docs Details toggle from tablet and mobile layouts where the inspector is already hidden, avoiding a control with no visible effect.
+- Added responsive smoke coverage for the compact Docs toolbar.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.3.3 — Clean live product surface
 
 Published September 10, 2026.
