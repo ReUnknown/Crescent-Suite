@@ -599,12 +599,28 @@ try {
     await freshContext.close();
   }
 
+  const demoIsolationContext = await browser.newContext({ viewport: viewports[0] });
+  try {
+    const demoIsolationPage = await demoIsolationContext.newPage();
+    await demoIsolationPage.goto(`${baseUrl}/home?demo=1`, { waitUntil: "networkidle" });
+    await demoIsolationPage.waitForTimeout(250);
+    await demoIsolationPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    const isolationState = await demoIsolationPage.evaluate(() => ({
+      workspaceClass: document.querySelector(".app-shell")?.className ?? "",
+      text: document.body.innerText,
+    }));
+    if (isolationState.workspaceClass.includes("workspace-demo") || /Product strategy Q3 2024|Growth metrics|Launch feedback/.test(isolationState.text)) failures.push({ route: "home", controls: "demo preview isolation", isolationState });
+    await demoIsolationPage.close();
+  } finally {
+    await demoIsolationContext.close();
+  }
+
   await browser.close();
   if (failures.length) {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; consistent Focus Mode and keyboard-safe exit controls across every suite app; actionable empty-state navigation; local-only sharing feedback; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; demo preview isolation; consistent Focus Mode and keyboard-safe exit controls across every suite app; actionable empty-state navigation; local-only sharing feedback; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

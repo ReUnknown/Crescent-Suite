@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.7 — Honest rendered content**
+**v5.3.8 — Isolated demo preview**
 
-Published September 10, 2026. Forms now renders its maintained local copy directly instead of relying on hidden prototype text and CSS-generated replacements.
+Published September 10, 2026. The optional `?demo=1` preview can no longer leak seeded showcase data into the normal blank local workspace.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -50,6 +50,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - CI now uses `actions/checkout@v5` and `actions/setup-node@v5` to avoid the older Node 20 action path
 - New Docs files, reset Docs, and empty recovery records no longer inject instructional body copy
 - Forms’ rendered and accessible text now come from the same maintained JSX content, with the stale prototype override removed
+- Demo preview data is isolated from the normal local workspace when the demo query is removed
 - Restoring a trashed editor file now archives the displaced active Docs, Sheets, Slides, or Forms record back into local Trash
 - Linked text in Docs now has a clear document-paper treatment with visible underline and hover contrast
 - Trash cleanup now uses accessible Crescent confirmation dialogs for permanent deletion and Empty Trash, with Escape/backdrop dismissal and clear irreversible-action language

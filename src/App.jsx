@@ -340,6 +340,7 @@ function loadWorkspace() {
     if (!stored && demoRequested) return INITIAL_WORKSPACE;
     if (!stored) return createEmptyWorkspace();
     const parsed = JSON.parse(stored);
+    if (parsed?.demo && !demoRequested) return createEmptyWorkspace();
     return parsed?.version === 1 ? normalizeWorkspace(parsed) : createEmptyWorkspace();
   } catch {
     return createEmptyWorkspace();

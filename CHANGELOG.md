@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.3.8 — Isolated demo preview
+
+Published September 10, 2026.
+
+### Fixed
+
+- Explicit `?demo=1` preview data is no longer retained as the user’s normal local workspace after returning to the standard URL.
+- Added smoke coverage for entering and leaving demo preview mode without seeded data leakage.
+
+### Verification
+
+- Local lint, build, and smoke checks pass; GitHub CI and Pages will validate the pushed release.
+
 ## v5.3.7 — Honest rendered content
 
 Published September 10, 2026.
