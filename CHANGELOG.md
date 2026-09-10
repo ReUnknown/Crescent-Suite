@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.3.17 — Honest blank Forms start
+
+Published September 10, 2026.
+
+### Improved
+
+- Removed the Preview action from the completely blank Forms first-run state because there is no form content to preview yet.
+- Added blank-workspace smoke coverage so empty Forms expose only actionable controls.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.16 — Clean accessibility landmarks
 
 Published September 10, 2026.

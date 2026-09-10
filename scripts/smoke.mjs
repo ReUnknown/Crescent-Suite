@@ -114,6 +114,7 @@ try {
         if (route === "mail" && smokeData === "fresh" && !(await page.locator(".mail-list-empty").count())) failures.push({ viewport: viewport.name, route, emptyState: "Mail inbox empty state" });
         if (route === "drive" && smokeData === "fresh" && await page.locator(".drive-empty-state").count() !== 2) failures.push({ viewport: viewport.name, route, emptyState: "Drive folders and files empty states" });
         if (route === "sheets" && smokeData === "fresh" && await page.locator(".name-box").innerText() !== "A1") failures.push({ viewport: viewport.name, route, controls: "blank Sheets starts at A1" });
+        if (route === "forms" && smokeData === "fresh" && await page.getByRole("button", { name: "Preview", exact: true }).count()) failures.push({ viewport: viewport.name, route, controls: "blank Forms preview dead end" });
         if (route === "drive" && await page.getByRole("button", { name: "Grid view" }).getAttribute("aria-pressed") !== "true") failures.push({ viewport: viewport.name, route, accessibility: "Drive view state" });
         if (route === "trash" && !(await page.locator(".utility-panel").innerText()).includes("Trash is empty.")) failures.push({ viewport: viewport.name, route, emptyState: "Trash is empty." });
         if (route === "trash") {
@@ -606,6 +607,7 @@ try {
           const hasLocalSlideResidue = route === "slides" && state.text.includes("CRESCENT / DESIGN REVIEW");
           if (pageErrors.length || state.overflow || !state.workspaceClass.includes("workspace-local") || seededCopy.test(state.text) || hasLocalSlideResidue) failures.push({ viewport: viewport.name, route, pageErrors, overflow: state.overflow, workspaceClass: state.workspaceClass, seededCopy: seededCopy.test(state.text), hasLocalSlideResidue });
           if (route === "home" && viewport.name === "desktop" && await freshPage.getByText("Make Crescent yours.").count() !== 1) failures.push({ viewport: viewport.name, route, emptyState: "optional guide" });
+          if (route === "forms" && await freshPage.getByRole("button", { name: "Preview", exact: true }).count()) failures.push({ viewport: viewport.name, route, controls: "blank Forms preview dead end" });
         } finally {
           await freshPage.close();
         }

@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.16 — Clean accessibility landmarks**
+**v5.3.17 — Honest blank Forms start**
 
-Published September 10, 2026. The keyboard skip target now preserves clean landmark semantics across every suite surface, including Slides.
+Published September 10, 2026. A new blank Form now exposes only actions that can move the work forward; Preview appears after there is something to preview.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -48,6 +48,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Blank editor headers now use app-specific “Untitled document/spreadsheet/presentation/form” hints for a more consistent first-run experience
 - Shared modal focus behavior now keeps Tab and Shift+Tab inside active dialogs, including Mail compose and local creation flows
 - Home now provides a low-profile Skip to content link for keyboard users, and the Focus Mode exit exposes its Escape shortcut semantically
+- Blank Forms no longer show an inert Preview action before a title or question exists
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority
