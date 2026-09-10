@@ -1,6 +1,6 @@
 # Crescent Suite visual preview archive
 
-The newest screenshots in this archive were captured from v5.3.14. The current live release is v5.3.16; the releases after the screenshot capture are keyboard and semantic accessibility refinements with no persistent visual state.
+The current live release is v5.3.16. The blank-workspace captures below were captured from v5.3.14; `keyboard-skip-link.png` was captured from v5.3.16. Releases after v5.3.14 are keyboard and semantic accessibility refinements, with the skip affordance visible only when focused.
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
@@ -12,6 +12,7 @@ These four screenshots capture the blank-workspace experience published in the v
 - `drive-empty.png` — Drive explaining both empty folders and empty recent files with direct actions
 - `docs-focus.png` — Docs Focus Mode prioritizing the writing surface while keeping Details one click away
 - `sheets-blank-a1.png` — a new blank spreadsheet starting at the familiar A1 cell
+- `keyboard-skip-link.png` — the keyboard-only Skip to content affordance in its focused state
 
 The earlier screenshots below document the seeded preview and interaction milestones that led to the current local-first product shell.
 
