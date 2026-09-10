@@ -337,6 +337,8 @@ try {
     if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== "Product strategy Q3 2024") failures.push({ route: "docs", controls: "Docs restore" });
     await behaviorPage.goto(`${baseUrl}/notes`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: "New note" }).click();
+    const newNoteTitle = behaviorPage.getByRole("textbox", { name: "Note title" });
+    if (await newNoteTitle.inputValue() !== "" || await newNoteTitle.getAttribute("placeholder") !== "Name this note") failures.push({ route: "notes", controls: "blank note naming field" });
     await behaviorPage.getByRole("button", { name: "Delete Untitled note" }).click();
     await behaviorPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
     const permanentlyDeletedNote = behaviorPage.locator(".utility-file-row").filter({ hasText: "Untitled note" });

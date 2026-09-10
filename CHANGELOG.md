@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.21 — Honest Notes first run
+
+Published September 10, 2026.
+
+### Improved
+
+- New Notes now save an empty title until the user names them, with a clear “Name this note” prompt in the editor.
+- The Notes list and Trash retain a readable fallback label without treating it as user-authored content.
+- Added smoke coverage for the blank Notes naming field.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.20 — User-owned creation flows
 
 Published September 10, 2026.

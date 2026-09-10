@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.20 — User-owned creation flows**
+**v5.3.21 — Honest Notes first run**
 
-Published September 10, 2026. Workspace, project, folder, and Drive file creation now starts blank and asks for a user-owned name instead of saving showcase-like defaults.
+Published September 10, 2026. New Notes now start with an empty saved title and a clear “Name this note” prompt, matching the rest of Crescent’s blank-first editors.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -53,6 +53,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Decorative eye glyphs no longer pollute the accessible names of Preview and Back to form controls
 - Blank navigation now offers “Add your first project” and removes the inert “More projects…” row
 - Workspace, project, folder, and Drive file dialogs start with blank names and clear contextual prompts
+- New Notes keep their title blank until the user names them; the list uses a visible fallback without saving placeholder content
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority
