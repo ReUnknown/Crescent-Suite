@@ -1523,7 +1523,7 @@ export default function App() {
     document.addEventListener("pointerdown", handleOutsideSearch);
     return () => document.removeEventListener("pointerdown", handleOutsideSearch);
   }, [query]);
-  const navigate = (id, context = null) => { setActiveApp(id); setNavigationContext(context); setQuery(""); setSidebarOpen(false); const nextHash = `#${id}`; const currentContext = window.history.state?.context ?? null; if (window.location.hash !== nextHash || JSON.stringify(currentContext) !== JSON.stringify(context)) window.history.pushState({ app: id, context }, "", nextHash); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const navigate = (id, context = null) => { setActiveApp(id); setNavigationContext(context); setQuery(""); setSidebarOpen(false); const nextHash = `#${id}`; const currentContext = window.history.state?.context ?? null; if (window.location.hash !== nextHash || JSON.stringify(currentContext) !== JSON.stringify(context)) window.history.pushState({ app: id, context }, "", nextHash); window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); };
   const focusSearch = () => { setQuery(""); window.setTimeout(() => document.querySelector(".global-search input")?.focus(), 0); };
   const currentView = useMemo(() => {
     if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} onFocusSearch={focusSearch} />;
