@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.1.6 — Reproducible local build
+
+Published September 10, 2026.
+
+### Improved
+
+- Pinned the verified React, Vite, Lucide, ESLint, and Playwright versions so future installs cannot silently change the published workspace build.
+
+### Verification
+
+- `npm ci --ignore-scripts --dry-run`, `npm run lint`, and `npm run build` pass with the pinned toolchain.
+
 ## v5.1.5 — Release metadata alignment
 
 Published September 10, 2026.
