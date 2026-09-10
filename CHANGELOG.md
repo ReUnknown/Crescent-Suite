@@ -1,5 +1,20 @@
 # Changelog
 
+## v5.3.39 — Complete unnamed-work coverage
+
+Published September 10, 2026.
+
+### Improved
+
+- Expanded the first-use smoke workflow across Docs, Sheets, Slides, Notes, and Forms so content remains discoverable before naming.
+- Kept blank-first behavior explicit: untouched editors still do not create Recent rows.
+- Updated the release metadata and product guide to describe the cross-app guarantee.
+
+### Verification
+
+- `npm run lint`
+- `npm run test:smoke`
+
 ## v5.3.38 — Discoverable unnamed work
 
 Published September 10, 2026.

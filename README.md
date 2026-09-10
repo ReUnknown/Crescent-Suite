@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.38 — Discoverable unnamed work**
+**v5.3.39 — Complete unnamed-work coverage**
 
-Published September 10, 2026. Crescent keeps content-bearing work discoverable in Recent even when the user has not named it yet.
+Published September 10, 2026. Crescent keeps content-bearing work discoverable in Recent even when the user has not named it yet, with cross-app regression coverage for the full editor set.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -26,6 +26,8 @@ Public preview: [reunknown.github.io/Crescent-Suite](https://reunknown.github.io
 Focus Mode hides the global sidebar and top navigation. Docs opens on a centered writing canvas with Outline hidden and Details available on demand; Slides keeps a compact slide picker while hiding the secondary design inspector; Notes and Mail keep compact selection rails so navigation remains one click away without taking over the canvas. The explicit Demo Preview status pill stays out of the editor header and never intercepts controls.
 
 Untitled documents, spreadsheets, presentations, notes, and forms only appear in Recent after they contain real user content; untouched blank editors remain out of the way.
+
+The v5.3.39 smoke suite verifies that first-use content is discoverable with honest Untitled labels across Docs, Sheets, Slides, Notes, and Forms.
 
 ### Included
 

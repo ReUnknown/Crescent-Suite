@@ -712,6 +712,30 @@ try {
     await untitledContentContext.close();
   }
 
+  const unnamedRecentCases = [
+    { route: "sheets", label: "Untitled spreadsheet", setup: async (page) => page.getByRole("textbox", { name: "Cell A1" }).fill("Revenue") },
+    { route: "slides", label: "Untitled presentation", setup: async (page) => page.getByRole("textbox", { name: "Slide body" }).fill("A useful presentation before I name the deck.") },
+    { route: "notes", label: "Untitled note", setup: async (page) => { await page.getByRole("button", { name: "Create your first note" }).click(); await page.getByRole("textbox", { name: "Note body" }).fill("A useful note before I give it a title."); } },
+    { route: "forms", label: "Untitled form", setup: async (page) => { await page.getByRole("button", { name: "Add your first question" }).click(); await page.getByRole("textbox", { name: "Question 1 label" }).fill("What should we improve next?"); } },
+  ];
+  for (const testCase of unnamedRecentCases) {
+    const context = await browser.newContext({ viewport: viewports[0] });
+    try {
+      const page = await context.newPage();
+      await page.goto(`${baseUrl}/${testCase.route}?fresh=1`, { waitUntil: "networkidle" });
+      await testCase.setup(page);
+      await page.keyboard.press("Tab");
+      await page.waitForTimeout(250);
+      await page.getByRole("button", { name: "Exit focus mode" }).click();
+      await page.getByRole("button", { name: "Back to Home" }).click();
+      await page.waitForURL(/#home$/);
+      if (await page.locator(".recent-row").filter({ hasText: testCase.label }).count() !== 1) failures.push({ route: `unnamed-${testCase.route}`, controls: `${testCase.label} appears in Home Recent` });
+      await page.close();
+    } finally {
+      await context.close();
+    }
+  }
+
   const demoIsolationContext = await browser.newContext({ viewport: viewports[0] });
   try {
     const demoIsolationPage = await demoIsolationContext.newPage();
@@ -770,7 +794,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; first-run Docs creation appears in Recent; content-bearing unnamed Docs remains discoverable as Untitled document; demo preview isolation; consistent Focus Mode and keyboard-safe exit controls across every suite app; actionable empty-state navigation; local-storage status; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+  console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; first-run Docs creation appears in Recent; content-bearing unnamed Docs, Sheets, Slides, Notes, and Forms remain discoverable with honest Untitled labels; demo preview isolation; consistent Focus Mode and keyboard-safe exit controls across every suite app; actionable empty-state navigation; local-storage status; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
