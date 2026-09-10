@@ -10,6 +10,8 @@ Published September 10, 2026. Focus Mode now gives every suite surface more room
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
+For the latest Focus Mode captures, see the [v5.3.35 GitHub release](https://github.com/ReUnknown/Crescent-Suite/releases/tag/v5.3.35) and its attached desktop and mobile QA images.
+
 Public preview: [reunknown.github.io/Crescent-Suite](https://reunknown.github.io/Crescent-Suite/)
 
 ### Quick start
