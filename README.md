@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.2.8 — Keyboard-safe guide**
+**v5.2.9 — Performance guardrails**
 
-Published September 10, 2026. The in-product guide now keeps keyboard focus inside its dialog, while fresh Slides renders local presentation language directly without seeded showcase copy.
+Published September 10, 2026. Crescent now protects its lean published shell with a production smoke budget for core JavaScript and CSS transfer, alongside the keyboard-safe guide and blank-first surfaces.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 

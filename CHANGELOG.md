@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.2.9 — Performance guardrails
+
+Published September 10, 2026.
+
+### Improved
+
+- Added a 150 KB transfer budget for core production JavaScript and CSS to catch accidental bundle growth in the smoke suite.
+- Recorded the current published core transfer at roughly 114 KB in the local production preview, leaving room for measured iteration without masking regressions.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.2.8 — Keyboard-safe guide
 
 Published September 10, 2026.

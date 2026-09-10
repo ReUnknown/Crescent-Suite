@@ -1,4 +1,4 @@
-/* global Buffer, console, document, fetch, getComputedStyle, localStorage, process, setTimeout */
+/* global Buffer, console, document, fetch, getComputedStyle, localStorage, performance, process, setTimeout */
 
 import { spawn } from "node:child_process";
 import { chromium } from "playwright";
@@ -53,6 +53,8 @@ try {
     await reducedMotionPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     const motionStyle = await reducedMotionPage.locator(".page-enter").first().evaluate((node) => getComputedStyle(node).transitionDuration);
     if (Number.parseFloat(motionStyle) > 0.001) failures.push({ route: "home", accessibility: "reduced-motion transitions", motionStyle });
+    const coreTransfer = await reducedMotionPage.evaluate(() => performance.getEntriesByType("resource").filter((entry) => /\.(?:js|css)$/.test(entry.name)).reduce((total, entry) => total + entry.transferSize, 0));
+    if (coreTransfer > 150000) failures.push({ route: "home", performance: "core JS/CSS transfer budget", coreTransfer });
   } finally {
     await reducedMotionPage.close();
   }
