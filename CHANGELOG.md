@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.3.32 — Consistent release archive
+
+Published September 10, 2026.
+
+### Improved
+
+- Updated the committed visual-preview archive to identify v5.3.31 as the prior live release and describe the screenshots as milestone captures instead of implying they are all from one older build.
+
+### Verification
+
+- Repository documentation and release metadata are aligned.
+
 ## v5.3.31 — Verified Pages routes
 
 Published September 10, 2026.

@@ -1,6 +1,6 @@
 # Crescent Suite visual preview archive
 
-The current live release is v5.3.17. The blank-workspace captures below were captured from v5.3.14; `keyboard-skip-link.png` was captured from v5.3.16; and `forms-empty.png` was captured from v5.3.17. Releases after v5.3.14 are keyboard, semantic, and first-run accessibility refinements.
+The current live release is v5.3.31. The archive below contains milestone captures from the local-first, blank-workspace, keyboard, and responsive refinement passes; the live release and its browser-smoke contract remain the source of truth for current behavior.
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 

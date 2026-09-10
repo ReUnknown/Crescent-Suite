@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.31 — Verified Pages routes**
+**v5.3.32 — Consistent release archive**
 
-Published September 10, 2026. The Pages deployment now verifies a direct Docs route after publishing, keeping the stable 200-status entrypoint contract observable on every deployment.
+Published September 10, 2026. The public visual-preview archive now matches the current release line, while Pages continues to verify the stable 200-status entrypoint contract on every deployment.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
