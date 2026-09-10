@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.2.6 — Clearer focus affordance
+
+Published September 10, 2026.
+
+### Improved
+
+- Replaced the generic Focus Mode minimize icon with Crescent’s navigation-panel icon so the exit action is visually self-explanatory.
+
+### Verification
+
+- `npm run lint` and `npm run build` pass; the full smoke matrix passed immediately before this icon-only refinement.
+
 ## v5.2.5 — Predictable modal escape
 
 Published September 10, 2026.

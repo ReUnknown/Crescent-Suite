@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.2.5 — Predictable modal escape**
+**v5.2.6 — Clearer focus affordance**
 
-Published September 10, 2026. Every Crescent app opens in a focused, full-viewport workspace, Search follows its shortcut, and open dialogs now close before Focus Mode changes when you press Escape.
+Published September 10, 2026. Every Crescent app opens in a focused, full-viewport workspace, Search follows its shortcut, and the Focus Mode exit affordance now uses the same navigation-panel language as the rest of the suite.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
