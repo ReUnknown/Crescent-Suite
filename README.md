@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.17 — Honest blank Forms start**
+**v5.3.18 — User-owned Forms questions**
 
-Published September 10, 2026. A new blank Form now exposes only actions that can move the work forward; Preview appears after there is something to preview.
+Published September 10, 2026. New Forms questions now start empty instead of carrying placeholder content, with Preview and Publish guarded until the user gives each question a real label.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -49,6 +49,8 @@ The current release provides a usable Crescent product shell and a local-first s
 - Shared modal focus behavior now keeps Tab and Shift+Tab inside active dialogs, including Mail compose and local creation flows
 - Home now provides a low-profile Skip to content link for keyboard users, and the Focus Mode exit exposes its Escape shortcut semantically
 - Blank Forms no longer show an inert Preview action before a title or question exists
+- New Forms questions start empty with a clear writing prompt; Preview and Publish require labeled questions
+- Decorative eye glyphs no longer pollute the accessible names of Preview and Back to form controls
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority

@@ -608,6 +608,21 @@ try {
           if (pageErrors.length || state.overflow || !state.workspaceClass.includes("workspace-local") || seededCopy.test(state.text) || hasLocalSlideResidue) failures.push({ viewport: viewport.name, route, pageErrors, overflow: state.overflow, workspaceClass: state.workspaceClass, seededCopy: seededCopy.test(state.text), hasLocalSlideResidue });
           if (route === "home" && viewport.name === "desktop" && await freshPage.getByText("Make Crescent yours.").count() !== 1) failures.push({ viewport: viewport.name, route, emptyState: "optional guide" });
           if (route === "forms" && await freshPage.getByRole("button", { name: "Preview", exact: true }).count()) failures.push({ viewport: viewport.name, route, controls: "blank Forms preview dead end" });
+          if (route === "forms" && viewport.name === "desktop") {
+            const formIsolationContext = await browser.newContext({ viewport });
+            const formIsolationPage = await formIsolationContext.newPage();
+            try {
+              await formIsolationPage.goto(`${baseUrl}/forms?fresh=1`, { waitUntil: "networkidle" });
+              await formIsolationPage.getByRole("button", { name: "Add your first question" }).click();
+              const newQuestion = formIsolationPage.getByRole("textbox", { name: "Question 1 label" });
+              if (await newQuestion.inputValue() !== "" || await newQuestion.getAttribute("placeholder") !== "Write a question...") failures.push({ viewport: viewport.name, route, controls: "blank new question label" });
+              await formIsolationPage.getByRole("button", { name: "Preview", exact: true }).click();
+              if (!(await formIsolationPage.getByRole("status").innerText()).includes("Give every question a label before previewing")) failures.push({ viewport: viewport.name, route, controls: "unlabeled question preview guard" });
+            } finally {
+              await formIsolationPage.close();
+              await formIsolationContext.close();
+            }
+          }
         } finally {
           await freshPage.close();
         }

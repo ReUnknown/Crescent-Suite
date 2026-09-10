@@ -1,5 +1,20 @@
 # Changelog
 
+## v5.3.18 — User-owned Forms questions
+
+Published September 10, 2026.
+
+### Improved
+
+- New Forms questions now start with an empty label and an explicit “Write a question…” editing prompt.
+- Preview and Publish now guard against unlabeled questions with clear local feedback.
+- Decorative eye glyphs are hidden from accessible button names.
+- Added isolated smoke coverage for the blank-question flow and preview guard.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.17 — Honest blank Forms start
 
 Published September 10, 2026.
