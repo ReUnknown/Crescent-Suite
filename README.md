@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.15 — Keyboard-friendly work surfaces**
+**v5.3.16 — Clean accessibility landmarks**
 
-Published September 10, 2026. Keyboard users can now skip straight to the active work surface, and Focus Mode exposes its Escape shortcut to assistive technology.
+Published September 10, 2026. The keyboard skip target now preserves clean landmark semantics across every suite surface, including Slides.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 

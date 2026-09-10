@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.3.16 — Clean accessibility landmarks
+
+Published September 10, 2026.
+
+### Fixed
+
+- Kept the keyboard skip target neutral so Slides’ internal main landmark is not nested inside another main landmark.
+
+### Verification
+
+- Local lint and production build pass; the existing skip-link smoke coverage remains active.
+
 ## v5.3.15 — Keyboard-friendly work surfaces
 
 Published September 10, 2026.
