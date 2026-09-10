@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.3.5 — Current CI actions
+
+Published September 10, 2026.
+
+### Maintenance
+
+- Updated the GitHub CI workflow to `actions/checkout@v5` and `actions/setup-node@v5`, matching the current Pages workflow and avoiding the older Node 20 action path.
+
+### Verification
+
+- Local lint, build, and smoke checks pass; GitHub CI and Pages will validate the pushed workflow update.
+
 ## v5.3.4 — Responsive panel ergonomics
 
 Published September 10, 2026.
