@@ -1,6 +1,6 @@
 # Crescent Suite visual preview archive
 
-The current live release is v5.3.32. The archive below contains milestone captures from the local-first, blank-workspace, keyboard, and responsive refinement passes; the live release and its browser-smoke contract remain the source of truth for current behavior.
+The archive below contains milestone captures from the local-first, blank-workspace, keyboard, and responsive refinement passes. See the repository README and latest GitHub release for the current live version; the live release and its browser-smoke contract remain the source of truth for current behavior.
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
