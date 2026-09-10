@@ -667,8 +667,9 @@ try {
     const previewState = await demoIsolationPage.evaluate(() => ({
       workspaceClass: document.querySelector(".app-shell")?.className ?? "",
       text: document.body.innerText,
+      previewBanner: document.querySelector(".demo-preview-banner")?.textContent ?? "",
     }));
-    if (!previewState.workspaceClass.includes("workspace-demo") || !previewState.text.includes("Product strategy Q3 2024")) failures.push({ route: "home", controls: "demo preview entry", previewState });
+    if (!previewState.workspaceClass.includes("workspace-demo") || !previewState.text.includes("Product strategy Q3 2024") || !previewState.previewBanner.includes("Changes stay in this tab")) failures.push({ route: "home", controls: "demo preview entry", previewState });
     await demoIsolationPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     const isolationState = await demoIsolationPage.evaluate(() => ({
       workspaceClass: document.querySelector(".app-shell")?.className ?? "",

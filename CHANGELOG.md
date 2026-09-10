@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.3.29 — Clear demo preview state
+
+Published September 10, 2026.
+
+### Improved
+
+- Added a compact demo-preview status badge that remains visible in both Home and Focus Mode.
+- The badge explains that preview changes stay in the current browser tab, making the local/demo boundary clear before users start editing.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.28 — Temporary demo preview isolation
 
 Published September 10, 2026.

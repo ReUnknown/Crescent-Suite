@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.28 — Temporary demo preview isolation**
+**v5.3.29 — Clear demo preview state**
 
-Published September 10, 2026. The optional demo preview now lives in tab-scoped storage, keeping the real local workspace untouched while the preview remains interactive.
+Published September 10, 2026. The optional demo preview is clearly labeled and lives in tab-scoped storage, keeping the real local workspace untouched while the preview remains interactive.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
