@@ -1,5 +1,20 @@
 # Changelog
 
+## v5.3.22 — Honest blank-file recovery
+
+Published September 10, 2026.
+
+### Fixed
+
+- Moving an untouched Docs, Sheets, or Slides surface to Trash now discards the blank surface without creating a fake file record.
+- Sheets and Forms no longer reset from the seeded demo template after local file disposal.
+- Forms now uses the same clean blank reset when a blank form is discarded.
+- Added isolated smoke coverage for blank Docs, Sheets, and Slides Trash cleanup.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.21 — Honest Notes first run
 
 Published September 10, 2026.

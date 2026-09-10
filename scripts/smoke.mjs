@@ -620,6 +620,10 @@ try {
             if (await freshPage.getByRole("button", { name: "Add your first project", exact: true }).count() !== 1) failures.push({ viewport: viewport.name, route, controls: "first project action" });
           }
           if (route === "forms" && await freshPage.getByRole("button", { name: "Preview", exact: true }).count()) failures.push({ viewport: viewport.name, route, controls: "blank Forms preview dead end" });
+          if (["docs", "sheets", "slides"].includes(route) && viewport.name === "desktop") {
+            await freshPage.getByRole("button", { name: "Move to Trash", exact: true }).click();
+            if (!freshPage.url().endsWith("#trash") || !(await freshPage.locator(".utility-panel").innerText()).includes("Trash is empty.")) failures.push({ viewport: viewport.name, route, controls: "blank file trash cleanup", url: freshPage.url(), trash: await freshPage.locator(".utility-panel").innerText() });
+          }
           if (route === "forms" && viewport.name === "desktop") {
             const formIsolationContext = await browser.newContext({ viewport });
             const formIsolationPage = await formIsolationContext.newPage();

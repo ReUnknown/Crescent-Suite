@@ -740,9 +740,17 @@ function DocsView({ workspace, update, onNavigate, initialHeading, focusMode }) 
   };
   const moveDocumentToTrash = () => {
     const starredTitles = getStarredTitles(workspace);
+    const hasDocumentContent = Boolean(title.trim() || String(workspace.docs.body ?? "").replace(/<[^>]*>/g, " ").trim());
+    if (!hasDocumentContent) {
+      starredTitles.delete(title);
+      update({ docs: createEmptyWorkspace().docs, starredFiles: [...starredTitles] });
+      emitNotice("Blank document discarded locally.");
+      onNavigate("trash");
+      return;
+    }
     const deletedDoc = { id: `doc-${Date.now()}`, title, body: workspace.docs.body, updatedAt: workspace.docs.updatedAt, type: "Docs", appId: "docs", opened: "just now", owner: "Me", starred: starredTitles.has(title) };
     starredTitles.delete(title);
-    update({ docs: { ...INITIAL_WORKSPACE.docs, title: "Untitled document", body: "", updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles: [deletedDoc, ...(workspace.deletedFiles ?? [])] });
+    update({ docs: createEmptyWorkspace().docs, starredFiles: [...starredTitles], deletedFiles: [deletedDoc, ...(workspace.deletedFiles ?? [])] });
     emitNotice("Document moved to local Trash.");
     onNavigate("trash");
   };
@@ -808,9 +816,17 @@ function SheetsView({ workspace, update, onNavigate, initialCell }) {
   const exportCsv = () => { const csv = SHEET_ROWS.map((row) => SHEET_COLS.map((col) => JSON.stringify(evaluateCell(cells[`${col}${row}`] ?? "", cells))).join(",")).join("\n"); downloadText(`${safeFileName(workspace.sheets.title || "crescent-sheet")}.csv`, csv, "text/csv"); emitNotice("Sheet export downloaded."); };
   const moveSheetToTrash = () => {
     const starredTitles = getStarredTitles(workspace);
+    const hasSheetContent = Boolean(workspace.sheets.title.trim() || Object.values(workspace.sheets.cells ?? {}).some((value) => String(value ?? "").trim()));
+    if (!hasSheetContent) {
+      starredTitles.delete(workspace.sheets.title);
+      update({ sheets: createEmptyWorkspace().sheets, starredFiles: [...starredTitles] });
+      emitNotice("Blank spreadsheet discarded locally.");
+      onNavigate("trash");
+      return;
+    }
     const deletedSheet = { id: `sheet-${Date.now()}`, title: workspace.sheets.title, cells: workspace.sheets.cells, tabs: workspace.sheets.tabs, styles: workspace.sheets.styles, activeSheet: workspace.sheets.activeSheet, type: "Sheets", appId: "sheets", opened: "just now", owner: "Me", starred: starredTitles.has(workspace.sheets.title) };
     starredTitles.delete(workspace.sheets.title);
-    update({ sheets: { ...INITIAL_WORKSPACE.sheets, title: "Untitled spreadsheet", updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles: [deletedSheet, ...(workspace.deletedFiles ?? [])] });
+    update({ sheets: createEmptyWorkspace().sheets, starredFiles: [...starredTitles], deletedFiles: [deletedSheet, ...(workspace.deletedFiles ?? [])] });
     emitNotice("Spreadsheet moved to local Trash.");
     onNavigate("trash");
   };
@@ -853,6 +869,14 @@ function SlidesView({ workspace, update, onNavigate, initialSlideTitle }) {
   const addSlide = () => { const nextSlide = workspace.demo ? { title: "A new chapter", body: "Add a thought worth sharing.", accent: "blue", notes: "", layout: "title-body" } : { title: "", body: "", accent: "blue", notes: "", layout: "title-body" }; update({ slides: [...slides, nextSlide] }); setActive(slides.length); };
   const moveDeckToTrash = () => {
     const starredTitles = getStarredTitles(workspace);
+    const hasDeckContent = Boolean(workspace.slidesTitle.trim() || slides.some((slide) => String(slide.title ?? "").trim() || String(slide.body ?? "").trim() || String(slide.notes ?? "").trim()));
+    if (!hasDeckContent) {
+      starredTitles.delete(workspace.slidesTitle);
+      update({ slidesTitle: "", slides: [{ title: "", body: "", accent: "lilac", notes: "", layout: "title-body" }], starredFiles: [...starredTitles] });
+      emitNotice("Blank presentation discarded locally.");
+      onNavigate("trash");
+      return;
+    }
     const deletedDeck = { id: `slides-${Date.now()}`, title: workspace.slidesTitle, slides, type: "Slides", appId: "slides", opened: "just now", owner: "Me", starred: starredTitles.has(workspace.slidesTitle) };
     starredTitles.delete(workspace.slidesTitle);
     update({ slidesTitle: "", slides: [{ title: "", body: "", accent: "lilac", notes: "", layout: "title-body" }], starredFiles: [...starredTitles], deletedFiles: [deletedDeck, ...(workspace.deletedFiles ?? [])] });
@@ -1240,9 +1264,17 @@ function FormsView({ workspace, update, onNavigate, initialQuestionId }) {
   const publishForm = () => { if (!workspace.forms.length) { emitNotice("Add at least one question before publishing."); return; } if (!previewReady) { emitNotice("Give every question a label before publishing."); return; } setPublished(true); update({ formPublished: true }); emitNotice("Form is ready locally. Public sharing will be available when Crescent Cloud is connected."); };
   const moveFormToTrash = () => {
     const starredTitles = getStarredTitles(workspace);
+    const hasFormContent = Boolean(formTitle.trim() || workspace.forms.length || (workspace.formResponses ?? []).length);
+    if (!hasFormContent) {
+      starredTitles.delete(formTitle);
+      update({ formTitle: "", formTheme: "lilac", formSettings: createEmptyWorkspace().formSettings, forms: [], formPublished: false, formResponses: [], lastFormResponse: undefined, starredFiles: [...starredTitles] });
+      emitNotice("Blank form discarded locally.");
+      onNavigate("trash");
+      return;
+    }
     const deletedForm = { id: `form-${Date.now()}`, title: formTitle, formTitle, formTheme, formSettings, forms: workspace.forms, formPublished: published, formResponses: workspace.formResponses ?? [], lastFormResponse: workspace.lastFormResponse, type: "Forms", appId: "forms", opened: "just now", owner: "Me", starred: starredTitles.has(formTitle) };
     starredTitles.delete(formTitle);
-    update({ formTitle: "Untitled form", formTheme: "lilac", formSettings: { ...INITIAL_WORKSPACE.formSettings }, forms: [...INITIAL_WORKSPACE.forms], formPublished: false, formResponses: [], lastFormResponse: undefined, starredFiles: [...starredTitles], deletedFiles: [deletedForm, ...(workspace.deletedFiles ?? [])] });
+    update({ formTitle: "", formTheme: "lilac", formSettings: createEmptyWorkspace().formSettings, forms: [], formPublished: false, formResponses: [], lastFormResponse: undefined, starredFiles: [...starredTitles], deletedFiles: [deletedForm, ...(workspace.deletedFiles ?? [])] });
     emitNotice("Form moved to local Trash.");
     onNavigate("trash");
   };
