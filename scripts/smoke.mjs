@@ -117,6 +117,8 @@ try {
         if (route === "home" && viewport.name === "desktop") {
           await page.getByRole("button", { name: "Open Crescent guide" }).click();
           if (!(await page.evaluate(() => document.activeElement?.closest(".guide-dialog") !== null))) failures.push({ viewport: viewport.name, route, accessibility: "guide focus" });
+          await page.keyboard.press("Shift+Tab");
+          if (!(await page.evaluate(() => document.activeElement?.closest(".guide-dialog") !== null))) failures.push({ viewport: viewport.name, route, accessibility: "guide focus trap" });
           await page.keyboard.press("Escape");
           const launchers = page.locator(".app-launch");
           if (await launchers.count() !== 9) failures.push({ viewport: viewport.name, route, launcherCount: await launchers.count() });

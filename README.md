@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.2.7 — Truly blank Slides**
+**v5.2.8 — Keyboard-safe guide**
 
-Published September 10, 2026. Fresh Slides now renders local presentation language directly instead of carrying seeded showcase copy beneath a visual CSS replacement.
+Published September 10, 2026. The in-product guide now keeps keyboard focus inside its dialog, while fresh Slides renders local presentation language directly without seeded showcase copy.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 

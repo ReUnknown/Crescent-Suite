@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.2.8 — Keyboard-safe guide
+
+Published September 10, 2026.
+
+### Improved
+
+- Added a focus trap to the in-product guide so Tab and Shift+Tab stay within the open dialog until the user dismisses it.
+- Added smoke coverage for reverse tab wrapping alongside the existing focus-entry and Escape checks.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.2.7 — Truly blank Slides
 
 Published September 10, 2026.

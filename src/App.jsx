@@ -540,8 +540,19 @@ function GettingStarted({ onNavigate, onDismiss }) {
 
 function GuideDialog({ onClose, onNavigate }) {
   useLayoutEffect(() => {
-    const closeOnEscape = (event) => { if (event.key === "Escape") onClose(); };
-    document.querySelector(".guide-dialog button")?.focus();
+    const dialog = document.querySelector(".guide-dialog");
+    const focusable = () => [...(dialog?.querySelectorAll("button, [href], input, textarea, select, [tabindex]:not([tabindex=\"-1\"])") ?? [])].filter((node) => !node.disabled && node.getAttribute("aria-hidden") !== "true");
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") { onClose(); return; }
+      if (event.key !== "Tab" || !dialog) return;
+      const items = focusable();
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    dialog?.querySelector("button")?.focus();
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [onClose]);
