@@ -529,12 +529,39 @@ try {
     await behaviorPage.close();
   }
 
+  const freshContext = await browser.newContext();
+  const freshRoutes = routes.filter((route) => route !== "Crescent-Suite/forms");
+  const seededCopy = /Alex Morgan|Taylor Kim|Jordan Lee|Sam Chen|Design review|Growth metrics|Launch feedback|Product workspace|A new chapter|Add a thought worth sharing/;
+  try {
+    for (const viewport of viewports) {
+      for (const route of freshRoutes) {
+        const freshPage = await freshContext.newPage({ viewport });
+        const pageErrors = [];
+        freshPage.on("pageerror", (error) => pageErrors.push(error.message));
+        try {
+          await freshPage.goto(`${baseUrl}/${route}?fresh=1`, { waitUntil: "networkidle" });
+          const state = await freshPage.evaluate(() => ({
+            workspaceClass: document.querySelector(".app-shell")?.className ?? "",
+            text: document.body.innerText,
+            overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+          }));
+          if (pageErrors.length || state.overflow || !state.workspaceClass.includes("workspace-local") || seededCopy.test(state.text)) failures.push({ viewport: viewport.name, route, pageErrors, overflow: state.overflow, workspaceClass: state.workspaceClass, seededCopy: seededCopy.test(state.text) });
+          if (route === "home" && viewport.name === "desktop" && await freshPage.getByText("Make Crescent yours.").count() !== 1) failures.push({ viewport: viewport.name, route, emptyState: "optional guide" });
+        } finally {
+          await freshPage.close();
+        }
+      }
+    }
+  } finally {
+    await freshContext.close();
+  }
+
   await browser.close();
   if (failures.length) {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; actionable empty-state navigation; local-only sharing feedback; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; actionable empty-state navigation; local-only sharing feedback; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
