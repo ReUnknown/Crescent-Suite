@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.3.1 — Collapsible document details
+
+Published September 10, 2026.
+
+### Improved
+
+- Docs Details now collapses from both its close control and the editor header, reclaiming canvas width for focused writing.
+- Added smoke coverage for hiding and restoring the local document inspector.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.3.0 — Honest Settings
 
 Published September 10, 2026.

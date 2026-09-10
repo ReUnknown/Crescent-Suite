@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.0 — Honest Settings**
+**v5.3.1 — Collapsible document details**
 
-Published September 10, 2026. Settings now reports the active local Dark sky theme without presenting an unavailable theme switch, alongside Crescent’s performance guardrails and blank-first surfaces.
+Published September 10, 2026. Docs can now hide and restore its Details inspector so the writing canvas can reclaim space when the user wants to focus.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -43,6 +43,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Sidebar Workspaces and Projects now use matching accessible creation dialogs with local persistence and keyboard-friendly submission
 - Drive’s New folder action now uses the same accessible dialog, duplicate guard, local-save language, and mobile-safe layout
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
+- Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Restoring a trashed editor file now archives the displaced active Docs, Sheets, Slides, or Forms record back into local Trash
 - Linked text in Docs now has a clear document-paper treatment with visible underline and hover contrast
 - Trash cleanup now uses accessible Crescent confirmation dialogs for permanent deletion and Empty Trash, with Escape/backdrop dismissal and clear irreversible-action language

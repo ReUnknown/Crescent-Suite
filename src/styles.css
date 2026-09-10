@@ -346,3 +346,6 @@ input, textarea { color: var(--text); }
 .danger-button:hover { background: #d26770; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
 @media (max-width: 780px) { .editor-actions { gap: 5px; }.editor-actions > .secondary-button { display: inline-flex; width: 32px; padding: 0; gap: 0; font-size: 0; }.editor-actions > .secondary-button svg { width: 16px; }.editor-actions > .secondary-button .eye-icon { font-size: 14px; } }
+.doc-workspace-details-hidden { grid-template-columns: minmax(480px, 740px); }
+@media (max-width: 1250px) { .doc-workspace-details-hidden { grid-template-columns: minmax(440px, 1fr); } }
+@media (max-width: 1050px) { .doc-workspace-details-hidden { grid-template-columns: 1fr; } }

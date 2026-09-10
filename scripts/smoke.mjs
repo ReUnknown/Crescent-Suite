@@ -173,8 +173,9 @@ try {
     await behaviorPage.getByRole("button", { name: "Share", exact: true }).click();
     if (!(await behaviorPage.locator(".toast").innerText()).includes("Sharing will be available")) failures.push({ route: "docs", controls: "local-only sharing notice" });
     await behaviorPage.getByRole("button", { name: "Close details" }).click();
-    await behaviorPage.waitForTimeout(50);
-    if (!(await behaviorPage.locator(".toast").innerText()).includes("Document details stay visible")) failures.push({ route: "docs", controls: "details feedback" });
+    if (await behaviorPage.locator(".doc-inspector").count() !== 0 || await behaviorPage.getByRole("button", { name: "Show document details" }).count() !== 1) failures.push({ route: "docs", controls: "hide document details" });
+    await behaviorPage.getByRole("button", { name: "Show document details" }).click();
+    if (await behaviorPage.locator(".doc-inspector").count() !== 1) failures.push({ route: "docs", controls: "restore document details" });
     const documentBody = behaviorPage.getByRole("textbox", { name: "Document body" });
     await documentBody.evaluate((node) => { const textNode = document.createTreeWalker(node, globalThis.NodeFilter.SHOW_TEXT).nextNode(); const range = document.createRange(); range.setStart(textNode, 0); range.setEnd(textNode, Math.min(8, textNode.textContent.length)); const selection = globalThis.getSelection(); selection.removeAllRanges(); selection.addRange(range); });
     await behaviorPage.getByRole("button", { name: "Add link" }).click();
