@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.3.30 — Direct Pages routes
+
+Published September 10, 2026.
+
+### Improved
+
+- GitHub Pages now receives real `index.html` entrypoints for every Crescent route instead of relying on the 404 fallback for direct app links.
+- Direct links such as `/Crescent-Suite/docs` now return a normal 200 response while preserving the existing client-side navigation.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.29 — Clear demo preview state
 
 Published September 10, 2026.

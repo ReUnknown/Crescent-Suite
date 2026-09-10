@@ -35,7 +35,12 @@ jobs:
         env:
           CRESCENT_PAGES_BUILD: "true"
       - name: Enable direct app routes
-        run: cp dist/index.html dist/404.html
+        run: |
+          for route in home recent starred shared trash settings mail docs sheets slides notes tasks calendar drive forms; do
+            mkdir -p "dist/$route"
+            cp dist/index.html "dist/$route/index.html"
+          done
+          cp dist/index.html dist/404.html
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

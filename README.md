@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.29 — Clear demo preview state**
+**v5.3.30 — Direct Pages routes**
 
-Published September 10, 2026. The optional demo preview is clearly labeled and lives in tab-scoped storage, keeping the real local workspace untouched while the preview remains interactive.
+Published September 10, 2026. GitHub Pages now serves stable 200-status entrypoints for each Crescent app, so direct links open cleanly instead of relying on the fallback document.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -38,6 +38,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Focus Mode for every suite app, with a full-viewport work surface, explicit exit control, and `⌘/Ctrl + Shift + F` shortcut
 - Settings reset flow with an explicit confirmation and backup reminder for starting over locally
 - Pages-ready workflow builds a visual preview on every `main` milestone and deploys when repository Pages is enabled
+- GitHub Pages publishes direct 200-status entrypoints for Home, Recent, Starred, Shared, Trash, Settings, and every suite app
 - Drive’s New file action now creates named Docs, Sheets, Slides, Notes, or Forms records and opens the selected editor
 - Drive’s New file action now uses an accessible, keyboard-friendly Crescent modal with app cards, title entry, Escape dismissal, and mobile layout
 - Calendar’s Event action now uses a matching accessible modal with title and natural-language time fields, Escape dismissal, and local persistence
