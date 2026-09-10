@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.28 — Temporary demo preview isolation
+
+Published September 10, 2026.
+
+### Fixed
+
+- Demo preview now always opens the curated preview only when explicitly requested, without reading or replacing the user’s local workspace.
+- Demo preview edits use tab-scoped storage, so the preview remains interactive without replacing the user’s normal local workspace.
+- Added browser smoke coverage for entering demo mode with existing local work and restoring that work after leaving it.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.27 — Honest backup normalization
 
 Published September 10, 2026.

@@ -1,3 +1,5 @@
+/* global sessionStorage */
+
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   AlignCenter,
@@ -58,6 +60,7 @@ import {
 } from "lucide-react";
 
 const STORAGE_KEY = "crescent-suite:workspace:v1";
+const DEMO_STORAGE_KEY = "crescent-suite:demo-preview:v1";
 const SIDEBAR_KEY = "crescent-suite:sidebar-collapsed:v1";
 const FOCUS_APP_IDS = new Set(["docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "mail"]);
 
@@ -334,16 +337,21 @@ function normalizeWorkspace(source) {
 }
 
 function loadWorkspace() {
+  const demoRequested = new window.URLSearchParams(window.location.search).get("demo") === "1";
   try {
-    const demoRequested = new window.URLSearchParams(window.location.search).get("demo") === "1";
+    if (demoRequested) {
+      const demoStored = sessionStorage.getItem(DEMO_STORAGE_KEY);
+      if (!demoStored) return normalizeWorkspace(INITIAL_WORKSPACE);
+      const parsedDemo = JSON.parse(demoStored);
+      return parsedDemo?.version === 1 ? normalizeWorkspace({ ...parsedDemo, demo: true }) : normalizeWorkspace(INITIAL_WORKSPACE);
+    }
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored && demoRequested) return INITIAL_WORKSPACE;
     if (!stored) return createEmptyWorkspace();
     const parsed = JSON.parse(stored);
-    if (parsed?.demo && !demoRequested) return createEmptyWorkspace();
+    if (parsed?.demo) return createEmptyWorkspace();
     return parsed?.version === 1 ? normalizeWorkspace(parsed) : createEmptyWorkspace();
   } catch {
-    return createEmptyWorkspace();
+    return demoRequested ? normalizeWorkspace(INITIAL_WORKSPACE) : createEmptyWorkspace();
   }
 }
 
@@ -352,8 +360,13 @@ function useWorkspace() {
   const workspaceRef = useRef(workspace);
   workspaceRef.current = workspace;
   useEffect(() => {
+    const demoPreview = new window.URLSearchParams(window.location.search).get("demo") === "1";
     const persist = (notify = true) => {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(workspaceRef.current)); } catch { if (notify) emitNotice("This workspace could not be saved locally."); }
+      try {
+        const storage = demoPreview ? sessionStorage : localStorage;
+        const storageKey = demoPreview ? DEMO_STORAGE_KEY : STORAGE_KEY;
+        storage.setItem(storageKey, JSON.stringify(workspaceRef.current));
+      } catch { if (notify) emitNotice("This workspace could not be saved locally."); }
     };
     const timeout = window.setTimeout(() => persist(), 180);
     const flushOnExit = () => persist(false);

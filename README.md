@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.27 — Honest backup normalization**
+**v5.3.28 — Temporary demo preview isolation**
 
-Published September 10, 2026. Imported version-1 backups now stay local-first unless they explicitly request demo mode, so absent fields never repopulate the workspace with seeded records.
+Published September 10, 2026. The optional demo preview now lives in tab-scoped storage, keeping the real local workspace untouched while the preview remains interactive.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -33,8 +33,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Notes, Tasks, Calendar, Drive, Forms, and Mail surfaces with working local interactions
 - Mail inbox with unread and Starred state, message selection, local reply prefill, and a browser-saved compose/send flow
 - Mail’s blank local inbox now has a useful empty state with a direct New message action, and compose validates recipient addresses before saving
-- Editor Share actions now respond with clear local-only guidance instead of appearing inert while Crescent Cloud is disconnected
-- Local-only action feedback is routed through the shared workspace layer without duplicate notifications
+- Editor headers now label local storage directly, so unavailable cloud actions are not presented as if they were connected
 - Shared navigation, command-style search, responsive layouts, and a night-sky design system
 - Focus Mode for every suite app, with a full-viewport work surface, explicit exit control, and `⌘/Ctrl + Shift + F` shortcut
 - Settings reset flow with an explicit confirmation and backup reminder for starting over locally
@@ -69,7 +68,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - CI now uses `actions/checkout@v5` and `actions/setup-node@v5` to avoid the older Node 20 action path
 - New Docs files, reset Docs, and empty recovery records no longer inject instructional body copy
 - Forms’ rendered and accessible text now come from the same maintained JSX content, with the stale prototype override removed
-- Demo preview data is isolated from the normal local workspace when the demo query is removed
+- Demo preview data is isolated in the current browser tab and never replaces the normal local workspace, even when local work already exists
 - Restoring a trashed editor file now archives the displaced active Docs, Sheets, Slides, or Forms record back into local Trash
 - Linked text in Docs now has a clear document-paper treatment with visible underline and hover contrast
 - Trash cleanup now uses accessible Crescent confirmation dialogs for permanent deletion and Empty Trash, with Escape/backdrop dismissal and clear irreversible-action language
@@ -166,7 +165,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Added mobile smoke coverage across all suite routes with compact app-aware actions
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
-- Local-only Share, Invite, cell-link, and slide-design controls now provide explicit status feedback, while Settings reports the active Dark sky theme honestly
+- Settings reports the active Dark sky theme honestly, and editor toolbars keep only controls that work in the local build
 - Calendar Today, Previous, and new-event dates now follow the browser’s actual date instead of the seeded demo date
 - Calendar Month view now places saved local events in the matching stored day column
 - Calendar Month view keeps pre-date-metadata local events visible on the current day during migration

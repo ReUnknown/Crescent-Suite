@@ -1,4 +1,4 @@
-/* global Buffer, console, document, fetch, getComputedStyle, localStorage, performance, process, setTimeout */
+/* global Buffer, URLSearchParams, console, document, fetch, getComputedStyle, localStorage, location, performance, process, sessionStorage, setTimeout */
 
 import { spawn } from "node:child_process";
 import { chromium } from "playwright";
@@ -11,13 +11,13 @@ const viewports = [
   { name: "mobile", width: 390, height: 844 },
 ];
 const smokeData = process.env.SMOKE_DATA ?? "demo";
-const preparePage = (page) => {
+const preparePage = (page, { local = false } = {}) => {
   const originalGoto = page.goto.bind(page);
   page.goto = (url, options) => {
       const nextUrl = new globalThis.URL(url);
     nextUrl.searchParams.delete("demo");
     nextUrl.searchParams.delete("fresh");
-    nextUrl.searchParams.set(smokeData === "fresh" ? "fresh" : "demo", "1");
+    if (!local) nextUrl.searchParams.set(smokeData === "fresh" ? "fresh" : "demo", "1");
     return originalGoto(nextUrl.toString(), options);
   };
   return page;
@@ -268,7 +268,7 @@ try {
     if (!(await behaviorPage.locator(".calendar-local-list").innerText()).includes("Smoke focus edited")) failures.push({ route: "calendar", controls: "inline event edit" });
     await behaviorPage.reload({ waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".calendar-local-list").innerText()).includes("Smoke focus edited")) failures.push({ route: "calendar", controls: "event edit persistence" });
-    const storedCalendarDate = await behaviorPage.evaluate(() => JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").calendarEvents?.[0]?.date);
+    const storedCalendarDate = await behaviorPage.evaluate(() => JSON.parse((new URLSearchParams(location.search).get("demo") === "1" ? sessionStorage : localStorage).getItem(new URLSearchParams(location.search).get("demo") === "1" ? "crescent-suite:demo-preview:v1" : "crescent-suite:workspace:v1") ?? "{}").calendarEvents?.[0]?.date);
     const expectedTomorrow = await behaviorPage.evaluate(() => { const date = new Date(); date.setDate(date.getDate() + 1); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; });
     if (storedCalendarDate !== expectedTomorrow) failures.push({ route: "calendar", controls: "natural language event date", storedCalendarDate, expectedTomorrow });
     const icsDownloadPromise = behaviorPage.waitForEvent("download");
@@ -280,7 +280,7 @@ try {
     if (!icsText.includes(`DTSTART:${expectedTomorrow.replaceAll("-", "")}T160000`)) failures.push({ route: "calendar", controls: "timed ICS export" });
     await addCalendarEvent("Smoke Friday", "Friday · 9:00 AM");
     const expectedFriday = await behaviorPage.evaluate(() => { const date = new Date(); date.setHours(0, 0, 0, 0); const daysAhead = (5 - date.getDay() + 7) % 7 || 7; date.setDate(date.getDate() + daysAhead); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; });
-    const storedFriday = await behaviorPage.evaluate(() => JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").calendarEvents?.[0]?.date);
+    const storedFriday = await behaviorPage.evaluate(() => JSON.parse((new URLSearchParams(location.search).get("demo") === "1" ? sessionStorage : localStorage).getItem(new URLSearchParams(location.search).get("demo") === "1" ? "crescent-suite:demo-preview:v1" : "crescent-suite:workspace:v1") ?? "{}").calendarEvents?.[0]?.date);
     if (storedFriday !== expectedFriday) failures.push({ route: "calendar", controls: "natural language weekday date", storedFriday, expectedFriday });
     await addCalendarEvent("Smoke today", "Today · 5:00 PM");
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
@@ -382,7 +382,7 @@ try {
     await behaviorPage.getByRole("combobox", { name: "Filter tasks by project" }).selectOption({ label: "Smoke project" });
     const projectFilteredTasks = await behaviorPage.locator(".task-row").allTextContents();
     if (projectFilteredTasks.some((task) => !task.includes("Smoke project"))) failures.push({ route: "tasks", controls: "project task filter", projectFilteredTasks });
-    await behaviorPage.evaluate(() => { const key = "crescent-suite:workspace:v1"; const workspace = JSON.parse(localStorage.getItem(key) ?? "{}"); workspace.tasks = []; localStorage.setItem(key, JSON.stringify(workspace)); });
+    await behaviorPage.evaluate(() => { const demo = new URLSearchParams(location.search).get("demo") === "1"; const storage = demo ? sessionStorage : localStorage; const key = demo ? "crescent-suite:demo-preview:v1" : "crescent-suite:workspace:v1"; const workspace = JSON.parse(storage.getItem(key) ?? "{}"); workspace.tasks = []; storage.setItem(key, JSON.stringify(workspace)); });
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     if ((await behaviorPage.locator(".recent-table").innerText()).includes("Review the launch brief")) failures.push({ route: "home", controls: "empty task collection stays empty" });
     await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
@@ -491,7 +491,7 @@ try {
     await behaviorPage.goto(`${baseUrl}/starred`, { waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".utility-panel").innerText()).includes(previousDocTitle)) failures.push({ route: "starred", controls: "restored favorite" });
     const backupContext = await browser.newContext({ viewport: viewports[0] });
-    const backupPage = preparePage(await backupContext.newPage());
+    const backupPage = preparePage(await backupContext.newPage(), { local: true });
     try {
       await backupPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
       await backupPage.locator('input[type="file"]').setInputFiles({ name: "partial-backup.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Smoke restore" }, sheets: { title: "Smoke sheet" }, forms: null, formSettings: { collectEmail: true }, workspaces: ["Research"], projects: [{ name: "Migration" }], driveFolders: [{}, "Archive"] })) });
@@ -538,7 +538,7 @@ try {
     await behaviorPage.waitForSelector(".document-inner .search-target");
     if (behaviorPage.url().split("#")[1] !== "docs" || !(await behaviorPage.locator(".document-inner .search-target").innerText()).includes("North star")) failures.push({ route: "search", controls: "open exact Docs heading result", url: behaviorPage.url() });
     await behaviorPage.locator(".document-inner").evaluate((editor) => editor.blur());
-    await behaviorPage.waitForFunction(() => !JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").docs?.body?.includes("search-target"));
+    await behaviorPage.waitForFunction(() => { const demo = new URLSearchParams(location.search).get("demo") === "1"; const storage = demo ? sessionStorage : localStorage; const key = demo ? "crescent-suite:demo-preview:v1" : "crescent-suite:workspace:v1"; return !JSON.parse(storage.getItem(key) ?? "{}").docs?.body?.includes("search-target"); });
     await ensureGlobalChrome();
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Launch ideas");
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
@@ -571,7 +571,7 @@ try {
     await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "malformed-records.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Safe import" }, sheets: { title: "Safe sheet" }, slides: [null], notes: [null], tasks: [null], forms: [null], calendarEvents: [null], driveFolders: [null], deletedFiles: [null], formResponses: [{ submittedAt: "not a date", scaleAnswers: { 2: "invalid", 3: "5" }, scale: "9", answers: null }] })) });
     await behaviorPage.getByRole("status").filter({ hasText: "Workspace backup restored locally." }).waitFor({ state: "visible" });
     await behaviorPage.waitForTimeout(250);
-    const normalizedScaleResponse = await behaviorPage.evaluate(() => JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").formResponses?.[0] ?? {});
+    const normalizedScaleResponse = await behaviorPage.evaluate(() => { const demo = new URLSearchParams(location.search).get("demo") === "1"; const storage = demo ? sessionStorage : localStorage; const key = demo ? "crescent-suite:demo-preview:v1" : "crescent-suite:workspace:v1"; return JSON.parse(storage.getItem(key) ?? "{}").formResponses?.[0] ?? {}; });
     if (normalizedScaleResponse.scale !== null || Object.prototype.hasOwnProperty.call(normalizedScaleResponse.scaleAnswers ?? {}, "2") || normalizedScaleResponse.scaleAnswers?.[3] !== 5) failures.push({ route: "settings", controls: "malformed Scale response normalization", normalizedScaleResponse });
     await behaviorPage.goto(`${baseUrl}/slides`, { waitUntil: "networkidle" });
     if (await behaviorPage.locator(".slide-thumb").count() !== 1) failures.push({ route: "settings", controls: "malformed slide backup normalization" });
@@ -658,14 +658,24 @@ try {
   const demoIsolationContext = await browser.newContext({ viewport: viewports[0] });
   try {
     const demoIsolationPage = await demoIsolationContext.newPage();
-    await demoIsolationPage.goto(`${baseUrl}/home?demo=1`, { waitUntil: "networkidle" });
+    await demoIsolationPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });
+    await demoIsolationPage.getByRole("textbox", { name: "File title" }).fill("Keep this local");
+    await demoIsolationPage.getByRole("textbox", { name: "File title" }).press("Tab");
     await demoIsolationPage.waitForTimeout(250);
+    await demoIsolationPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
+    await demoIsolationPage.goto(`${baseUrl}/home?demo=1`, { waitUntil: "networkidle" });
+    const previewState = await demoIsolationPage.evaluate(() => ({
+      workspaceClass: document.querySelector(".app-shell")?.className ?? "",
+      text: document.body.innerText,
+    }));
+    if (!previewState.workspaceClass.includes("workspace-demo") || !previewState.text.includes("Product strategy Q3 2024")) failures.push({ route: "home", controls: "demo preview entry", previewState });
     await demoIsolationPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     const isolationState = await demoIsolationPage.evaluate(() => ({
       workspaceClass: document.querySelector(".app-shell")?.className ?? "",
       text: document.body.innerText,
+      storedTitle: JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").docs?.title ?? "",
     }));
-    if (isolationState.workspaceClass.includes("workspace-demo") || /Product strategy Q3 2024|Growth metrics|Launch feedback/.test(isolationState.text)) failures.push({ route: "home", controls: "demo preview isolation", isolationState });
+    if (isolationState.workspaceClass.includes("workspace-demo") || !isolationState.text.includes("Keep this local") || isolationState.storedTitle !== "Keep this local" || /Product strategy Q3 2024|Growth metrics|Launch feedback/.test(isolationState.text)) failures.push({ route: "home", controls: "demo preview isolation", isolationState });
     await demoIsolationPage.close();
   } finally {
     await demoIsolationContext.close();
@@ -702,7 +712,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; demo preview isolation; consistent Focus Mode and keyboard-safe exit controls across every suite app; actionable empty-state navigation; local-only sharing feedback; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; demo preview isolation; consistent Focus Mode and keyboard-safe exit controls across every suite app; actionable empty-state navigation; local-storage status; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
