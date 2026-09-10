@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.30 — Direct Pages routes**
+**v5.3.31 — Verified Pages routes**
 
-Published September 10, 2026. GitHub Pages now serves stable 200-status entrypoints for each Crescent app, so direct links open cleanly instead of relying on the fallback document.
+Published September 10, 2026. The Pages deployment now verifies a direct Docs route after publishing, keeping the stable 200-status entrypoint contract observable on every deployment.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 

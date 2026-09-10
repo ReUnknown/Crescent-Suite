@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.3.31 — Verified Pages routes
+
+Published September 10, 2026.
+
+### Improved
+
+- Pages deployment now checks the live direct Docs route after publishing and fails the deployment if it does not return HTTP 200.
+
+### Verification
+
+- Local lint and build pass.
+- The Pages workflow now verifies the deployed route itself.
+
 ## v5.3.30 — Direct Pages routes
 
 Published September 10, 2026.
