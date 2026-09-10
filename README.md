@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.32 — Consistent release archive**
+**v5.3.33 — Final release-label consistency**
 
-Published September 10, 2026. The public visual-preview archive now matches the current release line, while Pages continues to verify the stable 200-status entrypoint contract on every deployment.
+Published September 10, 2026. The public visual-preview archive now names v5.3.32 as the current captured release line, while Pages continues to verify the stable 200-status entrypoint contract on every deployment.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
