@@ -212,11 +212,13 @@ try {
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: "Add workspace" }).click();
     const workspaceDialog = behaviorPage.getByRole("dialog", { name: "Make room for a new space" });
+    if (await workspaceDialog.getByRole("textbox", { name: "Workspace name" }).inputValue() !== "" || await workspaceDialog.getByRole("textbox", { name: "Workspace name" }).getAttribute("placeholder") !== "Name this workspace") failures.push({ route: "home", controls: "blank workspace naming field" });
     await workspaceDialog.getByRole("textbox", { name: "Workspace name" }).fill("Smoke workspace");
     await workspaceDialog.getByRole("button", { name: "Add workspace", exact: true }).click();
     if (!(await behaviorPage.locator(".workspace-list").innerText()).includes("Smoke workspace")) failures.push({ route: "home", controls: "local workspace creation" });
     await behaviorPage.getByRole("button", { name: "Add project" }).click();
     const projectDialog = behaviorPage.getByRole("dialog", { name: "Give the work a clear home" });
+    if (await projectDialog.getByRole("textbox", { name: "Project name" }).inputValue() !== "" || await projectDialog.getByRole("textbox", { name: "Project name" }).getAttribute("placeholder") !== "Name this project") failures.push({ route: "home", controls: "blank project naming field" });
     await projectDialog.getByRole("textbox", { name: "Project name" }).fill("Smoke project");
     await projectDialog.getByRole("button", { name: "Add project", exact: true }).click();
     if (!(await behaviorPage.locator(".project-list").innerText()).includes("Smoke project")) failures.push({ route: "home", controls: "local project creation" });
@@ -242,6 +244,7 @@ try {
     if (!(await behaviorPage.locator(".folder-grid").innerText()).includes("Smoke workspace")) failures.push({ route: "drive", controls: "workspace folder creation" });
     await behaviorPage.getByRole("button", { name: "New folder" }).click();
     const folderDialog = behaviorPage.getByRole("dialog", { name: "Make room for a new folder" });
+    if (await folderDialog.getByRole("textbox", { name: "Folder name" }).inputValue() !== "" || await folderDialog.getByRole("textbox", { name: "Folder name" }).getAttribute("placeholder") !== "Name this folder") failures.push({ route: "drive", controls: "blank folder naming field" });
     await folderDialog.getByRole("textbox", { name: "Folder name" }).fill("Smoke folder");
     await folderDialog.getByRole("button", { name: "Add folder", exact: true }).click();
     if (!(await behaviorPage.locator(".folder-grid").innerText()).includes("Smoke folder")) failures.push({ route: "drive", controls: "new folder creation" });
@@ -446,7 +449,9 @@ try {
     const createDriveFile = async (type, title) => { await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" }); await behaviorPage.getByRole("button", { name: "New file" }).click(); const dialog = behaviorPage.getByRole("dialog", { name: "Start something new" }); await dialog.waitFor(); await dialog.locator(".file-type-option").filter({ hasText: type }).click(); await dialog.getByRole("textbox", { name: "File name" }).fill(title); await dialog.getByRole("button", { name: `Create ${type}`, exact: true }).click(); await behaviorPage.waitForURL(new RegExp(`#${type.toLowerCase()}$`)); };
     await behaviorPage.goto(`${baseUrl}/drive`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: "New file" }).click();
-    await behaviorPage.getByRole("dialog", { name: "Start something new" }).press("Escape");
+    const blankFileDialog = behaviorPage.getByRole("dialog", { name: "Start something new" });
+    if (await blankFileDialog.getByRole("textbox", { name: "File name" }).inputValue() !== "" || await blankFileDialog.getByRole("textbox", { name: "File name" }).getAttribute("placeholder") !== "Name this document") failures.push({ route: "drive", controls: "blank file naming field" });
+    await blankFileDialog.press("Escape");
     if (await behaviorPage.getByRole("dialog", { name: "Start something new" }).count()) failures.push({ route: "drive", controls: "new file Escape dismissal" });
     await createDriveFile("Docs", "Smoke new file");
     if (await behaviorPage.getByRole("textbox", { name: "File title" }).inputValue() !== "Smoke new file") failures.push({ route: "drive", controls: "new file title" });

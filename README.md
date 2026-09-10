@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.19 — Honest project first run**
+**v5.3.20 — User-owned creation flows**
 
-Published September 10, 2026. A blank workspace now offers a real first-project action instead of an inert “More projects…” placeholder.
+Published September 10, 2026. Workspace, project, folder, and Drive file creation now starts blank and asks for a user-owned name instead of saving showcase-like defaults.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -52,6 +52,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - New Forms questions start empty with a clear writing prompt; Preview and Publish require labeled questions
 - Decorative eye glyphs no longer pollute the accessible names of Preview and Back to form controls
 - Blank navigation now offers “Add your first project” and removes the inert “More projects…” row
+- Workspace, project, folder, and Drive file dialogs start with blank names and clear contextual prompts
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority
@@ -292,7 +293,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Notes now export the selected note as a plain-text `.txt` file alongside Docs HTML and Sheets CSV export
 - Slides now export the full deck as a self-contained HTML document with escaped title/body content
 - Forms now export their questions, response settings, and saved local response as JSON
-- Help, Profile, and More projects shell controls explain their local-only or not-yet-connected state; Workspace and Project “+” controls create persistent local entries
+- Help and Profile shell controls explain their local-only or not-yet-connected state; Workspace and Project “+” controls create persistent local entries
 - Forms creators can toggle each question between Required and Optional, with the state saved locally and reflected in Preview
 - The committed visual archive now captures that Required state in the Forms builder
 - Home’s Continue working and Recent shelves now use current local Docs, Sheets, Slides, and Notes titles

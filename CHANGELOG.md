@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.20 — User-owned creation flows
+
+Published September 10, 2026.
+
+### Improved
+
+- Workspace and Project creation dialogs now start blank with contextual prompts instead of prefilled “New …” values.
+- Drive folder and file creation now starts blank, preventing default labels from becoming accidental user records.
+- Added smoke coverage for blank naming fields and their contextual prompts across navigation and Drive.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.19 — Honest project first run
 
 Published September 10, 2026.
