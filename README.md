@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.2.2 — Safe workspace reset**
+**v5.2.3 — Clearer local controls**
 
-Published September 10, 2026. Every Crescent app opens in a focused, full-viewport workspace, and Settings now includes a guarded local reset so users can start over without clearing browser data by hand.
+Published September 10, 2026. Every Crescent app opens in a focused, full-viewport workspace, Settings includes a guarded local reset, and the local controls now explain their keyboard paths clearly.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 

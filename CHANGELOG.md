@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.2.3 — Clearer local controls
+
+Published September 10, 2026.
+
+### Improved
+
+- Added `aria-describedby` context to destructive confirmation dialogs so assistive technology receives the same backup and irreversibility guidance visible on screen.
+- Updated Settings to document Search, Focus Mode, and Escape keyboard paths in one place.
+- Updated the guide’s backup section to mention the local reset path.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.2.2 — Safe workspace reset
 
 Published September 10, 2026.
