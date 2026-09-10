@@ -202,13 +202,9 @@ try {
     await linkDialog.getByRole("button", { name: "Add link", exact: true }).click();
     if (await documentBody.locator('a[href="https://example.com/crescent"]').count() !== 1) failures.push({ route: "docs", controls: "local link insertion" });
     await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
-    await behaviorPage.getByRole("button", { name: /100%/ }).click();
-    await behaviorPage.waitForTimeout(50);
-    if (!(await behaviorPage.locator(".toast").innerText()).includes("Sheet zoom is fixed")) failures.push({ route: "sheets", controls: "zoom feedback" });
+    if (await behaviorPage.getByRole("button", { name: "Insert link" }).count() !== 0 || await behaviorPage.getByRole("button", { name: /100%/ }).count() !== 0) failures.push({ route: "sheets", controls: "honest toolbar affordances" });
     await behaviorPage.goto(`${baseUrl}/slides`, { waitUntil: "networkidle" });
-    await behaviorPage.getByRole("button", { name: "Design options" }).click();
-    await behaviorPage.waitForTimeout(50);
-    if (!(await behaviorPage.locator(".toast").innerText()).includes("available in the inspector")) failures.push({ route: "slides", controls: "design feedback" });
+    if (await behaviorPage.getByRole("button", { name: "Design options" }).count() !== 0) failures.push({ route: "slides", controls: "honest design affordances" });
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: "Add workspace" }).click();
     const workspaceDialog = behaviorPage.getByRole("dialog", { name: "Make room for a new space" });

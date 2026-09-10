@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.24 — Honest controls
+
+Published September 10, 2026.
+
+### Improved
+
+- Removed the non-functional Sheets link and zoom controls from the local preview; the fixed zoom value is now status text.
+- Removed the non-functional Slides design-options button while keeping the working theme and layout controls visible.
+- Added smoke coverage that guards against reintroducing those inert affordances.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.23 — Honest recovery round-trips
 
 Published September 10, 2026.
