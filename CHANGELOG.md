@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.1.9 — Complete in-product guide
+
+Published September 10, 2026.
+
+### Improved
+
+- Expanded the Crescent guide to cover all nine apps and the full local workflow from writing through backup.
+- Added a mobile-safe scroll boundary for the longer guide.
+- Added font connection hints to reduce first-load handshake time without changing the visual system.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.1.8 — Keyboard-ready guide
 
 Published September 10, 2026.

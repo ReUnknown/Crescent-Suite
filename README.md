@@ -4,7 +4,7 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.1.8 — Workspace polish**
+**v5.1.9 — Workspace polish**
 
 Published September 10, 2026. Crescent now opens as a blank, personal workspace instead of a seeded showcase: the navigation rail collapses by default, the guide is available in-product, and every local-only action explains what it can do today.
 
