@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.2 — Honest local publishing**
+**v5.3.3 — Clean live product surface**
 
-Published September 10, 2026. Forms now makes its local-only publish state explicit, while Docs can hide and restore its Details inspector to reclaim canvas space.
+Published September 10, 2026. The live blank-first suite is now the only maintained product surface in source, with local Forms publishing and collapsible Docs details kept explicit.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -45,6 +45,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Forms now labels publish state as Ready locally and explains that public sharing needs Crescent Cloud
+- Removed unreachable legacy Drive and Forms prototypes so the maintained source matches the live user experience
 - Restoring a trashed editor file now archives the displaced active Docs, Sheets, Slides, or Forms record back into local Trash
 - Linked text in Docs now has a clear document-paper treatment with visible underline and hover contrast
 - Trash cleanup now uses accessible Crescent confirmation dialogs for permanent deletion and Empty Trash, with Escape/backdrop dismissal and clear irreversible-action language

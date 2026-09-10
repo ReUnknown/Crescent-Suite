@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.3 — Clean live product surface
+
+Published September 10, 2026.
+
+### Maintenance
+
+- Removed unreachable legacy Drive and Forms prototype views containing inert controls and seeded showcase copy.
+- Kept the maintained source aligned with the blank-first, local-first product that users actually open.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+- Core JavaScript and CSS transfer remains within the 150 KB production guardrail.
+
 ## v5.3.2 — Honest local publishing
 
 Published September 10, 2026.
