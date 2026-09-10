@@ -70,7 +70,7 @@ try {
           unnamedFields: [...document.querySelectorAll("input,textarea,select,[contenteditable=true]")].filter((node) => !((node.getAttribute("aria-label") || node.getAttribute("title") || node.getAttribute("placeholder") || node.labels?.length || node.getAttribute("role") || "").toString().trim())).length,
         }));
         if (pageErrors.length || overflow || accessibility.unnamedButtons || accessibility.unnamedFields) failures.push({ viewport: viewport.name, route, pageErrors, overflow, accessibility });
-        if (["docs", "sheets", "slides", "notes", "forms"].includes(route)) {
+        if (["docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "mail"].includes(route)) {
           if (!(await page.locator(".app-shell.focus-mode").count()) || !(await page.getByRole("button", { name: "Exit focus mode" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "default focus mode" });
           await page.getByRole("button", { name: "Exit focus mode" }).click();
           if (!(await page.getByRole("button", { name: "Enter focus mode" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "focus mode exit" });
@@ -466,6 +466,7 @@ try {
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     await behaviorPage.waitForFunction(() => document.querySelector(".task-project-filter")?.value?.toLowerCase() === "migration");
     if (behaviorPage.url().split("#")[1] !== "tasks" || (await behaviorPage.getByRole("combobox", { name: "Filter tasks by project" }).inputValue()).toLowerCase() !== "migration") failures.push({ route: "search", controls: "open exact Project result", url: behaviorPage.url() });
+    await ensureGlobalChrome();
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Calendar");
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     if (behaviorPage.url().split("#")[1] !== "calendar") failures.push({ route: "search", controls: "open exact app result", url: behaviorPage.url() });
@@ -578,7 +579,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; default Focus Mode and keyboard-safe exit controls; actionable empty-state navigation; local-only sharing feedback; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; consistent Focus Mode and keyboard-safe exit controls across every suite app; actionable empty-state navigation; local-only sharing feedback; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

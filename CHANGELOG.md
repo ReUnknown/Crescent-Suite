@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.2.1 — Unified Focus Mode
+
+Published September 10, 2026.
+
+### Improved
+
+- Extended Focus Mode from the core creation tools to all nine Crescent apps, keeping the suite consistent across Docs, Sheets, Slides, Notes, Tasks, Calendar, Drive, Forms, and Mail.
+- Kept Home, utility pages, and global Search available through a predictable Escape or corner-control return path.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.2.0 — Focus workspace
 
 Published September 10, 2026.

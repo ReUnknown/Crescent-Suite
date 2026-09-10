@@ -59,7 +59,7 @@ import {
 
 const STORAGE_KEY = "crescent-suite:workspace:v1";
 const SIDEBAR_KEY = "crescent-suite:sidebar-collapsed:v1";
-const FOCUS_APP_IDS = new Set(["docs", "sheets", "slides", "notes", "forms"]);
+const FOCUS_APP_IDS = new Set(["docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "mail"]);
 
 const APP_META = [
   { id: "docs", label: "Docs", icon: FileText, color: "blue", description: "Write with clarity" },
@@ -551,7 +551,7 @@ function GuideDialog({ onClose, onNavigate }) {
     ["Plan and analyze", "Use Sheets for calculations, Tasks for next steps, and Calendar for time you want to protect."],
     ["Present, ask, and communicate", "Use Slides to tell the story, Forms to collect answers, and Mail to keep a local thread."],
     ["Keep work together", "Use Drive for named files and folders, Recent for momentum, and Search to jump to exact work."],
-    ["Keep your focus", "Docs, Sheets, Slides, Notes, and Forms open in Focus Mode to give the canvas the full viewport. Press Escape or use the corner control to return to navigation."],
+    ["Keep your focus", "Every Crescent app opens in Focus Mode to give the work surface the full viewport. Press Escape or use the corner control to return to navigation and Search."],
     ["Protect your work", "Crescent saves your work in this browser. Open Settings to download a JSON backup before moving devices."],
   ];
   return <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section className="file-create-dialog guide-dialog" role="dialog" aria-modal="true" aria-labelledby="guide-title"><div className="file-create-heading"><div><span className="utility-kicker"><CircleHelp size={14} />Crescent guide</span><h2 id="guide-title">A calm way to get things done.</h2><p>Everything you need to start using the suite, without pre-filled work.</p></div><button className="icon-button muted" onClick={onClose} aria-label="Close guide"><X size={18} /></button></div><div className="guide-list">{guideItems.map(([title, body], index) => <article className="guide-item" key={title}><span>{index + 1}</span><div><strong>{title}</strong><p>{body}</p></div></article>)}</div><div className="guide-apps"><span>Open an app</span>{APP_META.map((app) => <button className="quiet-button" key={app.id} onClick={() => { onClose(); onNavigate(app.id); }}><AppIcon app={app} size={14} />{app.label}</button>)}</div><div className="file-create-footer"><span><HardDrive size={14} />Saved locally in this browser</span><button className="primary-button" onClick={onClose}>Got it</button></div></section></div>;
