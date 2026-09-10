@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.8 — Isolated demo preview**
+**v5.3.9 — Mail first-run polish**
 
-Published September 10, 2026. The optional `?demo=1` preview can no longer leak seeded showcase data into the normal blank local workspace.
+Published September 10, 2026. Mail now gives a blank local inbox a clear first action and validates recipient addresses before saving a message.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -31,6 +31,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Slides editor with slide management, themes, and presentation mode
 - Notes, Tasks, Calendar, Drive, Forms, and Mail surfaces with working local interactions
 - Mail inbox with unread and Starred state, message selection, local reply prefill, and a browser-saved compose/send flow
+- Mail’s blank local inbox now has a useful empty state with a direct New message action, and compose validates recipient addresses before saving
 - Editor Share actions now respond with clear local-only guidance instead of appearing inert while Crescent Cloud is disconnected
 - Local-only action feedback is routed through the shared workspace layer without duplicate notifications
 - Shared navigation, command-style search, responsive layouts, and a night-sky design system

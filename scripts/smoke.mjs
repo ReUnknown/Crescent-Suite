@@ -111,6 +111,7 @@ try {
         if (route === "forms" && await page.getByRole("textbox", { name: "What are you working on?" }).getAttribute("aria-required") !== "true") failures.push({ viewport: viewport.name, route, accessibility: "required answer semantics" });
         if (route === "forms" && await page.getByRole("button", { name: "How clear is the next step?: 1" }).getAttribute("aria-required") !== "true") failures.push({ viewport: viewport.name, route, accessibility: "required Scale semantics" });
         if (route === "home" && await page.getByRole("button", { name: "All", exact: true }).getAttribute("aria-pressed") !== "true") failures.push({ viewport: viewport.name, route, accessibility: "Recent filter state" });
+        if (route === "mail" && smokeData === "fresh" && !(await page.locator(".mail-list-empty").count())) failures.push({ viewport: viewport.name, route, emptyState: "Mail inbox empty state" });
         if (route === "drive" && await page.getByRole("button", { name: "Grid view" }).getAttribute("aria-pressed") !== "true") failures.push({ viewport: viewport.name, route, accessibility: "Drive view state" });
         if (route === "trash" && !(await page.locator(".utility-panel").innerText()).includes("Trash is empty.")) failures.push({ viewport: viewport.name, route, emptyState: "Trash is empty." });
         if (route === "trash") {
@@ -165,9 +166,12 @@ try {
     await replyDialog.getByRole("button", { name: "Cancel" }).click();
     await behaviorPage.getByRole("button", { name: "New message" }).click();
     const composeDialog = behaviorPage.getByRole("dialog", { name: "Write something clear." });
-    await composeDialog.getByRole("textbox", { name: "To" }).fill("casey@crescent.local");
+    await composeDialog.getByRole("textbox", { name: "To" }).fill("casey");
     await composeDialog.getByRole("textbox", { name: "Subject" }).fill("Smoke message");
     await composeDialog.getByRole("textbox", { name: "Message" }).fill("A local smoke-test message.");
+    await composeDialog.getByRole("button", { name: "Send message" }).click();
+    if (await behaviorPage.getByRole("dialog", { name: "Write something clear." }).count() !== 1 || !(await behaviorPage.locator(".toast").innerText()).includes("Use an email address")) failures.push({ route: "mail", controls: "recipient validation" });
+    await composeDialog.getByRole("textbox", { name: "To" }).fill("casey@crescent.local");
     await composeDialog.getByRole("button", { name: "Send message" }).click();
     if (await behaviorPage.getByRole("button", { name: "Open message Smoke message" }).count() !== 1) failures.push({ route: "mail", controls: "local message send" });
     await behaviorPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });

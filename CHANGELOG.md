@@ -1,5 +1,20 @@
 # Changelog
 
+## v5.3.9 — Mail first-run polish
+
+Published September 10, 2026.
+
+### Improved
+
+- Added a useful blank-inbox state with a direct New message action for first-run local workspaces.
+- Clarified the reader pane when there are no messages yet.
+- Added lightweight email-format validation before a local message is saved.
+- Added smoke coverage for recipient validation and the blank Mail state.
+
+### Verification
+
+- Local lint, build, full demo smoke, and targeted blank-workspace desktop/mobile checks pass.
+
 ## v5.3.8 — Isolated demo preview
 
 Published September 10, 2026.
