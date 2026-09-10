@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.11 — Drive first-run guidance
+
+Published September 10, 2026.
+
+### Improved
+
+- Added in-context empty states for Drive folders and recent files in a blank local workspace.
+- Added direct New folder and New file actions to those states, reusing the existing accessible dialogs.
+- Added desktop/mobile smoke coverage for Drive’s empty-state actions.
+
+### Verification
+
+- Local lint, build, full smoke, and targeted desktop/mobile Drive checks pass.
+
 ## v5.3.10 — Focused Docs canvas
 
 Published September 10, 2026.

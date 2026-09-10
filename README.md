@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.10 — Focused Docs canvas**
+**v5.3.11 — Drive first-run guidance**
 
-Published September 10, 2026. Docs now opens Focus Mode with the optional Details inspector collapsed, giving the writing surface more room while keeping the panel one click away.
+Published September 10, 2026. Drive now explains an empty local workspace in place, with direct actions for creating a folder or a new file.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -43,6 +43,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Calendar’s Event action now uses a matching accessible modal with title and natural-language time fields, Escape dismissal, and local persistence
 - Sidebar Workspaces and Projects now use matching accessible creation dialogs with local persistence and keyboard-friendly submission
 - Drive’s New folder action now uses the same accessible dialog, duplicate guard, local-save language, and mobile-safe layout
+- Drive’s empty folders and recent-files sections now provide direct first-run actions instead of blank space
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority
