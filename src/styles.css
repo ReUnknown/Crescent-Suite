@@ -76,7 +76,8 @@ input, textarea { color: var(--text); }
 .dot-0 { background: #7559ec; }.dot-1 { background: #5ba5f5; }.dot-2 { background: #e86eac; }.dot-3 { background: #62c795; }.dot-4 { background: #ee984d; }
 .projects-head { margin-top: 19px; }
 .project-link { color: #cbd0e3; }
-.project-more { color: var(--muted); }
+.project-empty-action { color: var(--lilac); }
+.project-empty-action:hover { color: var(--lilac-bright); }
 .sidebar-quote { margin: auto 5px 0; min-height: 116px; border-radius: 11px; padding: 18px 12px; position: relative; overflow: hidden; border: 1px solid rgba(150, 137, 255, .20); background: radial-gradient(circle at 80% 25%, rgba(106, 83, 215, .42), transparent 37%), linear-gradient(145deg, #171b38, #111522 80%); }
 .sidebar-quote p { position: relative; z-index: 1; max-width: 108px; margin: 13px 0 0; color: #bdb9d7; font-size: 13px; line-height: 1.35; }
 .quote-orbit { position: absolute; top: 7px; right: 13px; width: 52px; height: 52px; border: 1px solid rgba(184, 165, 255, .22); border-radius: 50%; }

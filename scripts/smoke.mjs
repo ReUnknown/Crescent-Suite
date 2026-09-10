@@ -607,6 +607,11 @@ try {
           const hasLocalSlideResidue = route === "slides" && state.text.includes("CRESCENT / DESIGN REVIEW");
           if (pageErrors.length || state.overflow || !state.workspaceClass.includes("workspace-local") || seededCopy.test(state.text) || hasLocalSlideResidue) failures.push({ viewport: viewport.name, route, pageErrors, overflow: state.overflow, workspaceClass: state.workspaceClass, seededCopy: seededCopy.test(state.text), hasLocalSlideResidue });
           if (route === "home" && viewport.name === "desktop" && await freshPage.getByText("Make Crescent yours.").count() !== 1) failures.push({ viewport: viewport.name, route, emptyState: "optional guide" });
+          if (route === "home" && viewport.name === "desktop") {
+            await freshPage.getByRole("button", { name: "Expand navigation", exact: true }).click();
+            if (await freshPage.getByRole("button", { name: "More projects", exact: true }).count()) failures.push({ viewport: viewport.name, route, controls: "inert projects placeholder" });
+            if (await freshPage.getByRole("button", { name: "Add your first project", exact: true }).count() !== 1) failures.push({ viewport: viewport.name, route, controls: "first project action" });
+          }
           if (route === "forms" && await freshPage.getByRole("button", { name: "Preview", exact: true }).count()) failures.push({ viewport: viewport.name, route, controls: "blank Forms preview dead end" });
           if (route === "forms" && viewport.name === "desktop") {
             const formIsolationContext = await browser.newContext({ viewport });

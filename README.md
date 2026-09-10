@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.18 — User-owned Forms questions**
+**v5.3.19 — Honest project first run**
 
-Published September 10, 2026. New Forms questions now start empty instead of carrying placeholder content, with Preview and Publish guarded until the user gives each question a real label.
+Published September 10, 2026. A blank workspace now offers a real first-project action instead of an inert “More projects…” placeholder.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -51,6 +51,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Blank Forms no longer show an inert Preview action before a title or question exists
 - New Forms questions start empty with a clear writing prompt; Preview and Publish require labeled questions
 - Decorative eye glyphs no longer pollute the accessible names of Preview and Back to form controls
+- Blank navigation now offers “Add your first project” and removes the inert “More projects…” row
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority

@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.19 — Honest project first run
+
+Published September 10, 2026.
+
+### Improved
+
+- Replaced the inert “More projects…” sidebar row with a real “Add your first project” action for blank workspaces.
+- Kept the sidebar project list free of showcase-only controls once a user has created a project.
+- Added blank-workspace smoke coverage that expands navigation and verifies the first-project action is present.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.18 — User-owned Forms questions
 
 Published September 10, 2026.
