@@ -538,8 +538,9 @@ function GettingStarted({ onNavigate, onDismiss }) {
 function GuideDialog({ onClose, onNavigate }) {
   useEffect(() => {
     const closeOnEscape = (event) => { if (event.key === "Escape") onClose(); };
+    const focusTimer = window.setTimeout(() => document.querySelector(".guide-dialog button")?.focus(), 0);
     window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
+    return () => { window.clearTimeout(focusTimer); window.removeEventListener("keydown", closeOnEscape); };
   }, [onClose]);
   const guideItems = [
     ["Start at Home", "Use the app launcher to open a blank tool, or follow the optional three-step guide."],

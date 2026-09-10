@@ -100,6 +100,9 @@ try {
           if (!page.url().endsWith("#recent")) failures.push({ viewport: viewport.name, route, emptyState: "Trash empty-state action", url: page.url() });
         }
         if (route === "home" && viewport.name === "desktop") {
+          await page.getByRole("button", { name: "Open Crescent guide" }).click();
+          if (!(await page.evaluate(() => document.activeElement?.closest(".guide-dialog") !== null))) failures.push({ viewport: viewport.name, route, accessibility: "guide focus" });
+          await page.keyboard.press("Escape");
           const launchers = page.locator(".app-launch");
           if (await launchers.count() !== 9) failures.push({ viewport: viewport.name, route, launcherCount: await launchers.count() });
           const railBox = await page.locator(".home-rail").boundingBox();

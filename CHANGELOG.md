@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.1.8 — Keyboard-ready guide
+
+Published September 10, 2026.
+
+### Improved
+
+- Moves keyboard focus into the in-product guide when it opens and keeps Escape dismissal predictable.
+- Adds smoke coverage for the guide’s focus entry point.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.1.7 — Honest folder feedback
 
 Published September 10, 2026.
