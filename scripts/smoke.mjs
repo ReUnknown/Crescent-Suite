@@ -177,6 +177,9 @@ try {
     await behaviorPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: "Share", exact: true }).click();
     if (!(await behaviorPage.locator(".toast").innerText()).includes("Sharing will be available")) failures.push({ route: "docs", controls: "local-only sharing notice" });
+    if (await behaviorPage.getByRole("button", { name: "Show document details" }).count() !== 1) failures.push({ route: "docs", controls: "focus mode starts with details collapsed" });
+    await behaviorPage.getByRole("button", { name: "Show document details" }).click();
+    if (await behaviorPage.locator(".doc-inspector").count() !== 1) failures.push({ route: "docs", controls: "restore document details" });
     await behaviorPage.getByRole("button", { name: "Close details" }).click();
     if (await behaviorPage.locator(".doc-inspector").count() !== 0 || await behaviorPage.getByRole("button", { name: "Show document details" }).count() !== 1) failures.push({ route: "docs", controls: "hide document details" });
     await behaviorPage.getByRole("button", { name: "Show document details" }).click();

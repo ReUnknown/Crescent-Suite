@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.10 — Focused Docs canvas
+
+Published September 10, 2026.
+
+### Improved
+
+- Docs now opens Focus Mode with the optional Details inspector collapsed, giving the document more usable width by default.
+- The Details panel remains available through the editor-header Show details control.
+- Updated smoke coverage for the collapsed-by-default state and reversible panel control.
+
+### Verification
+
+- Local lint, build, smoke, and desktop/mobile Docs checks pass.
+
 ## v5.3.9 — Mail first-run polish
 
 Published September 10, 2026.

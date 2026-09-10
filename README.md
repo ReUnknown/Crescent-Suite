@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.9 — Mail first-run polish**
+**v5.3.10 — Focused Docs canvas**
 
-Published September 10, 2026. Mail now gives a blank local inbox a clear first action and validates recipient addresses before saving a message.
+Published September 10, 2026. Docs now opens Focus Mode with the optional Details inspector collapsed, giving the writing surface more room while keeping the panel one click away.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -45,6 +45,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Drive’s New folder action now uses the same accessible dialog, duplicate guard, local-save language, and mobile-safe layout
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
+- Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority
 - Forms now labels publish state as Ready locally and explains that public sharing needs Crescent Cloud
 - Removed unreachable legacy Drive and Forms prototypes so the maintained source matches the live user experience
 - Docs no longer presents a Details toggle at widths where the Details panel is automatically hidden
