@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.1 — Collapsible document details**
+**v5.3.2 — Honest local publishing**
 
-Published September 10, 2026. Docs can now hide and restore its Details inspector so the writing canvas can reclaim space when the user wants to focus.
+Published September 10, 2026. Forms now makes its local-only publish state explicit, while Docs can hide and restore its Details inspector to reclaim canvas space.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -44,6 +44,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Drive’s New folder action now uses the same accessible dialog, duplicate guard, local-save language, and mobile-safe layout
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
+- Forms now labels publish state as Ready locally and explains that public sharing needs Crescent Cloud
 - Restoring a trashed editor file now archives the displaced active Docs, Sheets, Slides, or Forms record back into local Trash
 - Linked text in Docs now has a clear document-paper treatment with visible underline and hover contrast
 - Trash cleanup now uses accessible Crescent confirmation dialogs for permanent deletion and Empty Trash, with Escape/backdrop dismissal and clear irreversible-action language

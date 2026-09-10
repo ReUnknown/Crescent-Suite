@@ -1242,7 +1242,7 @@ function FormsView({ workspace, update, onNavigate, initialQuestionId }) {
   const cycleQuestionType = (id) => { const types = ["Short answer", "Long answer", "Scale"]; update({ forms: workspace.forms.map((question) => { if (question.id !== id) return question; const nextType = types[(types.indexOf(question.type) + 1) % types.length]; return { ...question, type: nextType }; }) }); };
   const toggleFormSetting = (setting) => update({ formSettings: { ...formSettings, [setting]: !formSettings[setting] } });
   const setFormTheme = (theme) => update({ formTheme: theme });
-  const publishForm = () => { if (!workspace.forms.length) { emitNotice("Add at least one question before publishing."); return; } setPublished(true); update({ formPublished: true }); };
+  const publishForm = () => { if (!workspace.forms.length) { emitNotice("Add at least one question before publishing."); return; } setPublished(true); update({ formPublished: true }); emitNotice("Form is ready locally. Public sharing will be available when Crescent Cloud is connected."); };
   const moveFormToTrash = () => {
     const starredTitles = getStarredTitles(workspace);
     const deletedForm = { id: `form-${Date.now()}`, title: formTitle, formTitle, formTheme, formSettings, forms: workspace.forms, formPublished: published, formResponses: workspace.formResponses ?? [], lastFormResponse: workspace.lastFormResponse, type: "Forms", appId: "forms", opened: "just now", owner: "Me", starred: starredTitles.has(formTitle) };
@@ -1262,10 +1262,10 @@ function FormsView({ workspace, update, onNavigate, initialQuestionId }) {
       <button className="secondary-button" onClick={() => setShowResponses((current) => !current)}><CheckCircle2 size={15} />Responses {responses.length ? `(${responses.length})` : ""}</button>
       <button className="secondary-button" onClick={() => setPreviewing((current) => !current)}><EyeIcon />{previewing ? "Edit form" : "Preview"}</button>
       <button className="secondary-button editor-trash-button" onClick={moveFormToTrash}><Trash2 size={16} />Move to Trash</button>
-      <button className="primary-button" onClick={publishForm}><Share2 size={16} />{published ? "Published" : "Publish"}</button>
+      <button className="primary-button" onClick={publishForm}><Share2 size={16} />{published ? "Published locally" : "Publish"}</button>
     </EditorHeader>
     <div className={`forms-content ${previewing ? "forms-preview-mode" : ""}`}>
-      <div className="forms-heading"><div><h1>{displayTitle}</h1><p>{workspace.demo ? "Ask the questions that help the next move become obvious." : "Create a focused form and keep responses on this device."}</p></div><span className={`publish-status ${published ? "is-published" : ""}`}><span />{published ? "Live" : "Draft"}</span></div>
+      <div className="forms-heading"><div><h1>{displayTitle}</h1><p>{workspace.demo ? "Ask the questions that help the next move become obvious." : "Create a focused form and keep responses on this device."}</p></div><span className={`publish-status ${published ? "is-published" : ""}`}><span />{published ? "Ready locally" : "Draft"}</span></div>
       {showResponses ? <FormResponses workspace={workspace} responses={responses} onBack={() => setShowResponses(false)} onExport={exportResponses} /> : <div className="form-builder">
         <div className="form-preview">
           <div className="form-cover"><div className="form-cover-orbit" /><span>{workspace.demo ? "CRESCENT / FEEDBACK" : "LOCAL FORM"}</span><h2>{workspace.demo ? "Help us make the next release better." : displayTitle === "Untitled form" ? "Start with one clear question." : displayTitle}</h2><p>{workspace.demo ? "A two-minute check-in for the people who use the work." : "Add a question below whenever you are ready."}</p></div>

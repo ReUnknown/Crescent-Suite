@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.3.2 — Honest local publishing
+
+Published September 10, 2026.
+
+### Improved
+
+- Forms now reports `Ready locally` instead of implying a public `Live` state when Crescent Cloud is disconnected.
+- Publishing a local form now explains what happened and what public sharing would require.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.3.1 — Collapsible document details
 
 Published September 10, 2026.

@@ -410,6 +410,9 @@ try {
     await behaviorPage.getByRole("button", { name: "Export" }).click();
     const exportFilename = (await exportDownloadPromise).suggestedFilename();
     if (exportFilename.includes("/")) failures.push({ route: "forms", controls: "safe export filename", exportFilename });
+    await behaviorPage.getByRole("button", { name: "Publish", exact: true }).click();
+    await behaviorPage.waitForTimeout(50);
+    if (await behaviorPage.getByRole("button", { name: "Published locally", exact: true }).count() !== 1 || !(await behaviorPage.locator(".publish-status").innerText()).includes("Ready locally") || !(await behaviorPage.locator(".toast").innerText()).includes("ready locally")) failures.push({ route: "forms", controls: "honest local publish state" });
     await behaviorPage.getByRole("button", { name: "Preview" }).click();
     await behaviorPage.locator(".form-input").first().fill("Smoke response");
     await behaviorPage.locator(".scale-input button").last().click();
