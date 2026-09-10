@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.2.1 — Unified Focus Mode**
+**v5.2.2 — Safe workspace reset**
 
-Published September 10, 2026. Every Crescent app now opens in a focused, full-viewport workspace instead of carrying navigation chrome into the work surface: the rail and global header step away until you need them, with Escape or the corner control bringing navigation back.
+Published September 10, 2026. Every Crescent app opens in a focused, full-viewport workspace, and Settings now includes a guarded local reset so users can start over without clearing browser data by hand.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -18,7 +18,8 @@ Public preview: [reunknown.github.io/Crescent-Suite](https://reunknown.github.io
 2. Choose an app from Home, or follow the optional “Make Crescent yours” guide.
 3. Every Crescent app opens in Focus Mode; press Escape to return to navigation or use `⌘/Ctrl + Shift + F` to toggle it.
 4. Use Drive for named files and folders, Recent or Search to find work, and Settings to export or restore a JSON backup.
-5. Your work is saved in this browser. Cloud sharing is intentionally not connected in this preview.
+5. Use Settings → Reset workspace when you want a confirmed, blank local start; download a backup first if you may need the current work later.
+6. Your work is saved in this browser. Cloud sharing is intentionally not connected in this preview.
 
 ### Included
 
@@ -34,6 +35,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Local-only action feedback is routed through the shared workspace layer without duplicate notifications
 - Shared navigation, command-style search, responsive layouts, and a night-sky design system
 - Focus Mode for every suite app, with a full-viewport work surface, explicit exit control, and `⌘/Ctrl + Shift + F` shortcut
+- Settings reset flow with an explicit confirmation and backup reminder for starting over locally
 - Pages-ready workflow builds a visual preview on every `main` milestone and deploys when repository Pages is enabled
 - Drive’s New file action now creates named Docs, Sheets, Slides, Notes, or Forms records and opens the selected editor
 - Drive’s New file action now uses an accessible, keyboard-friendly Crescent modal with app cards, title entry, Escape dismissal, and mobile layout

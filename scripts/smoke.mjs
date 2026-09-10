@@ -543,6 +543,12 @@ try {
     await behaviorPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: /Responses/ }).click();
     if (await behaviorPage.locator(".response-card").count() !== 1) failures.push({ route: "settings", controls: "malformed response backup normalization" });
+    await behaviorPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
+    await behaviorPage.getByRole("button", { name: "Reset workspace" }).click();
+    const resetDialog = behaviorPage.getByRole("dialog", { name: "Start over with a blank workspace?" });
+    await resetDialog.getByRole("button", { name: "Reset workspace", exact: true }).click();
+    await behaviorPage.getByRole("status").filter({ hasText: "Workspace reset locally. Start fresh on Home." }).waitFor({ state: "visible" });
+    if (behaviorPage.url().split("#")[1] !== "home" || (await behaviorPage.locator(".app-shell").getAttribute("class"))?.includes("workspace-demo") || (await behaviorPage.locator(".recent-table").innerText()).includes("Review the launch brief")) failures.push({ route: "settings", controls: "reset local workspace" });
   } finally {
     await behaviorPage.close();
   }

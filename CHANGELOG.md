@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.2.2 — Safe workspace reset
+
+Published September 10, 2026.
+
+### Added
+
+- Added a Settings reset flow that clears only Crescent’s browser-local workspace after an explicit confirmation and returns to blank Home.
+- Added a backup reminder inside the destructive confirmation and smoke coverage for the reset-to-empty contract.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.2.1 — Unified Focus Mode
 
 Published September 10, 2026.
