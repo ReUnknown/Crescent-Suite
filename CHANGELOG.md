@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.23 — Honest recovery round-trips
+
+Published September 10, 2026.
+
+### Fixed
+
+- Restoring empty Sheets, Slides, and Forms now preserves empty user content instead of falling back to the demo template.
+- Recovery no longer archives the untouched blank editor slot as a new Trash record.
+- Added isolated smoke coverage for a named empty Form create → Trash → Restore round-trip.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.22 — Honest blank-file recovery
 
 Published September 10, 2026.

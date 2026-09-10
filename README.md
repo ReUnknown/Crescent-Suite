@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.22 — Honest blank-file recovery**
+**v5.3.23 — Honest recovery round-trips**
 
-Published September 10, 2026. Discarding an untouched Docs, Sheets, or Slides surface now leaves no fake file in Trash, and local blank state never falls back to seeded demo content.
+Published September 10, 2026. Restoring a named but empty file now preserves its blank content, avoids archiving the empty editor slot, and never falls back to seeded demo records.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -55,6 +55,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Workspace, project, folder, and Drive file dialogs start with blank names and clear contextual prompts
 - New Notes keep their title blank until the user names them; the list uses a visible fallback without saving placeholder content
 - Untouched Docs, Sheets, Slides, and Forms surfaces discard cleanly without creating placeholder Trash records or resurrecting demo data
+- Recovery preserves named empty Sheets, Slides, and Forms without injecting demo content or blank Trash records
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority

@@ -664,6 +664,32 @@ try {
     await demoIsolationContext.close();
   }
 
+  const blankRecoveryContext = await browser.newContext({ viewport: viewports[0] });
+  try {
+    const recoveryPage = await blankRecoveryContext.newPage();
+    await recoveryPage.goto(`${baseUrl}/drive?fresh=1`, { waitUntil: "networkidle" });
+    const createNamedFile = async (type, title) => {
+      await recoveryPage.getByRole("button", { name: "New file", exact: true }).first().click();
+      const dialog = recoveryPage.getByRole("dialog", { name: "Start something new" });
+      await dialog.locator(".file-type-option").filter({ hasText: type }).click();
+      await dialog.getByRole("textbox", { name: "File name" }).fill(title);
+      await dialog.getByRole("button", { name: `Create ${type}`, exact: true }).click();
+      await recoveryPage.waitForURL(new RegExp(`#${type.toLowerCase()}$`));
+    };
+    await createNamedFile("Forms", "Smoke empty form");
+    await recoveryPage.getByRole("button", { name: "Move to Trash", exact: true }).click();
+    const formTrashRow = recoveryPage.locator(".utility-file-row").filter({ hasText: "Smoke empty form" });
+    if (await formTrashRow.count() !== 1) failures.push({ route: "forms", controls: "named empty form recovery record" });
+    await formTrashRow.getByRole("button", { name: "Restore" }).click();
+    await recoveryPage.goto(`${baseUrl}/forms`, { waitUntil: "networkidle" });
+    if (await recoveryPage.locator(".question-label-input").count() !== 0) failures.push({ route: "forms", controls: "named empty form restore seeded content" });
+    await recoveryPage.goto(`${baseUrl}/trash`, { waitUntil: "networkidle" });
+    if (!(await recoveryPage.locator(".utility-panel").innerText()).includes("Trash is empty.")) failures.push({ route: "forms", controls: "blank current archive after restore" });
+    await recoveryPage.close();
+  } finally {
+    await blankRecoveryContext.close();
+  }
+
   await browser.close();
   if (failures.length) {
     console.error(JSON.stringify(failures, null, 2));
