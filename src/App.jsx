@@ -783,7 +783,7 @@ function SheetInsights({ cells }) {
 }
 
 function SheetsView({ workspace, update, onNavigate, initialCell }) {
-  const [selected, setSelected] = useState(initialCell ?? "B2");
+  const [selected, setSelected] = useState(initialCell ?? (workspace.demo ? "B2" : "A1"));
   const [view, setView] = useState("grid");
   const [past, setPast] = useState([]);
   const [future, setFuture] = useState([]);

@@ -113,6 +113,7 @@ try {
         if (route === "home" && await page.getByRole("button", { name: "All", exact: true }).getAttribute("aria-pressed") !== "true") failures.push({ viewport: viewport.name, route, accessibility: "Recent filter state" });
         if (route === "mail" && smokeData === "fresh" && !(await page.locator(".mail-list-empty").count())) failures.push({ viewport: viewport.name, route, emptyState: "Mail inbox empty state" });
         if (route === "drive" && smokeData === "fresh" && await page.locator(".drive-empty-state").count() !== 2) failures.push({ viewport: viewport.name, route, emptyState: "Drive folders and files empty states" });
+        if (route === "sheets" && smokeData === "fresh" && await page.locator(".name-box").innerText() !== "A1") failures.push({ viewport: viewport.name, route, controls: "blank Sheets starts at A1" });
         if (route === "drive" && await page.getByRole("button", { name: "Grid view" }).getAttribute("aria-pressed") !== "true") failures.push({ viewport: viewport.name, route, accessibility: "Drive view state" });
         if (route === "trash" && !(await page.locator(".utility-panel").innerText()).includes("Trash is empty.")) failures.push({ viewport: viewport.name, route, emptyState: "Trash is empty." });
         if (route === "trash") {

@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.12 — Familiar Sheets start
+
+Published September 10, 2026.
+
+### Improved
+
+- Blank local spreadsheets now select A1 on first open, matching the conventional starting point for a new sheet.
+- Preserved the seeded preview’s B2 selection so demo screenshots remain stable.
+- Added smoke coverage for the blank local Sheets starting cell.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.11 — Drive first-run guidance
 
 Published September 10, 2026.

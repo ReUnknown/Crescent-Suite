@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.11 — Drive first-run guidance**
+**v5.3.12 — Familiar Sheets start**
 
-Published September 10, 2026. Drive now explains an empty local workspace in place, with direct actions for creating a folder or a new file.
+Published September 10, 2026. Blank local spreadsheets now open at A1, while the demo preview keeps its curated starting cell.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -28,6 +28,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Home dashboard with app launcher, recent work, activity, and a daily focus rail
 - Docs editor with local autosave, formatting controls, outline, and HTML export
 - Sheets grid with editable cells, basic formulas, and CSV export
+- Blank local Sheets files start at the familiar A1 cell; the optional demo preview keeps its curated B2 focus
 - Slides editor with slide management, themes, and presentation mode
 - Notes, Tasks, Calendar, Drive, Forms, and Mail surfaces with working local interactions
 - Mail inbox with unread and Starred state, message selection, local reply prefill, and a browser-saved compose/send flow
