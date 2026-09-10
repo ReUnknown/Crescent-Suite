@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.1.7 — Honest folder feedback
+
+Published September 10, 2026.
+
+### Fixed
+
+- Removed the premature “folder added” toast when opening the New folder dialog; confirmation now appears only after a named folder is saved.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.1.6 — Reproducible local build
 
 Published September 10, 2026.

@@ -1499,7 +1499,6 @@ export default function App() {
       if (button?.getAttribute("aria-label") === "Design options") emitNotice("Slide design options are available in the inspector.");
       if (button?.getAttribute("aria-label") === "Close details") emitNotice("Document details stay visible while you work locally.");
       if (button?.classList.contains("toolbar-select")) emitNotice("Sheet zoom is fixed at 100% in this local workspace.");
-      if (label.includes("New folder")) emitNotice("Folder added to this local workspace.");
     };
     document.addEventListener("click", handleActionFeedback);
     return () => document.removeEventListener("click", handleActionFeedback);
