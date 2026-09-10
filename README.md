@@ -4,13 +4,24 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v4.0.2 — Verified local-only feedback**
+**v5.1.1 — Workspace polish**
+
+Published September 10, 2026. Crescent now opens as a blank, personal workspace instead of a seeded showcase: the navigation rail collapses by default, the guide is available in-product, and every local-only action explains what it can do today.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
 Public preview: [reunknown.github.io/Crescent-Suite](https://reunknown.github.io/Crescent-Suite/)
 
-The first major release establishes a usable Crescent product shell and a local-first suite experience:
+### Quick start
+
+1. Open the [public preview](https://reunknown.github.io/Crescent-Suite/).
+2. Choose an app from Home, or follow the optional “Make Crescent yours” guide.
+3. Use Drive for named files and folders, Recent or Search to find work, and Settings to export or restore a JSON backup.
+4. Your work is saved in this browser. Cloud sharing is intentionally not connected in this preview.
+
+### Included
+
+The current release provides a usable Crescent product shell and a local-first suite experience:
 
 - Home dashboard with app launcher, recent work, activity, and a daily focus rail
 - Docs editor with local autosave, formatting controls, outline, and HTML export

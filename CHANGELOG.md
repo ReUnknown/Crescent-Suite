@@ -1,5 +1,32 @@
 # Changelog
 
+## v5.1.1 — Workspace control polish
+
+Published September 10, 2026.
+
+### Improved
+
+- Made the compact navigation rail the default desktop posture so the suite gives more room back to the work.
+- Added a complete in-product Crescent guide with keyboard dismissal, app shortcuts, local-storage guidance, and backup guidance.
+- Converted the public first visit to a blank local workspace with actionable Home and app empty states instead of seeded showcase content.
+- Added explicit feedback for local-only Share, document details, sheet zoom, and slide design controls so visible actions never fail silently.
+- Tightened calendar natural-language date resolution and local persistence across reloads.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 desktop/mobile route checks.
+- Public GitHub Pages deployment completed successfully for `cd966b7`.
+
+## v5.0.0 — Personal workspace
+
+Published September 10, 2026.
+
+### Added
+
+- Added blank-first local workspace initialization, persistent sidebar preference, responsive mobile drawer behavior, and guided first-run actions.
+- Added local Notes, Tasks, Calendar, Drive, Forms, Mail, Docs, Sheets, and Slides workflows with recoverable local storage and backup import/export.
+- Added fresh-workspace smoke coverage for empty states, responsive routes, and the shared navigation contract.
+
 ## v4.0.3 — Public GitHub Pages
 
 Published September 9, 2026.
