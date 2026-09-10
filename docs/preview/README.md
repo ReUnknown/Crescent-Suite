@@ -6,7 +6,7 @@ These screenshots are committed with Crescent milestones so the product can be r
 
 ## Current first-run pass
 
-These four screenshots capture the blank-workspace experience published in the v5.3.14 first-run pass:
+These six screenshots capture the blank-workspace and accessibility experience across the current first-run passes:
 
 - `mail-empty.png` — Mail with a useful local inbox state and direct New message action
 - `drive-empty.png` — Drive explaining both empty folders and empty recent files with direct actions
