@@ -43,6 +43,8 @@ try {
   const manifestResponse = await fetch(`${baseUrl}/site.webmanifest`);
   const manifest = await manifestResponse.json();
   if (manifest.start_url !== "./" || manifest.scope !== "./" || manifest.icons?.[0]?.src !== "./favicon.svg") throw new Error("PWA manifest is not subpath-safe");
+  const indexHtml = await (await fetch(`${baseUrl}/`)).text();
+  if (!indexHtml.includes('rel="preconnect" href="https://fonts.googleapis.com"') || !indexHtml.includes('rel="preconnect" href="https://fonts.gstatic.com"')) throw new Error("Font preconnect hints are missing");
   const browser = await chromium.launch({ headless: true });
   const failures = [];
   const reducedMotionPage = preparePage(await browser.newPage({ viewport: viewports[0] }));
