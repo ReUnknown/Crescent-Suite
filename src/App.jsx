@@ -614,8 +614,9 @@ function PreviewArt({ type }) {
 
 function EditorHeader({ title, icon, onChangeTitle, children, onNavigate }) {
   const titleEditable = !["notes", "tasks", "calendar", "drive", "mail"].includes(icon?.id);
+  const titlePlaceholder = { docs: "Untitled document", sheets: "Untitled spreadsheet", slides: "Untitled presentation", forms: "Untitled form" }[icon?.id] ?? "Untitled file";
   const handleEditorAction = (event) => { if (event.target.closest("button")?.textContent?.trim() === "Share") emitNotice("Sharing will be available when Crescent Cloud is connected."); };
-  return <div className="editor-header"><div className="editor-breadcrumb"><button onClick={() => onNavigate("home")} className="crumb-home" aria-label="Back to Home"><Home size={15} /></button><ChevronRight size={14} /><span className="editor-app-label"><AppIcon app={icon} size={15} />{icon.label}</span><ChevronRight size={14} /><input value={title} onChange={(event) => onChangeTitle(event.target.value)} placeholder={titleEditable && !title ? "Untitled file" : undefined} readOnly={!titleEditable} aria-label="File title" aria-readonly={!titleEditable} /></div><div className="editor-actions" onClick={handleEditorAction}><span className="saved-status"><Check size={14} />Saved locally</span>{children}</div></div>;
+  return <div className="editor-header"><div className="editor-breadcrumb"><button onClick={() => onNavigate("home")} className="crumb-home" aria-label="Back to Home"><Home size={15} /></button><ChevronRight size={14} /><span className="editor-app-label"><AppIcon app={icon} size={15} />{icon.label}</span><ChevronRight size={14} /><input value={title} onChange={(event) => onChangeTitle(event.target.value)} placeholder={titleEditable && !title ? titlePlaceholder : undefined} readOnly={!titleEditable} aria-label="File title" aria-readonly={!titleEditable} /></div><div className="editor-actions" onClick={handleEditorAction}><span className="saved-status"><Check size={14} />Saved locally</span>{children}</div></div>;
 }
 
 function MailView({ workspace, update, onNavigate, initialSubject }) {

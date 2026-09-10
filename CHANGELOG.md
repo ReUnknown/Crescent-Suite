@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.13 — Clear editor naming
+
+Published September 10, 2026.
+
+### Improved
+
+- Replaced the generic blank editor title hint with app-specific names for Docs, Sheets, Slides, and Forms.
+- Kept title storage and demo data unchanged; this is a clearer first-run affordance only.
+- Verified all four editor placeholders with a targeted browser check.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.12 — Familiar Sheets start
 
 Published September 10, 2026.

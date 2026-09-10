@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.12 — Familiar Sheets start**
+**v5.3.13 — Clear editor naming**
 
-Published September 10, 2026. Blank local spreadsheets now open at A1, while the demo preview keeps its curated starting cell.
+Published September 10, 2026. Blank editor headers now use app-specific naming hints—document, spreadsheet, presentation, or form—instead of one generic label.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -45,6 +45,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Sidebar Workspaces and Projects now use matching accessible creation dialogs with local persistence and keyboard-friendly submission
 - Drive’s New folder action now uses the same accessible dialog, duplicate guard, local-save language, and mobile-safe layout
 - Drive’s empty folders and recent-files sections now provide direct first-run actions instead of blank space
+- Blank editor headers now use app-specific “Untitled document/spreadsheet/presentation/form” hints for a more consistent first-run experience
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority
