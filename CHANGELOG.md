@@ -1,5 +1,20 @@
 # Changelog
 
+## v5.3.37 — First-run workflow coverage
+
+Published September 10, 2026.
+
+### Improved
+
+- Added a browser smoke flow for Home → Docs → local save → Home Recent.
+- The regression test verifies a real user-created document survives Focus Mode exit and appears in the user’s local Recent work.
+
+### Verification
+
+- `npm run lint`
+- `npm run build`
+- `npm run test:smoke`
+
 ## v5.3.36 — Focus preview polish
 
 Published September 10, 2026.

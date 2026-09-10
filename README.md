@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.36 — Focus preview polish**
+**v5.3.37 — First-run workflow coverage**
 
-Published September 10, 2026. Focus Mode keeps the work surface clear of navigation chrome and non-blocking preview notices.
+Published September 10, 2026. The first-run path now has explicit regression coverage from creating a blank document to seeing it in Home Recent.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 

@@ -677,6 +677,25 @@ try {
     await freshContext.close();
   }
 
+  const firstRunContext = await browser.newContext({ viewport: viewports[0] });
+  try {
+    const firstRunPage = await firstRunContext.newPage();
+    await firstRunPage.goto(`${baseUrl}/home?fresh=1`, { waitUntil: "networkidle" });
+    await firstRunPage.getByRole("button", { name: "Start with Docs" }).click();
+    await firstRunPage.waitForURL(/#docs$/);
+    await firstRunPage.getByRole("textbox", { name: "File title" }).fill("First-run plan");
+    await firstRunPage.getByRole("textbox", { name: "Document body" }).fill("A useful local document created from the blank workspace.");
+    await firstRunPage.getByRole("textbox", { name: "Document body" }).press("Tab");
+    await firstRunPage.waitForTimeout(250);
+    await firstRunPage.getByRole("button", { name: "Exit focus mode" }).click();
+    await firstRunPage.getByRole("button", { name: "Back to Home" }).click();
+    await firstRunPage.waitForURL(/#home$/);
+    if (await firstRunPage.locator(".recent-row").filter({ hasText: "First-run plan" }).count() !== 1) failures.push({ route: "first-run", controls: "Docs creation appears in Home Recent" });
+    await firstRunPage.close();
+  } finally {
+    await firstRunContext.close();
+  }
+
   const demoIsolationContext = await browser.newContext({ viewport: viewports[0] });
   try {
     const demoIsolationPage = await demoIsolationContext.newPage();
@@ -735,7 +754,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; demo preview isolation; consistent Focus Mode and keyboard-safe exit controls across every suite app; actionable empty-state navigation; local-storage status; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; first-run Docs creation appears in Recent; demo preview isolation; consistent Focus Mode and keyboard-safe exit controls across every suite app; actionable empty-state navigation; local-storage status; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");
