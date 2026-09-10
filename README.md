@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.26 — Clean blank-workspace search**
+**v5.3.27 — Honest backup normalization**
 
-Published September 10, 2026. Search now indexes only named work, so blank initial Slides and Notes canvases never appear as empty results in a fresh workspace.
+Published September 10, 2026. Imported version-1 backups now stay local-first unless they explicitly request demo mode, so absent fields never repopulate the workspace with seeded records.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -59,6 +59,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Sheets and Slides no longer show inert toolbar affordances that imply unavailable local features
 - Docs, Sheets, and Slides no longer present unavailable cloud sharing as an active primary action
 - Search excludes blank editor scaffolding from fresh and local workspaces
+- Partial backups without an explicit demo flag no longer restore seeded demo documents, questions, or projects
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority

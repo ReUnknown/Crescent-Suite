@@ -230,7 +230,7 @@ const SCHEDULE = [
 ];
 
 function normalizeWorkspace(source) {
-  const base = source?.demo === false ? createEmptyWorkspace() : INITIAL_WORKSPACE;
+  const base = source?.demo === true ? INITIAL_WORKSPACE : createEmptyWorkspace();
   const merged = { ...base, ...(source ?? {}) };
   const workspaces = Array.isArray(source?.workspaces) && source.workspaces.length
     ? source.workspaces.map((item, index) => typeof item === "string"

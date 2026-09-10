@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.27 — Honest backup normalization
+
+Published September 10, 2026.
+
+### Fixed
+
+- Version-1 imports now use the blank workspace as their normalization base unless `demo: true` is explicit.
+- Partial backups no longer inject seeded Docs, Sheets, Slides, Forms, Tasks, or project data into omitted fields.
+- Isolated smoke coverage now verifies blank Forms, user-provided folders/projects, and restored partial-backup Docs navigation.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.26 — Clean blank-workspace search
 
 Published September 10, 2026.
