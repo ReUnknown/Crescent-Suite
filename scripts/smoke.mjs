@@ -577,7 +577,8 @@ try {
             text: document.body.innerText,
             overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
           }));
-          if (pageErrors.length || state.overflow || !state.workspaceClass.includes("workspace-local") || seededCopy.test(state.text)) failures.push({ viewport: viewport.name, route, pageErrors, overflow: state.overflow, workspaceClass: state.workspaceClass, seededCopy: seededCopy.test(state.text) });
+          const hasLocalSlideResidue = route === "slides" && state.text.includes("CRESCENT / DESIGN REVIEW");
+          if (pageErrors.length || state.overflow || !state.workspaceClass.includes("workspace-local") || seededCopy.test(state.text) || hasLocalSlideResidue) failures.push({ viewport: viewport.name, route, pageErrors, overflow: state.overflow, workspaceClass: state.workspaceClass, seededCopy: seededCopy.test(state.text), hasLocalSlideResidue });
           if (route === "home" && viewport.name === "desktop" && await freshPage.getByText("Make Crescent yours.").count() !== 1) failures.push({ viewport: viewport.name, route, emptyState: "optional guide" });
         } finally {
           await freshPage.close();

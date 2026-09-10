@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.2.6 — Clearer focus affordance**
+**v5.2.7 — Truly blank Slides**
 
-Published September 10, 2026. Every Crescent app opens in a focused, full-viewport workspace, Search follows its shortcut, and the Focus Mode exit affordance now uses the same navigation-panel language as the rest of the suite.
+Published September 10, 2026. Fresh Slides now renders local presentation language directly instead of carrying seeded showcase copy beneath a visual CSS replacement.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 

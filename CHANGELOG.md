@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.2.7 — Truly blank Slides
+
+Published September 10, 2026.
+
+### Fixed
+
+- Fresh Slides now renders `LOCAL PRESENTATION` directly instead of retaining the seeded review kicker in the DOM and hiding it with CSS.
+- Added isolated blank-workspace smoke coverage for seeded Slides residue.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.2.6 — Clearer focus affordance
 
 Published September 10, 2026.
