@@ -35,6 +35,8 @@ import {
   MailOpen,
   MoreHorizontal,
   NotebookPen,
+  PanelLeftClose,
+  PanelLeftOpen,
   Pencil,
   Play,
   Plus,
@@ -69,6 +71,7 @@ const APP_META = [
 
 const INITIAL_WORKSPACE = {
   version: 1,
+  demo: true,
   docs: {
     title: "Product strategy Q3 2024",
     body: `<h1>Product strategy Q3 2024</h1><p class="doc-lede">A focused plan for making Crescent the calmest place to do great work.</p><h2>North star</h2><p>Make the workspace feel obvious at every moment: one home for the work, one consistent language, and fewer reasons to context-switch.</p><h2>Three moves</h2><ul><li>Ship a dependable core of Docs, Sheets, and Slides.</li><li>Make every surface share the same navigation and saved-work model.</li><li>Use small moments of delight to reward momentum without adding noise.</li></ul><blockquote>Clarity is a feature. The best tool is the one that gets out of the way.</blockquote><p><strong>Next review:</strong> Friday at 2:00 PM</p>`,
@@ -131,6 +134,34 @@ const INITIAL_WORKSPACE = {
   ],
 };
 
+function createEmptyWorkspace() {
+  return {
+    version: 1,
+    demo: false,
+    docs: { title: "", body: "", updatedAt: "" },
+    sheets: { title: "", cells: {}, tabs: [{ name: "Sheet 1", cells: {} }], activeSheet: 0, styles: {}, updatedAt: "" },
+    slidesTitle: "",
+    slides: [{ title: "", body: "", accent: "lilac", notes: "", layout: "title-body" }],
+    notes: [],
+    formTitle: "",
+    formTheme: "lilac",
+    formSettings: { collectEmail: false, oneResponse: false },
+    formPublished: false,
+    forms: [],
+    formResponses: [],
+    lastFormResponse: undefined,
+    tasks: [],
+    calendarEvents: [],
+    deletedFiles: [],
+    starredFiles: [],
+    driveFolders: [],
+    workspaces: [],
+    projects: [],
+    mail: [],
+    guideDismissed: false,
+  };
+}
+
 const RECENT_FILES = [
   { title: "Product strategy Q3 2024", type: "Docs", icon: FileText, color: "blue", opened: "2 hours ago", owner: "Me", starred: true },
   { title: "Growth metrics", type: "Sheets", icon: FileSpreadsheet, color: "green", opened: "5 hours ago", owner: "Me", starred: false },
@@ -179,7 +210,8 @@ function getLiveRecentFiles(workspace) {
   const suppressedTypes = new Set();
   if (Array.isArray(workspace.tasks) && workspace.tasks.length === 0) suppressedTypes.add("Tasks");
   const starredTitles = getStarredTitles(workspace);
-  return [...liveFiles, ...RECENT_FILES.filter((file) => !liveTypes.has(file.type) && !suppressedTypes.has(file.type))].map((file) => ({ ...file, starred: starredTitles.has(file.title) }));
+  const fallbackFiles = workspace.demo ? RECENT_FILES.filter((file) => !liveTypes.has(file.type) && !suppressedTypes.has(file.type)) : [];
+  return [...liveFiles, ...fallbackFiles].map((file) => ({ ...file, starred: starredTitles.has(file.title) }));
 }
 
 function fileNavigationContext(file) {
@@ -194,15 +226,16 @@ const SCHEDULE = [
 ];
 
 function normalizeWorkspace(source) {
-  const merged = { ...INITIAL_WORKSPACE, ...(source ?? {}) };
+  const base = source?.demo === false ? createEmptyWorkspace() : INITIAL_WORKSPACE;
+  const merged = { ...base, ...(source ?? {}) };
   const workspaces = Array.isArray(source?.workspaces) && source.workspaces.length
     ? source.workspaces.map((item, index) => typeof item === "string"
       ? { name: item, color: index % 5 }
       : { ...item, name: String(item?.name ?? `Workspace ${index + 1}`), color: Number.isFinite(item?.color) ? Math.abs(Math.trunc(item.color)) % 5 : index % 5 })
-    : INITIAL_WORKSPACE.workspaces;
+    : base.workspaces;
   const projects = Array.isArray(source?.projects)
     ? source.projects.map((item) => typeof item === "string" ? item : String(item?.name ?? "")).filter(Boolean)
-    : INITIAL_WORKSPACE.projects;
+    : base.projects;
   const driveFolders = Array.isArray(source?.driveFolders)
     ? source.driveFolders.map((folder, index) => {
       const record = folder && typeof folder === "object" ? folder : {};
@@ -215,40 +248,40 @@ function normalizeWorkspace(source) {
         color: Number.isFinite(color) ? Math.abs(Math.trunc(color)) % 4 : index % 4,
       };
     })
-    : INITIAL_WORKSPACE.driveFolders;
+    : base.driveFolders;
   const slides = Array.isArray(source?.slides) && source.slides.length
     ? source.slides.map((slide, index) => {
       const record = slide && typeof slide === "object" ? slide : {};
-      const seed = INITIAL_WORKSPACE.slides[index % INITIAL_WORKSPACE.slides.length];
+      const seed = base.slides[index % base.slides.length] ?? {};
       return { ...seed, ...record, title: String(record.title ?? seed.title ?? `Slide ${index + 1}`), body: String(record.body ?? seed.body ?? ""), accent: ["lilac", "blue", "gold"].includes(record.accent) ? record.accent : seed.accent, notes: String(record.notes ?? ""), layout: record.layout === "statement" ? "statement" : "title-body" };
     })
-    : INITIAL_WORKSPACE.slides;
-  const notes = Array.isArray(source?.notes) && source.notes.length
+    : (Array.isArray(source?.slides) ? base.slides : base.slides);
+  const notes = Array.isArray(source?.notes)
     ? source.notes.map((note, index) => {
       const record = note && typeof note === "object" ? note : {};
-      const seed = INITIAL_WORKSPACE.notes[index % INITIAL_WORKSPACE.notes.length];
+      const seed = base.notes[index % Math.max(base.notes.length, 1)] ?? { color: "blue" };
       return { ...seed, ...record, id: record.id ?? index + 1, title: String(record.title ?? seed.title ?? `Note ${index + 1}`), body: String(record.body ?? ""), color: ["lilac", "blue", "gold"].includes(record.color) ? record.color : seed.color, updatedAt: String(record.updatedAt ?? "Just now") };
     })
-    : INITIAL_WORKSPACE.notes;
+    : base.notes;
   const tasks = Array.isArray(source?.tasks)
     ? source.tasks.map((task, index) => {
       const record = task && typeof task === "object" ? task : {};
-      return { ...record, id: record.id ?? index + 1, title: String(record.title ?? `Task ${index + 1}`), project: String(record.project ?? "Personal"), due: String(record.due ?? "No date"), complete: Boolean(record.complete) };
+      return { ...record, id: record.id ?? index + 1, title: String(record.title ?? `Task ${index + 1}`), project: String(record.project ?? ""), due: String(record.due ?? "No date"), complete: Boolean(record.complete) };
     })
-    : INITIAL_WORKSPACE.tasks;
+    : base.tasks;
   const forms = Array.isArray(source?.forms)
     ? source.forms.map((question, index) => {
       const record = question && typeof question === "object" ? question : {};
       return { ...record, id: record.id ?? index + 1, label: String(record.label ?? `Question ${index + 1}`), type: ["Short answer", "Long answer", "Scale"].includes(record.type) ? record.type : "Short answer", required: Boolean(record.required) };
     })
-    : INITIAL_WORKSPACE.forms;
-  const mail = Array.isArray(source?.mail) && source.mail.length
+    : base.forms;
+  const mail = Array.isArray(source?.mail)
     ? source.mail.map((message, index) => {
       const record = message && typeof message === "object" ? message : {};
-      const seed = INITIAL_WORKSPACE.mail[index % INITIAL_WORKSPACE.mail.length];
+      const seed = base.mail[index % Math.max(base.mail.length, 1)] ?? {};
       return { ...seed, ...record, id: record.id ?? index + 1, from: String(record.from ?? seed.from), email: String(record.email ?? seed.email), subject: String(record.subject ?? seed.subject), preview: String(record.preview ?? seed.preview), body: String(record.body ?? seed.body), time: String(record.time ?? "Just now"), read: Boolean(record.read), starred: Boolean(record.starred), tag: String(record.tag ?? seed.tag), sent: Boolean(record.sent), to: String(record.to ?? "") };
     })
-    : INITIAL_WORKSPACE.mail;
+    : base.mail;
   const calendarEvents = Array.isArray(source?.calendarEvents)
     ? source.calendarEvents.map((event, index) => {
       const record = event && typeof event === "object" ? event : {};
@@ -277,8 +310,8 @@ function normalizeWorkspace(source) {
   const lastFormResponse = source?.lastFormResponse && typeof source.lastFormResponse === "object" ? normalizeResponse(source.lastFormResponse, 0) : undefined;
   return {
     ...merged,
-    docs: { ...INITIAL_WORKSPACE.docs, ...(source?.docs ?? {}) },
-    sheets: { ...INITIAL_WORKSPACE.sheets, ...(source?.sheets ?? {}) },
+    docs: { ...base.docs, ...(source?.docs ?? {}) },
+    sheets: { ...base.sheets, ...(source?.sheets ?? {}) },
     slides,
     notes,
     tasks,
@@ -289,7 +322,7 @@ function normalizeWorkspace(source) {
     projects,
     calendarEvents,
     deletedFiles,
-    formSettings: { ...INITIAL_WORKSPACE.formSettings, ...(source?.formSettings ?? {}) },
+    formSettings: { ...base.formSettings, ...(source?.formSettings ?? {}) },
     formResponses,
     lastFormResponse,
     version: 1,
@@ -298,19 +331,23 @@ function normalizeWorkspace(source) {
 
 function loadWorkspace() {
   try {
+    if (new window.URLSearchParams(window.location.search).get("demo") === "1") return INITIAL_WORKSPACE;
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return INITIAL_WORKSPACE;
+    if (!stored) return createEmptyWorkspace();
     const parsed = JSON.parse(stored);
-    return parsed?.version === 1 ? normalizeWorkspace(parsed) : INITIAL_WORKSPACE;
+    return parsed?.version === 1 ? normalizeWorkspace(parsed) : createEmptyWorkspace();
   } catch {
-    return INITIAL_WORKSPACE;
+    return createEmptyWorkspace();
   }
 }
 
 function useWorkspace() {
   const [workspace, setWorkspace] = useState(loadWorkspace);
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(workspace));
+    const timeout = window.setTimeout(() => {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(workspace)); } catch { emitNotice("This workspace could not be saved locally."); }
+    }, 180);
+    return () => window.clearTimeout(timeout);
   }, [workspace]);
   const update = useCallback((patch) => setWorkspace((current) => ({ ...current, ...patch })), []);
   return [workspace, update];
@@ -328,7 +365,7 @@ function BrandMark({ small = false }) {
   </div>;
 }
 
-function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
+function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update, collapsed }) {
   const navItems = [
     { id: "home", label: "Home", icon: Home },
     { id: "recent", label: "Recent", icon: Clock3 },
@@ -336,8 +373,8 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
     { id: "shared", label: "Shared with me", icon: UsersRound },
     { id: "trash", label: "Trash", icon: Trash2 },
   ];
-  const workspaces = workspace.workspaces ?? INITIAL_WORKSPACE.workspaces;
-  const projects = workspace.projects ?? INITIAL_WORKSPACE.projects;
+  const workspaces = workspace.workspaces ?? (workspace.demo ? INITIAL_WORKSPACE.workspaces : []);
+  const projects = workspace.projects ?? (workspace.demo ? INITIAL_WORKSPACE.projects : []);
   const [addDialog, setAddDialog] = useState(null);
   const [addName, setAddName] = useState("");
   const openAddDialog = (kind) => { setAddDialog(kind); setAddName(kind === "workspace" ? "New workspace" : "New project"); };
@@ -375,28 +412,28 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update }) {
   };
   return <>
     {open && <button className="sidebar-scrim" onClick={onClose} aria-label="Close navigation" />}
-    <aside className={`sidebar ${open ? "sidebar-open" : ""}`}>
+    <aside className={`sidebar ${open ? "sidebar-open" : ""} ${collapsed ? "sidebar-collapsed" : ""}`}>
       <div className="sidebar-header"><BrandMark /><button className="icon-button sidebar-close" onClick={onClose} aria-label="Close navigation"><X size={18} /></button></div>
       <nav className="sidebar-nav" aria-label="Primary">
-        {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={`sidebar-link ${activeApp === id ? "active" : ""}`} onClick={() => onNavigate(id)} aria-current={activeApp === id ? "page" : undefined}><Icon size={18} /><span>{label}</span></button>)}
+        {navItems.map(({ id, label, icon: Icon }) => <button key={id} className={`sidebar-link ${activeApp === id ? "active" : ""}`} onClick={() => onNavigate(id)} title={label} aria-label={label} aria-current={activeApp === id ? "page" : undefined}><Icon size={18} /><span>{label}</span></button>)}
       </nav>
       <div className="sidebar-divider" />
-      <div className="sidebar-section-head"><span>Workspaces</span><button className="icon-button muted" onClick={() => openAddDialog("workspace")} aria-label="Add workspace"><Plus size={17} /></button></div>
+      <div className="sidebar-section-head"><span>Workspaces</span><button className="icon-button muted" onClick={() => openAddDialog("workspace")} aria-label="Add workspace" title="Add workspace"><Plus size={17} /></button></div>
       <div className="workspace-list">
-        {workspaces.map((item, index) => <button className="workspace-link" key={`${item.name}-${index}`} onClick={() => onNavigate("drive", { folderName: item.name })}><span className={`workspace-dot dot-${item.color ?? index % 5}`} />{item.name}</button>)}
+        {workspaces.map((item, index) => <button className="workspace-link" key={`${item.name}-${index}`} onClick={() => onNavigate("drive", { folderName: item.name })} title={item.name} aria-label={item.name}><span className={`workspace-dot dot-${item.color ?? index % 5}`} /><span>{item.name}</span></button>)}
       </div>
-      <div className="sidebar-section-head projects-head"><span>Projects</span><button className="icon-button muted" onClick={() => openAddDialog("project")} aria-label="Add project"><Plus size={17} /></button></div>
+      <div className="sidebar-section-head projects-head"><span>Projects</span><button className="icon-button muted" onClick={() => openAddDialog("project")} aria-label="Add project" title="Add project"><Plus size={17} /></button></div>
       <div className="project-list">
-        {projects.map((project) => <button className="project-link" key={project} onClick={() => onNavigate("tasks", { project })}><FileText size={16} />{project}</button>)}
-        <button className="project-link project-more" onClick={() => emitNotice("More projects will be available when the workspace connects to a team.")}><MoreHorizontal size={16} />More projects...</button>
+        {projects.map((project) => <button className="project-link" key={project} onClick={() => onNavigate("tasks", { project })} title={project} aria-label={project}><FileText size={16} /><span>{project}</span></button>)}
+        <button className="project-link project-more" onClick={() => emitNotice("Add a project whenever you need a new focus area.")} title="More projects" aria-label="More projects"><MoreHorizontal size={16} /><span>More projects...</span></button>
       </div>
-      <div className="sidebar-quote"><div className="quote-orbit"><span className="quote-moon" /></div><p>A more focused way to work</p></div>
+      <div className="sidebar-quote"><div className="quote-orbit"><span className="quote-moon" /></div><p>Make space for the work that matters.</p></div>
       {addDialog && <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAddDialog(null); }}><section className="file-create-dialog sidebar-create-dialog" role="dialog" aria-modal="true" aria-labelledby="sidebar-create-title"><div className="file-create-heading"><div><span className="utility-kicker">{addDialog === "workspace" ? <FolderPlus size={14} /> : <ListChecks size={14} />}{addDialog === "workspace" ? "New workspace" : "New project"}</span><h2 id="sidebar-create-title">{addDialog === "workspace" ? "Make room for a new space" : "Give the work a clear home"}</h2><p>{addDialog === "workspace" ? "Create a local folder for a team, theme, or part of your life." : "Projects keep related tasks together in one focused view."}</p></div><button className="icon-button muted" onClick={() => setAddDialog(null)} aria-label="Close create dialog"><X size={18} /></button></div><label className="file-name-field"><span>{addDialog === "workspace" ? "Workspace name" : "Project name"}</span><input autoFocus value={addName} aria-label={addDialog === "workspace" ? "Workspace name" : "Project name"} onChange={(event) => setAddName(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") addDialog === "workspace" ? addWorkspace() : addProject(); }} /></label><div className="file-create-footer"><span><HardDrive size={14} />Saved locally in this browser</span><div><button className="secondary-button" onClick={() => setAddDialog(null)}>Cancel</button><button className="primary-button" onClick={addDialog === "workspace" ? addWorkspace : addProject}>{addDialog === "workspace" ? <><FolderPlus size={16} />Add workspace</> : <><ListChecks size={16} />Add project</>}</button></div></div></section></div>}
     </aside>
   </>;
 }
 
-function Header({ activeApp, onOpenSidebar, query, onQueryChange, onNavigate, workspace }) {
+function Header({ activeApp, onOpenSidebar, onToggleSidebar, sidebarCollapsed, query, onQueryChange, onNavigate, workspace }) {
   const utilityTitles = { recent: "Recent", starred: "Starred", shared: "Shared with me", trash: "Trash", settings: "Settings" };
   const title = activeApp === "home" ? "Home" : APP_META.find((app) => app.id === activeApp)?.label ?? utilityTitles[activeApp] ?? "Crescent";
   const handleSearchKeyDown = (event) => {
@@ -408,7 +445,7 @@ function Header({ activeApp, onOpenSidebar, query, onQueryChange, onNavigate, wo
     <button className="mobile-menu icon-button" onClick={onOpenSidebar} aria-label="Open navigation"><Menu size={20} /></button>
     <div className="mobile-title"><BrandMark small /><span>{title}</span></div>
     <div className="global-search"><Search size={19} /><input value={query} onChange={(event) => onQueryChange(event.target.value)} onKeyDown={handleSearchKeyDown} placeholder="Search across Crescent..." aria-label="Search across Crescent" aria-expanded={Boolean(query)} aria-controls="crescent-search-results" aria-autocomplete="list" aria-haspopup="listbox" /><kbd><Command size={13} />K</kbd></div>
-    <div className="topbar-actions"><button className="icon-button" aria-label="Help" onClick={() => emitNotice("Help center is coming soon to this local workspace.")}><CircleHelp size={19} /></button><button className="icon-button" aria-label="Settings" onClick={() => onNavigate("settings")}><Settings2 size={19} /></button><div className="topbar-divider" /><button className="profile-button" aria-label="Open profile" onClick={() => emitNotice("Crescent is running locally in this browser.")}><span>A</span><ChevronDown size={15} /></button></div>
+    <div className="topbar-actions"><button className="icon-button sidebar-toggle" aria-label={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} title={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} onClick={onToggleSidebar}>{sidebarCollapsed ? <PanelLeftOpen size={19} /> : <PanelLeftClose size={19} />}</button><button className="icon-button" aria-label="Help" onClick={() => emitNotice("Open the getting started guide from Home whenever you need a hand.")}><CircleHelp size={19} /></button><button className="icon-button" aria-label="Settings" onClick={() => onNavigate("settings")}><Settings2 size={19} /></button><div className="topbar-divider" /><button className="profile-button" aria-label="Local workspace" onClick={() => emitNotice("Crescent is running locally in this browser.")}><span>⌁</span><ChevronDown size={15} /></button></div>
     {query && <SearchResults query={query} onNavigate={onNavigate} workspace={workspace} />}
   </header>;
 }
@@ -481,6 +518,15 @@ function SearchResults({ query, onNavigate, workspace }) {
   return <div className="search-results" id="crescent-search-results" role="listbox" aria-label="Search results" aria-live="polite"><div className="search-results-heading">Search results</div>{results.length ? results.map((file) => <button key={`${file.type}-${file.title}`} className="search-result" role="option" onClick={() => onNavigate(file.appId ?? file.type.toLowerCase(), navigationFor(file))} onKeyDown={handleResultKeyDown}><AppIcon app={{ ...file, id: file.appId ?? file.type.toLowerCase() }} size={16} /><span><strong>{file.title}</strong><small>{file.type} · {file.opened}</small></span><ArrowRight size={15} /></button>) : <div className="search-empty">No files match “{query}”.</div>}</div>;
 }
 
+function GettingStarted({ onNavigate, onDismiss }) {
+  const steps = [
+    { app: "docs", label: "Write a document", detail: "Capture a plan, brief, or idea." },
+    { app: "tasks", label: "Add a task", detail: "Turn the next step into momentum." },
+    { app: "calendar", label: "Plan your time", detail: "Reserve space for focused work." },
+  ];
+  return <section className="getting-started" aria-labelledby="getting-started-title"><div className="getting-started-copy"><span className="utility-kicker"><Sparkles size={14} />Optional guide</span><h2 id="getting-started-title">Make Crescent yours.</h2><p>Start with a blank workspace and add only what you need. You can hide this guide at any time.</p></div><div className="getting-started-steps">{steps.map((step, index) => <button className="getting-started-step" key={step.app} onClick={() => onNavigate(step.app)}><span className="getting-started-number">{index + 1}</span><span><strong>{step.label}</strong><small>{step.detail}</small></span><ArrowRight size={15} /></button>)}</div><button className="getting-started-dismiss" onClick={onDismiss}>Hide guide</button></section>;
+}
+
 function HomeView({ workspace, update, onNavigate, onFocusSearch }) {
   const [filter, setFilter] = useState("All");
   const recentFiles = getLiveRecentFiles(workspace);
@@ -493,24 +539,25 @@ function HomeView({ workspace, update, onNavigate, onFocusSearch }) {
   return <div className="home-layout page-enter">
     <main className="home-main">
       <section className="home-hero">
-        <div><h1>{greeting}, Alex</h1><p>Pick up where you left off, or start something new.</p></div>
+        <div><h1>{greeting}</h1><p>{workspace.demo ? "Pick up where you left off, or start something new." : "Your workspace is ready for the next thing that matters."}</p></div>
         <div className="hero-moon"><span className="hero-moon-shape" /><span>A calmer<br />brighter you</span></div>
       </section>
       <section className="app-launcher" aria-label="Crescent apps">
         {APP_META.map((app) => <button className="app-launch" key={app.id} onClick={() => onNavigate(app.id)}><AppIcon app={app} size={23} /><span>{app.label}</span><small>{app.description}</small></button>)}
       </section>
+      {!workspace.demo && !workspace.guideDismissed && <GettingStarted onNavigate={onNavigate} onDismiss={() => update({ guideDismissed: true })} />}
       <section className="workspace-section">
         <div className="section-heading"><div><h2>Continue working</h2><p>Jump back into the work that is already in motion.</p></div><button className="quiet-button" onClick={() => onNavigate("recent")}>See all <ArrowRight size={15} /></button></div>
-        <div className="continue-row">{recentFiles.slice(0, 4).map((file) => <button className="continue-card" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), fileNavigationContext(file))}><div className={`file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div className="file-meta"><span><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={14} />{file.type}</span><MoreHorizontal size={15} /></div><strong>{file.title}</strong><small>Edited {file.opened}</small></button>)}</div>
+        {recentFiles.length ? <div className="continue-row">{recentFiles.slice(0, 4).map((file) => <button className="continue-card" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), fileNavigationContext(file))}><div className={`file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div className="file-meta"><span><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={14} />{file.type}</span><MoreHorizontal size={15} /></div><strong>{file.title}</strong><small>Edited {file.opened}</small></button>)}</div> : <div className="home-empty-state"><span className="home-empty-icon"><Plus size={18} /></span><div><strong>Your recent work will show up here.</strong><small>Open any app above to create something new.</small></div><button className="quiet-button" onClick={() => onNavigate("docs")}>Start with Docs <ArrowRight size={15} /></button></div>}
       </section>
       <section className="workspace-section recent-section">
         <div className="section-heading"><div><h2>Recent</h2><p>The latest files across your workspaces.</p></div><div className="filter-row">{["All", "Docs", "Sheets", "Slides", "Notes", "Tasks", "Calendar", "Drive", "Forms", "Mail"].map((item) => <button className={filter === item ? "filter-button selected" : "filter-button"} key={item} onClick={() => setFilter(item)} aria-pressed={filter === item}>{item}</button>)}</div></div>
-        <div className="recent-table"><div className="recent-table-head"><span>Name</span><span>Type</span><span>Last opened</span><span>Owner</span><span aria-label="Actions" /></div>{files.map((file) => <div className="recent-row" role="link" tabIndex="0" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), file.type === "Mail" ? { title: file.title } : { title: file.title })} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onNavigate(file.type.toLowerCase(), file.type === "Mail" ? { title: file.title } : { title: file.title }); } }}><span className="file-name"><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={18} /><strong>{file.title}</strong></span><span>{file.type}</span><span>{file.opened}</span><span>{file.owner}</span><span className="row-actions"><span className="row-action" role="button" tabIndex="0" aria-label={`${file.starred ? "Remove" : "Add"} ${file.title} ${file.starred ? "from" : "to"} Starred`} onClick={(event) => toggleStar(event, file)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") toggleStar(event, file); }}>{file.starred ? <Star size={16} fill="currentColor" /> : <Star size={16} />}</span><MoreHorizontal size={17} /></span></div>)}</div>
+        <div className="recent-table"><div className="recent-table-head"><span>Name</span><span>Type</span><span>Last opened</span><span>Owner</span><span aria-label="Actions" /></div>{files.length ? files.map((file) => <div className="recent-row" role="link" tabIndex="0" key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), file.type === "Mail" ? { title: file.title } : { title: file.title })} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onNavigate(file.type.toLowerCase(), file.type === "Mail" ? { title: file.title } : { title: file.title }); } }}><span className="file-name"><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={18} /><strong>{file.title}</strong></span><span>{file.type}</span><span>{file.opened}</span><span>{file.owner}</span><span className="row-actions"><span className="row-action" role="button" tabIndex="0" aria-label={`${file.starred ? "Remove" : "Add"} ${file.title} ${file.starred ? "from" : "to"} Starred`} onClick={(event) => toggleStar(event, file)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") toggleStar(event, file); }}>{file.starred ? <Star size={16} fill="currentColor" /> : <Star size={16} />}</span><MoreHorizontal size={17} /></span></div>) : <div className="home-table-empty"><Clock3 size={18} /><span>No recent files yet. Create something and it will appear here.</span></div>}</div>
       </section>
     </main>
     <aside className="home-rail">
-      <section className="rail-card day-card"><div className="rail-heading"><div><h3>My day</h3><p>{new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(new Date())}</p></div><button className="text-link" onClick={() => onNavigate("calendar")}>View calendar</button></div>{[...SCHEDULE, ...localSchedule].map((event) => <div className="schedule-row" key={`${event.title}-${event.time}`}><div className="schedule-time"><span>{event.time}</span><span>{event.end}</span></div><span className={`schedule-bar bar-${event.color}`} /><strong>{event.title}</strong></div>)}</section>
-      <section className="rail-card activity-card"><div className="rail-heading"><h3>Activity</h3><button className="text-link" onClick={() => onNavigate("recent")}>See all <ArrowRight size={14} /></button></div>{[{ initials: "TK", color: "lilac", text: "Taylor Kim commented on", target: "Design review deck", time: "10 minutes ago" }, { initials: "JL", color: "green", text: "Jordan Lee edited", target: "Growth metrics", time: "1 hour ago" }, { initials: "SC", color: "violet", text: "Sam Chen shared", target: "Launch assets with you", time: "3 hours ago" }].map((item) => <div className="activity-row" key={item.initials}><span className={`avatar avatar-${item.color}`}>{item.initials}</span><p>{item.text} <strong>{item.target}</strong><small>{item.time}</small></p></div>)}<div className="activity-task"><CalendarCheck2 size={18} /><p>You have <strong>3 tasks due tomorrow</strong><small>5 hours ago</small></p></div></section>
+      <section className="rail-card day-card"><div className="rail-heading"><div><h3>My day</h3><p>{new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(new Date())}</p></div><button className="text-link" onClick={() => onNavigate("calendar")}>View calendar</button></div>{(workspace.demo ? [...SCHEDULE, ...localSchedule] : localSchedule).length ? (workspace.demo ? [...SCHEDULE, ...localSchedule] : localSchedule).map((event) => <div className="schedule-row" key={`${event.title}-${event.time}`}><div className="schedule-time"><span>{event.time}</span><span>{event.end}</span></div><span className={`schedule-bar bar-${event.color}`} /><strong>{event.title}</strong></div>) : <div className="rail-empty"><CalendarDays size={18} /><span>Your day is open. Add time in Calendar when you are ready.</span></div>}</section>
+      <section className="rail-card activity-card"><div className="rail-heading"><h3>Activity</h3><button className="text-link" onClick={() => onNavigate("recent")}>See all <ArrowRight size={14} /></button></div>{workspace.demo ? <>{[{ initials: "TK", color: "lilac", text: "Taylor Kim commented on", target: "Design review deck", time: "10 minutes ago" }, { initials: "JL", color: "green", text: "Jordan Lee edited", target: "Growth metrics", time: "1 hour ago" }, { initials: "SC", color: "violet", text: "Sam Chen shared", target: "Launch assets with you", time: "3 hours ago" }].map((item) => <div className="activity-row" key={item.initials}><span className={`avatar avatar-${item.color}`}>{item.initials}</span><p>{item.text} <strong>{item.target}</strong><small>{item.time}</small></p></div>)}<div className="activity-task"><CalendarCheck2 size={18} /><p>You have <strong>3 tasks due tomorrow</strong><small>5 hours ago</small></p></div></> : <div className="rail-empty"><Clock3 size={18} /><span>Activity will collect here as you work.</span></div>}</section>
       <button className="ask-card" onClick={onFocusSearch}><span className="ask-icon"><Sparkles size={16} /></span><span className="ask-copy"><strong>Ask Crescent anything...</strong><small>Search files, notes, tasks, and events...</small></span><ArrowRight size={18} /></button>
     </aside>
   </div>;
@@ -525,7 +572,7 @@ function PreviewArt({ type }) {
 
 function EditorHeader({ title, icon, onChangeTitle, children, onNavigate }) {
   const titleEditable = !["notes", "tasks", "calendar", "drive", "mail"].includes(icon?.id);
-  return <div className="editor-header"><div className="editor-breadcrumb"><button onClick={() => onNavigate("home")} className="crumb-home" aria-label="Back to Home"><Home size={15} /></button><ChevronRight size={14} /><span className="editor-app-label"><AppIcon app={icon} size={15} />{icon.label}</span><ChevronRight size={14} /><input value={title} onChange={(event) => onChangeTitle(event.target.value)} readOnly={!titleEditable} aria-label="File title" aria-readonly={!titleEditable} /></div><div className="editor-actions"><span className="saved-status"><Check size={14} />Saved locally</span>{children}</div></div>;
+  return <div className="editor-header"><div className="editor-breadcrumb"><button onClick={() => onNavigate("home")} className="crumb-home" aria-label="Back to Home"><Home size={15} /></button><ChevronRight size={14} /><span className="editor-app-label"><AppIcon app={icon} size={15} />{icon.label}</span><ChevronRight size={14} /><input value={title} onChange={(event) => onChangeTitle(event.target.value)} placeholder={titleEditable && !title ? "Untitled file" : undefined} readOnly={!titleEditable} aria-label="File title" aria-readonly={!titleEditable} /></div><div className="editor-actions"><span className="saved-status"><Check size={14} />Saved locally</span>{children}</div></div>;
 }
 
 function MailView({ workspace, update, onNavigate, initialSubject }) {
@@ -571,7 +618,7 @@ function MailView({ workspace, update, onNavigate, initialSubject }) {
     const subject = draft.subject.trim();
     const body = draft.body.trim();
     if (!to || !subject || !body) { emitNotice("Add a recipient, subject, and message before sending."); return; }
-    const sentMessage = { id: Date.now(), from: "Alex Morgan", email: "alex@crescent.local", to, subject, preview: body.slice(0, 92), body, time: "just now", read: true, starred: false, tag: "Sent", sent: true };
+    const sentMessage = { id: Date.now(), from: "You", email: "local@crescent", to, subject, preview: body.slice(0, 92), body, time: "just now", read: true, starred: false, tag: "Sent", sent: true };
     update({ mail: [sentMessage, ...messages] });
     setSelectedId(sentMessage.id);
     setComposeOpen(false);
@@ -652,7 +699,7 @@ function DocsView({ workspace, update, onNavigate, initialHeading }) {
     emitNotice("Document moved to local Trash.");
     onNavigate("trash");
   };
-  return <div className="editor-page page-enter docs-page"><EditorHeader title={title} icon={icon} onChangeTitle={(value) => { setTitle(value); update({ docs: { ...workspace.docs, title: value, updatedAt: "just now" }, starredFiles: renameStarredFile(workspace, workspace.docs.title, value) }); }} onNavigate={onNavigate}><button className="secondary-button" onClick={exportDocument}><Download size={16} />Export</button><button className="secondary-button editor-trash-button" onClick={moveDocumentToTrash}><Trash2 size={16} />Move to Trash</button><button className="primary-button"><Share2 size={16} />Share</button></EditorHeader><div className="editor-subbar"><div className="toolbar-group"><button onClick={() => exec("undo")} aria-label="Undo"><Undo2 size={16} /></button><button onClick={() => exec("redo")} aria-label="Redo"><Redo2 size={16} /></button></div><div className="toolbar-divider" /><div className="toolbar-group"><button onClick={() => exec("bold")} aria-label="Bold"><Bold size={16} /></button><button onClick={() => exec("italic")} aria-label="Italic"><Italic size={16} /></button><button onClick={() => exec("formatBlock", "h2")} aria-label="Heading"><span className="toolbar-text">H2</span></button><button onClick={() => exec("insertUnorderedList")} aria-label="Bullet list"><List size={16} /></button><button onClick={() => exec("justifyLeft")} aria-label="Align left"><AlignLeft size={16} /></button><button onClick={() => exec("justifyCenter")} aria-label="Align center"><AlignCenter size={16} /></button><button onClick={() => exec("justifyRight")} aria-label="Align right"><AlignRight size={16} /></button><button onClick={openLinkDialog} aria-label="Add link"><Link size={16} /></button></div><div className="toolbar-divider" /><select className="toolbar-select" value={blockStyle} onChange={(event) => exec("formatBlock", event.target.value)} aria-label="Text style"><option value="p">Body</option><option value="h2">Heading</option><option value="blockquote">Quote</option></select><div className="editor-zoom">100% <ChevronDown size={14} /></div></div><div className="doc-workspace"><aside className="doc-outline"><div className="outline-heading"><span>Outline</span><button className="icon-button muted" onClick={addSection} aria-label="Add outline item"><Plus size={15} /></button></div>{outline.map((item, index) => <button className={`outline-link ${index === 0 ? "active" : ""}`} onClick={() => jumpToOutline(item)} key={`${item}-${index}`}>{item}</button>)}<div className="outline-footer"><span>Words</span><strong>{(editorRef.current?.innerText ?? "").trim().split(/\s+/).filter(Boolean).length || 72}</strong></div></aside><article className="document-paper"><div className="document-inner" ref={editorRef} contentEditable role="textbox" aria-label="Document body" aria-multiline="true" suppressContentEditableWarning onInput={() => updateDoc()} onBlur={() => updateDoc()} /></article><aside className="doc-inspector"><div className="inspector-heading"><span>Details</span><button className="icon-button muted" aria-label="Close details"><X size={15} /></button></div><div className="inspector-section"><span className="inspector-label">Cover</span><div className="cover-preview"><div className="cover-moon" /><strong>{title || "Untitled document"}</strong><small>CRESCENT / PRODUCT</small></div></div><div className="inspector-section"><span className="inspector-label">People</span><div className="person-row"><span className="avatar avatar-lilac">A</span><div><strong>Alex Morgan</strong><small>Owner</small></div><ChevronDown size={15} /></div><button className="add-person"><Plus size={15} />Invite someone</button></div></aside></div>{linkDialog && <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setLinkDialog(false); }}><section className="file-create-dialog link-create-dialog" role="dialog" aria-modal="true" aria-labelledby="link-create-title"><div className="file-create-heading"><div><span className="utility-kicker"><Link size={14} />Add document link</span><h2 id="link-create-title">Connect this thought</h2><p>Turn the selected text into a link you can revisit later.</p></div><button className="icon-button muted" onClick={() => setLinkDialog(false)} aria-label="Close link dialog"><X size={18} /></button></div><label className="file-name-field"><span>Link URL</span><input autoFocus value={linkUrl} aria-label="Link URL" onChange={(event) => setLinkUrl(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") insertLink(); }} /></label><div className="file-create-footer"><span><Link size={14} />Links stay in this local document</span><div><button className="secondary-button" onClick={() => setLinkDialog(false)}>Cancel</button><button className="primary-button" onClick={insertLink}><Link size={16} />Add link</button></div></div></section></div>}</div>;
+  return <div className="editor-page page-enter docs-page"><EditorHeader title={title} icon={icon} onChangeTitle={(value) => { setTitle(value); update({ docs: { ...workspace.docs, title: value, updatedAt: "just now" }, starredFiles: renameStarredFile(workspace, workspace.docs.title, value) }); }} onNavigate={onNavigate}><button className="secondary-button" onClick={exportDocument}><Download size={16} />Export</button><button className="secondary-button editor-trash-button" onClick={moveDocumentToTrash}><Trash2 size={16} />Move to Trash</button><button className="primary-button"><Share2 size={16} />Share</button></EditorHeader><div className="editor-subbar"><div className="toolbar-group"><button onClick={() => exec("undo")} aria-label="Undo"><Undo2 size={16} /></button><button onClick={() => exec("redo")} aria-label="Redo"><Redo2 size={16} /></button></div><div className="toolbar-divider" /><div className="toolbar-group"><button onClick={() => exec("bold")} aria-label="Bold"><Bold size={16} /></button><button onClick={() => exec("italic")} aria-label="Italic"><Italic size={16} /></button><button onClick={() => exec("formatBlock", "h2")} aria-label="Heading"><span className="toolbar-text">H2</span></button><button onClick={() => exec("insertUnorderedList")} aria-label="Bullet list"><List size={16} /></button><button onClick={() => exec("justifyLeft")} aria-label="Align left"><AlignLeft size={16} /></button><button onClick={() => exec("justifyCenter")} aria-label="Align center"><AlignCenter size={16} /></button><button onClick={() => exec("justifyRight")} aria-label="Align right"><AlignRight size={16} /></button><button onClick={openLinkDialog} aria-label="Add link"><Link size={16} /></button></div><div className="toolbar-divider" /><select className="toolbar-select" value={blockStyle} onChange={(event) => exec("formatBlock", event.target.value)} aria-label="Text style"><option value="p">Body</option><option value="h2">Heading</option><option value="blockquote">Quote</option></select><div className="editor-zoom">100% <ChevronDown size={14} /></div></div><div className="doc-workspace"><aside className="doc-outline"><div className="outline-heading"><span>Outline</span><button className="icon-button muted" onClick={addSection} aria-label="Add outline item"><Plus size={15} /></button></div>{outline.map((item, index) => <button className={`outline-link ${index === 0 ? "active" : ""}`} onClick={() => jumpToOutline(item)} key={`${item}-${index}`}>{item}</button>)}<div className="outline-footer"><span>Words</span><strong>{(editorRef.current?.innerText ?? "").trim().split(/\s+/).filter(Boolean).length}</strong></div></aside><article className="document-paper"><div className="document-inner" ref={editorRef} contentEditable role="textbox" aria-label="Document body" aria-multiline="true" data-placeholder="Start writing here…" suppressContentEditableWarning onInput={() => updateDoc()} onBlur={() => updateDoc()} /></article><aside className="doc-inspector"><div className="inspector-heading"><span>Details</span><button className="icon-button muted" aria-label="Close details"><X size={15} /></button></div><div className="inspector-section"><span className="inspector-label">Cover</span><div className="cover-preview"><div className="cover-moon" /><strong>{title || "Untitled document"}</strong><small>LOCAL DOCUMENT</small></div></div><div className="inspector-section"><span className="inspector-label">Storage</span><div className="person-row"><span className="avatar avatar-lilac">⌁</span><div><strong>Local workspace</strong><small>Saved in this browser</small></div></div><button className="add-person" onClick={() => emitNotice("Sharing will be available when Crescent Cloud is connected.")}><Plus size={15} />Invite someone</button></div></aside></div>{linkDialog && <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setLinkDialog(false); }}><section className="file-create-dialog link-create-dialog" role="dialog" aria-modal="true" aria-labelledby="link-create-title"><div className="file-create-heading"><div><span className="utility-kicker"><Link size={14} />Add document link</span><h2 id="link-create-title">Connect this thought</h2><p>Turn the selected text into a link you can revisit later.</p></div><button className="icon-button muted" onClick={() => setLinkDialog(false)} aria-label="Close link dialog"><X size={18} /></button></div><label className="file-name-field"><span>Link URL</span><input autoFocus value={linkUrl} aria-label="Link URL" onChange={(event) => setLinkUrl(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") insertLink(); }} /></label><div className="file-create-footer"><span><Link size={14} />Links stay in this local document</span><div><button className="secondary-button" onClick={() => setLinkDialog(false)}>Cancel</button><button className="primary-button" onClick={insertLink}><Link size={16} />Add link</button></div></div></section></div>}</div>;
 }
 
 const SHEET_COLS = ["A", "B", "C", "D", "E", "F"];
@@ -781,15 +828,16 @@ function NotesView({ workspace, update, onNavigate, initialNoteTitle }) {
     const nextNote = workspace.notes.find((item) => item.title === initialNoteTitle);
     if (nextNote) setSelected(nextNote.id);
   }, [initialNoteTitle, workspace.notes]);
-  const updateNote = (patch) => update({ notes: workspace.notes.map((item) => item.id === note.id ? { ...item, ...patch, updatedAt: "Just now" } : item), ...(Object.prototype.hasOwnProperty.call(patch, "title") ? { starredFiles: renameStarredFile(workspace, note.title, patch.title) } : {}) });
   const addNote = () => { const id = Date.now(); update({ notes: [{ id, title: "Untitled note", body: "Start writing...", color: "blue", updatedAt: "Just now" }, ...workspace.notes] }); setSelected(id); };
+  if (!note) return <div className="notes-page page-enter"><EditorHeader title="Notes" icon={APP_META.find((app) => app.id === "notes")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="primary-button" onClick={addNote}><Plus size={16} />New note</button></EditorHeader><div className="notes-empty-state"><span className="home-empty-icon"><NotebookPen size={18} /></span><div><h2>Keep the good ideas.</h2><p>Your notes start blank and stay local to this browser.</p><button className="primary-button" onClick={addNote}><Plus size={16} />Create your first note</button></div></div></div>;
+  const updateNote = (patch) => update({ notes: workspace.notes.map((item) => item.id === note.id ? { ...item, ...patch, updatedAt: "Just now" } : item), ...(Object.prototype.hasOwnProperty.call(patch, "title") ? { starredFiles: renameStarredFile(workspace, note.title, patch.title) } : {}) });
   const removeNote = () => { if (workspace.notes.length <= 1) { emitNotice("Keep one note in the workspace."); return; } const remaining = workspace.notes.filter((item) => item.id !== note.id); const starredTitles = getStarredTitles(workspace); const deletedNote = { id: `note-${note.id}`, noteId: note.id, title: note.title, body: note.body, color: note.color, updatedAt: note.updatedAt, type: "Notes", appId: "notes", opened: "just now", owner: "Me", starred: starredTitles.has(note.title) }; starredTitles.delete(note.title); update({ notes: remaining, starredFiles: [...starredTitles], deletedFiles: [deletedNote, ...(workspace.deletedFiles ?? [])] }); setSelected(remaining[0].id); emitNotice("Note moved to local Trash."); };
   return <div className="notes-page page-enter"><EditorHeader title="Notes" icon={APP_META.find((app) => app.id === "notes")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={() => downloadText(`${safeFileName(note.title || "crescent-note")}.txt`, note.body, "text/plain")}><Download size={16} />Export</button><button className="primary-button" onClick={addNote}><Plus size={16} />New note</button></EditorHeader><div className="notes-workspace"><aside className="notes-list"><div className="notes-list-head"><span>All notes</span><button className="icon-button muted" onClick={addNote} aria-label="Add note"><FolderPlus size={16} /></button></div>{workspace.notes.map((item) => <button className={`note-list-item ${item.id === selected ? "selected" : ""}`} key={item.id} onClick={() => setSelected(item.id)}><span className={`note-dot note-dot-${item.color}`} /><span><strong>{item.title}</strong><small>{item.body}</small><em>{item.updatedAt}</em></span></button>)}</aside><main className="note-editor"><div className="note-editor-top"><span className={`note-dot note-dot-${note.color}`} /> <input value={note.title} onChange={(event) => updateNote({ title: event.target.value })} aria-label="Note title" /><span className="saved-status"><Check size={14} />Saved</span><button className="icon-button muted" onClick={removeNote} aria-label={`Delete ${note.title}`}><Trash2 size={16} /></button></div><textarea value={note.body} onChange={(event) => updateNote({ body: event.target.value })} aria-label="Note body" /><div className="note-footer"><span><NotebookPen size={15} />Plain text note</span><span>{note.body.length} characters</span></div></main></div></div>;
 }
 
 function TasksView({ workspace, update, onNavigate, initialTaskTitle, initialProject }) {
   const [newTask, setNewTask] = useState("");
-  const [newProject, setNewProject] = useState("Personal");
+  const [newProject, setNewProject] = useState("");
   const [projectFilter, setProjectFilter] = useState("all");
   const [filter, setFilter] = useState("all");
   const [editingTask, setEditingTask] = useState(null);
@@ -798,13 +846,13 @@ function TasksView({ workspace, update, onNavigate, initialTaskTitle, initialPro
   const appliedProjectNavigation = useRef(null);
   const projectOptions = useMemo(() => {
     const options = [];
-    ["Personal", ...(workspace.projects ?? []), ...workspace.tasks.map((task) => task.project).filter(Boolean)].forEach((project) => {
+    [...(workspace.demo ? ["Personal"] : []), ...(workspace.projects ?? []), ...workspace.tasks.map((task) => task.project).filter(Boolean)].forEach((project) => {
       const label = String(project);
       if (label && !options.some((option) => option.toLowerCase() === label.toLowerCase())) options.push(label);
     });
     return options;
-  }, [workspace.projects, workspace.tasks]);
-  const activeProject = projectOptions.includes(newProject) ? newProject : projectOptions[0] ?? "Personal";
+  }, [workspace.demo, workspace.projects, workspace.tasks]);
+  const activeProject = projectOptions.includes(newProject) ? newProject : projectOptions[0] ?? "";
   const filterOrder = ["all", "today", "open", "done"];
   const dueOrder = ["Today", "Tomorrow", "Friday", "No date"];
   const filterLabels = { all: "All", today: "Today", open: "Open", done: "Done" };
@@ -849,8 +897,8 @@ function TasksView({ workspace, update, onNavigate, initialTaskTitle, initialPro
   return <div className="tasks-page page-enter">
     <EditorHeader title="Tasks" icon={APP_META.find((app) => app.id === "tasks")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={exportTasks}><Download size={16} />Export</button><button className="secondary-button" onClick={cycleFilter}><SlidersIcon />{filterLabels[filter]}</button><button className="primary-button" onClick={() => document.querySelector(".new-task-input")?.focus()}><Plus size={16} />New task</button></EditorHeader>
     <div className="tasks-content"><div className="tasks-heading"><div><h1>Make room for momentum.</h1><p>{openCount} open tasks across your workspace.</p></div><div className="task-progress"><span><i style={{ width: `${Math.max(8, ((workspace.tasks.length - openCount) / Math.max(workspace.tasks.length, 1)) * 100)}%` }} /></span><small>{workspace.tasks.length - openCount} completed</small></div></div>
-      <form className="new-task" onSubmit={addTask}><Plus size={19} /><input className="new-task-input" value={newTask} onChange={(event) => setNewTask(event.target.value)} placeholder="Add a task and press enter..." aria-label="New task" /><select className="new-task-project" value={activeProject} onChange={(event) => setNewProject(event.target.value)} aria-label="New task project">{projectOptions.map((project) => <option value={project} key={project}>{project}</option>)}</select></form>
-      <section className="task-list"><div className="task-list-heading"><div className="task-list-label"><span>{filterLabels[filter]}</span><small>{visibleTasks.length} task{visibleTasks.length === 1 ? "" : "s"}</small></div><select className="task-project-filter" value={projectFilter} onChange={(event) => setProjectFilter(event.target.value)} aria-label="Filter tasks by project"><option value="all">All projects</option>{projectOptions.map((project) => <option value={project} key={project}>{project}</option>)}</select></div>{visibleTasks.length ? visibleTasks.map((task) => <div className={`task-row ${task.complete ? "complete" : ""}`} key={task.id} data-task-title={task.title}><button className="task-check" onClick={() => toggle(task.id)} aria-label={`Mark ${task.title} ${task.complete ? "open" : "complete"}`}>{task.complete && <Check size={14} />}</button><div className="task-copy">{editingTask === task.id ? <input className="task-title-edit" value={editingTitle} onChange={(event) => setEditingTitle(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveTaskEdit(task.id); if (event.key === "Escape") cancelTaskEdit(); }} aria-label="Edit task title" autoFocus /> : <strong>{task.title}</strong>}<span>{task.project}</span></div>{editingTask === task.id ? <div className="task-edit-actions"><button className="task-edit-save" onClick={() => saveTaskEdit(task.id)} aria-label="Save task title"><Check size={15} /></button><button className="task-edit-cancel" onClick={cancelTaskEdit} aria-label="Cancel task title edit"><X size={15} /></button></div> : <button className="icon-button muted task-edit-button" onClick={() => startTaskEdit(task)} aria-label={`Edit ${task.title}`}><Pencil size={15} /></button>}<button className={`task-due ${task.due === "Today" ? "due-today" : ""}`} onClick={() => cycleDue(task.id)} aria-label={`Change due date for ${task.title}`}>{task.due}</button><button className="icon-button muted" onClick={() => removeTask(task.id)} aria-label={`Delete ${task.title}`}><Trash2 size={17} /></button></div>) : <div className="task-empty"><ListChecks size={20} /><strong>No tasks in this view.</strong><small>Try a different status or project, or add a new task above.</small></div>}</section>
+      <form className="new-task" onSubmit={addTask}><Plus size={19} /><input className="new-task-input" value={newTask} onChange={(event) => setNewTask(event.target.value)} placeholder="Add a task and press enter..." aria-label="New task" /><select className="new-task-project" value={activeProject} onChange={(event) => setNewProject(event.target.value)} aria-label="New task project"><option value="">No project</option>{projectOptions.map((project) => <option value={project} key={project}>{project}</option>)}</select></form>
+      <section className="task-list"><div className="task-list-heading"><div className="task-list-label"><span>{filterLabels[filter]}</span><small>{visibleTasks.length} task{visibleTasks.length === 1 ? "" : "s"}</small></div><select className="task-project-filter" value={projectFilter} onChange={(event) => setProjectFilter(event.target.value)} aria-label="Filter tasks by project"><option value="all">All projects</option>{projectOptions.map((project) => <option value={project} key={project}>{project}</option>)}</select></div>{visibleTasks.length ? visibleTasks.map((task) => <div className={`task-row ${task.complete ? "complete" : ""}`} key={task.id} data-task-title={task.title}><button className="task-check" onClick={() => toggle(task.id)} aria-label={`Mark ${task.title} ${task.complete ? "open" : "complete"}`}>{task.complete && <Check size={14} />}</button><div className="task-copy">{editingTask === task.id ? <input className="task-title-edit" value={editingTitle} onChange={(event) => setEditingTitle(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveTaskEdit(task.id); if (event.key === "Escape") cancelTaskEdit(); }} aria-label="Edit task title" autoFocus /> : <strong>{task.title}</strong>}<span>{task.project || "No project"}</span></div>{editingTask === task.id ? <div className="task-edit-actions"><button className="task-edit-save" onClick={() => saveTaskEdit(task.id)} aria-label="Save task title"><Check size={15} /></button><button className="task-edit-cancel" onClick={cancelTaskEdit} aria-label="Cancel task title edit"><X size={15} /></button></div> : <button className="icon-button muted task-edit-button" onClick={() => startTaskEdit(task)} aria-label={`Edit ${task.title}`}><Pencil size={15} /></button>}<button className={`task-due ${task.due === "Today" ? "due-today" : ""}`} onClick={() => cycleDue(task.id)} aria-label={`Change due date for ${task.title}`}>{task.due}</button><button className="icon-button muted" onClick={() => removeTask(task.id)} aria-label={`Delete ${task.title}`}><Trash2 size={17} /></button></div>) : <div className="task-empty"><ListChecks size={20} /><strong>No tasks in this view.</strong><small>Try a different status or project, or add a new task above.</small></div>}</section>
     </div>
   </div>;
 }
@@ -960,11 +1008,11 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
   const localEventsForDay = (dateKey) => localEvents.filter((event) => (event.date ?? localDateKey(displayDate)) === dateKey);
   const localEventsForDate = (date) => localEventsForDay(localDateKey(date)).map((event) => event.title);
   const seedDate = (dayOffset) => { const date = new Date(displayDate); date.setDate(displayDate.getDate() - displayDate.getDay() + dayOffset); return localDateKey(date); };
-  const seededMonthEvents = new Map([[seedDate(2), ["Product sync", "Design review", "Focus time"]], [seedDate(3), ["Customer interview"]], [seedDate(4), ["Launch review"]]]);
+  const seededMonthEvents = workspace.demo ? new Map([[seedDate(2), ["Product sync", "Design review", "Focus time"]], [seedDate(3), ["Customer interview"]], [seedDate(4), ["Launch review"]]]) : new Map();
   const monthStart = new Date(displayDate.getFullYear(), displayDate.getMonth(), 1);
   const monthDays = Array.from({ length: 42 }, (_, index) => { const date = new Date(monthStart); date.setDate(index - monthStart.getDay() + 1); const dateKey = localDateKey(date); return { label: new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date), date: date.getDate(), dateKey, currentMonth: date.getMonth() === displayDate.getMonth(), events: [...(seededMonthEvents.get(dateKey) ?? []), ...localEventsForDate(date)] }; });
   const monthCalendar = <div className="calendar-month-grid">{monthDays.map((day) => <div className={`calendar-month-cell ${day.currentMonth ? "" : "muted"} ${day.dateKey === todayKey ? "today" : ""}`} key={day.dateKey}><div className="calendar-month-head"><span>{day.label}</span><strong>{day.date}</strong></div><div className="calendar-month-events">{day.events.map((event, index) => <span className={`calendar-month-event month-event-${index % 4}`} key={`${day.dateKey}-${event}`}>{event}</span>)}</div></div>)}</div>;
-  const weekCalendar = <div className={"calendar-grid " + (mode === "day" ? "calendar-grid-day" : "")}><div className="calendar-axis"><span /><span>9 AM</span><span>10 AM</span><span>11 AM</span><span>12 PM</span><span>1 PM</span><span>2 PM</span><span>3 PM</span><span>4 PM</span><span>5 PM</span></div>{weekDates.map((day, index) => <div className={"calendar-day " + (mode === "day" && index > 0 ? "muted-day" : "")} key={day.dateKey}><div className="calendar-day-head"><span>{day.dateKey === todayKey ? "Today" : day.label}</span><strong>{day.date}</strong></div><div className="calendar-lines">{Array.from({ length: 9 }, (_, lineIndex) => <span key={lineIndex} />)}{index === 0 && <><div className="calendar-event event-one"><strong>Product sync</strong><small>Team · 9:00–9:45</small></div><div className="calendar-event event-two"><strong>Design review</strong><small>Design · 10:00–11:00</small></div><div className="calendar-event event-three"><strong>Focus time</strong><small>Personal · 1:00–3:00</small></div><div className="calendar-event event-four"><strong>Marketing check-in</strong><small>Marketing · 4:00–4:30</small></div></>}{index === 1 && <div className="calendar-event event-five"><strong>Customer interview</strong><small>Research · 11:00–12:00</small></div>}{index === 2 && <div className="calendar-event event-six"><strong>Launch review</strong><small>Product · 2:00–3:00</small></div>}{localEventsForDay(day.dateKey).map((event, eventIndex) => <div className="calendar-event calendar-event-local" style={{ top: `${localEventTop(event.when, eventIndex)}px` }} key={`local-${event.id ?? event.title}`}><strong>{event.title}</strong><small>{event.when}</small></div>)}</div></div>)}</div>;
+  const weekCalendar = <div className={"calendar-grid " + (mode === "day" ? "calendar-grid-day" : "")}><div className="calendar-axis"><span /><span>9 AM</span><span>10 AM</span><span>11 AM</span><span>12 PM</span><span>1 PM</span><span>2 PM</span><span>3 PM</span><span>4 PM</span><span>5 PM</span></div>{weekDates.map((day, index) => <div className={"calendar-day " + (mode === "day" && index > 0 ? "muted-day" : "")} key={day.dateKey}><div className="calendar-day-head"><span>{day.dateKey === todayKey ? "Today" : day.label}</span><strong>{day.date}</strong></div><div className="calendar-lines">{Array.from({ length: 9 }, (_, lineIndex) => <span key={lineIndex} />)}{workspace.demo && index === 0 && <><div className="calendar-event event-one"><strong>Product sync</strong><small>Team · 9:00–9:45</small></div><div className="calendar-event event-two"><strong>Design review</strong><small>Design · 10:00–11:00</small></div><div className="calendar-event event-three"><strong>Focus time</strong><small>Personal · 1:00–3:00</small></div><div className="calendar-event event-four"><strong>Marketing check-in</strong><small>Marketing · 4:00–4:30</small></div></>}{workspace.demo && index === 1 && <div className="calendar-event event-five"><strong>Customer interview</strong><small>Research · 11:00–12:00</small></div>}{workspace.demo && index === 2 && <div className="calendar-event event-six"><strong>Launch review</strong><small>Product · 2:00–3:00</small></div>}{localEventsForDay(day.dateKey).map((event, eventIndex) => <div className="calendar-event calendar-event-local" style={{ top: `${localEventTop(event.when, eventIndex)}px` }} key={`local-${event.id ?? event.title}`}><strong>{event.title}</strong><small>{event.when}</small></div>)}</div></div>)}</div>;
   return <div className="calendar-page page-enter">
     <EditorHeader title="Calendar" icon={APP_META.find((app) => app.id === "calendar")} onChangeTitle={() => {}} onNavigate={onNavigate}>
       <button className="secondary-button mobile-calendar-action" onClick={exportCalendar} disabled={!localEvents.length}><Download size={16} />Export ICS</button>
@@ -1077,7 +1125,7 @@ function FormResponses({ workspace, responses, onBack, onExport }) {
 }
 
 function FormsView({ workspace, update, onNavigate, initialQuestionId }) {
-  const [formTitle, setFormTitle] = useState(workspace.formTitle ?? "Launch feedback");
+  const [formTitle, setFormTitle] = useState(workspace.formTitle ?? "");
   const [published, setPublished] = useState(workspace.formPublished ?? false);
   const [submitted, setSubmitted] = useState(workspace.lastFormResponse?.saved ?? false);
   const [scaleAnswers, setScaleAnswers] = useState(() => {
@@ -1125,6 +1173,7 @@ function FormsView({ workspace, update, onNavigate, initialQuestionId }) {
   const exportForm = () => { const exportData = { title: formTitle, questions: workspace.forms, settings: formSettings, responses, response: workspace.lastFormResponse ?? null }; downloadText(`${safeFileName(formTitle || "crescent-form")}.json`, JSON.stringify(exportData, null, 2), "application/json"); emitNotice("Form export downloaded."); };
   const exportResponses = () => { const headers = ["Submitted at", ...(formSettings.collectEmail ? ["Email address"] : []), ...workspace.forms.map((question) => question.label)]; const rows = responses.map((response) => [response.submittedAt ?? "", ...(formSettings.collectEmail ? [response.answers?.email ?? ""] : []), ...workspace.forms.map((question) => question.type === "Scale" ? response.scaleAnswers?.[question.id] ?? response.scale ?? "" : response.answers?.[question.id] ?? "")]); const csv = [headers, ...rows].map((row) => row.map((value) => JSON.stringify(String(value ?? ""))).join(",")).join("\n"); downloadText(`${safeFileName(formTitle || "crescent-form")}-responses.csv`, `${csv}\n`, "text/csv"); emitNotice("Form responses exported as CSV."); };
   const submitResponse = () => { const email = answers.email?.trim() ?? ""; if (formSettings.collectEmail && (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) { emitNotice("Add a valid email address before submitting."); return; } const missingRequired = workspace.forms.some((question) => question.required && (question.type === "Scale" ? !scaleAnswers[question.id] : !answers[question.id]?.trim())); if (missingRequired) { emitNotice("Complete all required questions before submitting."); return; } const response = { id: Date.now(), saved: true, submittedAt: new Date().toISOString(), scale: Object.values(scaleAnswers).find((value) => Number.isInteger(value) && value >= 1 && value <= 5) ?? null, scaleAnswers, answers }; setSubmitted(true); update({ lastFormResponse: response, formResponses: [response, ...(workspace.formResponses ?? [])] }); emitNotice("Response saved in this local workspace."); };
+  if (!workspace.demo && !formTitle && workspace.forms.length === 0 && !showResponses) return <div className={`forms-page page-enter form-theme-${formTheme}`}><EditorHeader title="" icon={APP_META.find((app) => app.id === "forms")} onChangeTitle={(value) => { setFormTitle(value); update({ formTitle: value }); }} onNavigate={onNavigate}><button className="secondary-button" onClick={exportForm}><Download size={16} />Export</button><button className="secondary-button" onClick={() => setPreviewing(true)}><EyeIcon />Preview</button><button className="primary-button" onClick={addQuestion}><Plus size={16} />Add question</button></EditorHeader><div className="form-empty-state"><span className="home-empty-icon"><FormInput size={18} /></span><h1>Build a form that fits the moment.</h1><p>Name your form above, then add one clear question to get started. Everything stays in this browser.</p><button className="primary-button" onClick={addQuestion}><Plus size={16} />Add your first question</button></div></div>;
   return <div className={`forms-page page-enter form-theme-${formTheme}`}><EditorHeader title={formTitle} icon={APP_META.find((app) => app.id === "forms")} onChangeTitle={(value) => { setFormTitle(value); update({ formTitle: value, starredFiles: renameStarredFile(workspace, workspace.formTitle, value) }); }} onNavigate={onNavigate}><button className="secondary-button" onClick={exportForm}><Download size={16} />Export</button><button className="secondary-button" onClick={() => setShowResponses((current) => !current)}><CheckCircle2 size={15} />Responses {responses.length ? `(${responses.length})` : ""}</button><button className="secondary-button" onClick={() => setPreviewing((current) => !current)}><EyeIcon />{previewing ? "Edit form" : "Preview"}</button><button className="secondary-button editor-trash-button" onClick={moveFormToTrash}><Trash2 size={16} />Move to Trash</button><button className="primary-button" onClick={publishForm}><Share2 size={16} />{published ? "Published" : "Publish"}</button></EditorHeader><div className={`forms-content ${previewing ? "forms-preview-mode" : ""}`}><div className="forms-heading"><div><h1>{formTitle}</h1><p>Ask the questions that help the next move become obvious.</p></div><span className={`publish-status ${published ? "is-published" : ""}`}><span />{published ? "Live" : "Draft"}</span></div>{showResponses ? <FormResponses workspace={workspace} responses={responses} onBack={() => setShowResponses(false)} onExport={exportResponses} /> : <div className="form-builder"><div className="form-preview"><div className="form-cover"><div className="form-cover-orbit" /><span>CRESCENT / FEEDBACK</span><h2>Help us make the next release better.</h2><p>A two-minute check-in for the people who use the work.</p></div><div className="form-questions">{formSettings.collectEmail && <div className="form-question"><span>•</span><div><strong>Email address</strong><small>Required to respond</small><input className="form-input" type="email" value={answers.email ?? ""} onChange={(event) => setAnswers((current) => ({ ...current, email: event.target.value }))} placeholder="you@example.com" aria-label="Email address" aria-required="true" /></div></div>}{workspace.forms.map((question, index) => <div className="form-question" key={question.id}><span>{index + 1}</span><div>{previewing ? <strong>{question.label}</strong> : <input className="question-label-input" value={question.label} aria-label={`Question ${index + 1} label`} onChange={(event) => updateQuestion(question.id, event.target.value)} />}{previewing ? <small>{question.type} {question.required && "· Required"}</small> : <div className="question-edit-actions"><button className="question-type-toggle" onClick={() => cycleQuestionType(question.id)} aria-label={`Change question ${index + 1} type`}>{question.type}</button><button className="question-required-toggle" onClick={() => toggleRequired(question.id)} aria-pressed={question.required}>{question.required ? "Required" : "Optional"}</button><button className="icon-button muted" onClick={() => removeQuestion(question.id)} aria-label={`Delete question ${index + 1}`}><Trash2 size={15} /></button></div>}{question.type === "Scale" ? <div className="fake-input scale-input">{[1, 2, 3, 4, 5].map((value) => <button className={scaleAnswers[question.id] === value ? "selected" : ""} key={value} onClick={() => setScaleAnswers((current) => ({ ...current, [question.id]: value }))} aria-label={`${question.label}: ${value}`} aria-pressed={scaleAnswers[question.id] === value} aria-required={question.required}>{value}</button>)}</div> : question.type === "Long answer" ? <textarea className="form-input form-textarea" aria-label={question.label} aria-required={question.required} value={answers[question.id] ?? ""} onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))} placeholder="Your answer..." /> : <input className="form-input" aria-label={question.label} aria-required={question.required} value={answers[question.id] ?? ""} onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))} placeholder="Your answer..." />}</div></div>)}<button className="add-question" onClick={addQuestion}><Plus size={16} />Add question</button><button className="form-submit" onClick={submitResponse} disabled={submitted && formSettings.oneResponse}>{submitted && formSettings.oneResponse ? <><Check size={16} />Response saved</> : "Submit response"}</button>{submitted && <p className="form-success"><CheckCircle2 size={14} />Thanks — your response is saved locally.</p>}</div></div><aside className="form-settings"><div className="inspector-heading"><span>Form settings</span><Settings2 size={16} /></div><div className="inspector-section"><span className="inspector-label">Responses</span><div className="setting-row"><span>Collect email addresses</span><button className={`toggle ${formSettings.collectEmail ? "active" : ""}`} onClick={() => toggleFormSetting("collectEmail")} aria-label="Collect email addresses" aria-pressed={formSettings.collectEmail}><i /></button></div><div className="setting-row"><span>Allow one response</span><button className={`toggle ${formSettings.oneResponse ? "active" : ""}`} onClick={() => toggleFormSetting("oneResponse")} aria-label="Allow one response" aria-pressed={formSettings.oneResponse}><i /></button></div></div><div className="inspector-section"><span className="inspector-label">Theme</span><div className="form-theme"><button className={`theme-swatch swatch-lilac ${formTheme === "lilac" ? "selected" : ""}`} onClick={() => setFormTheme("lilac")} aria-label="Lilac theme" aria-pressed={formTheme === "lilac"} /><button className={`theme-swatch swatch-blue ${formTheme === "blue" ? "selected" : ""}`} onClick={() => setFormTheme("blue")} aria-label="Blue theme" aria-pressed={formTheme === "blue"} /><button className={`theme-swatch swatch-gold ${formTheme === "gold" ? "selected" : ""}`} onClick={() => setFormTheme("gold")} aria-label="Gold theme" aria-pressed={formTheme === "gold"} /></div></div></aside></div> }</div></div>;
 }
 
@@ -1143,7 +1192,7 @@ function UtilityView({ id, workspace, update, onNavigate }) {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [confirmAction]);
-  const files = id === "starred" ? getLiveRecentFiles(workspace).filter((file) => file.starred) : id === "shared" ? RECENT_FILES.filter((file) => file.owner !== "Me") : id === "trash" ? (workspace.deletedFiles ?? []).map((file) => ({ ...(APP_META.find((app) => app.id === file.appId) ?? {}), ...file })) : getLiveRecentFiles(workspace);
+  const files = id === "starred" ? getLiveRecentFiles(workspace).filter((file) => file.starred) : id === "shared" ? (workspace.demo ? RECENT_FILES.filter((file) => file.owner !== "Me") : []) : id === "trash" ? (workspace.deletedFiles ?? []).map((file) => ({ ...(APP_META.find((app) => app.id === file.appId) ?? {}), ...file })) : getLiveRecentFiles(workspace);
   const backupInputRef = useRef(null);
   const exportWorkspace = () => { downloadText("crescent-workspace-backup.json", JSON.stringify({ format: "crescent-suite-workspace", version: 1, exportedAt: new Date().toISOString(), workspace }, null, 2), "application/json"); emitNotice("Workspace backup downloaded."); };
   const importWorkspace = (event) => { const file = event.target.files?.[0]; if (!file) return; const reader = new window.FileReader(); reader.onload = () => { try { const parsed = JSON.parse(reader.result); const imported = parsed?.workspace ?? parsed; if (!imported || imported.version !== 1 || !imported.docs || !imported.sheets) throw new Error("Invalid Crescent backup"); update(normalizeWorkspace(imported)); emitNotice("Workspace backup restored locally."); } catch { emitNotice("That backup could not be restored."); } }; reader.readAsText(file); event.target.value = ""; };
@@ -1322,6 +1371,7 @@ export default function App() {
   const [workspace, update] = useWorkspace();
   const [activeApp, setActiveApp] = useState(appFromLocation);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
   const [navigationContext, setNavigationContext] = useState(null);
@@ -1394,5 +1444,5 @@ export default function App() {
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} initialQuestionId={navigationContext?.questionId} />;
     return <UtilityView id={activeApp} workspace={workspace} update={update} onNavigate={navigate} />;
   }, [activeApp, navigationContext, workspace, update]);
-  return <div className="app-shell"><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} workspace={workspace} update={update} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} query={query} onQueryChange={setQuery} onNavigate={navigate} workspace={workspace} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div></div>;
+  return <div className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} workspace={workspace} update={update} collapsed={sidebarCollapsed} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} onToggleSidebar={() => setSidebarCollapsed((current) => !current)} sidebarCollapsed={sidebarCollapsed} query={query} onQueryChange={setQuery} onNavigate={navigate} workspace={workspace} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div></div>;
 }
