@@ -74,6 +74,14 @@ try {
         if (pageErrors.length || overflow || accessibility.unnamedButtons || accessibility.unnamedFields) failures.push({ viewport: viewport.name, route, pageErrors, overflow, accessibility });
         if (["docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "mail"].includes(route)) {
           if (!(await page.locator(".app-shell.focus-mode").count()) || !(await page.getByRole("button", { name: "Exit focus mode" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "default focus mode" });
+        if (viewport.name === "desktop" && route === "docs") {
+            const docWorkspace = await page.locator(".doc-workspace").boundingBox();
+            if (await page.locator(".doc-outline:visible").count() || !docWorkspace || docWorkspace.width < 800) failures.push({ viewport: viewport.name, route, controls: "focus mode wastes document canvas on outline rail", docWorkspace });
+          }
+          if (viewport.name === "desktop" && route === "slides") {
+            const slideWorkspace = await page.locator(".slide-workspace").boundingBox();
+            if (await page.locator(".slide-inspector:visible").count() || !slideWorkspace || (await page.locator(".slide-rail").boundingBox())?.width > 180) failures.push({ viewport: viewport.name, route, controls: "focus mode keeps wide slide inspector rail", slideWorkspace });
+          }
         if (route === "docs" && viewport.name === "desktop") {
             await page.keyboard.press("ControlOrMeta+KeyK");
             await page.waitForFunction(() => !document.querySelector(".app-shell")?.classList.contains("focus-mode") && document.activeElement?.matches(".global-search input"));

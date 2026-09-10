@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.33 — Final release-label consistency**
+**v5.3.34 — Focus canvas polish**
 
-Published September 10, 2026. The public visual-preview archive now names v5.3.32 as the current captured release line, while Pages continues to verify the stable 200-status entrypoint contract on every deployment.
+Published September 10, 2026. Focus Mode now gives Docs and Slides more room for the work itself while keeping the controls users still need close at hand.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -20,6 +20,8 @@ Public preview: [reunknown.github.io/Crescent-Suite](https://reunknown.github.io
 4. Use Drive for named files and folders, Recent or Search to find work, and Settings to export or restore a JSON backup.
 5. Use Settings → Reset workspace when you want a confirmed, blank local start; download a backup first if you may need the current work later.
 6. Your work is saved in this browser. Cloud sharing is intentionally not connected in this preview.
+
+Focus Mode hides the global sidebar and top navigation. Docs opens on a centered writing canvas with Outline hidden and Details available on demand; Slides keeps a compact slide picker while hiding the secondary design inspector until you leave Focus Mode.
 
 ### Included
 

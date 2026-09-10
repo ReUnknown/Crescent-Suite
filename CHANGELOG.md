@@ -1,5 +1,23 @@
 # Changelog
 
+## v5.3.34 — Focus canvas polish
+
+Published September 10, 2026.
+
+### Improved
+
+- Focus Mode now gives Docs a centered, wider writing canvas instead of leaving the hidden outline rail consuming space.
+- Docs Details still opens on demand in Focus Mode, preserving the explicit local storage and cover controls.
+- Slides keeps its compact thumbnail picker for navigation while hiding the wide design inspector in Focus Mode.
+- Added desktop smoke assertions for the focus-mode canvas geometry and hidden contextual rails.
+
+### Verification
+
+- `npm run lint`
+- `npm run build`
+- `npm run test:smoke`
+- Local Playwright desktop and mobile checks with no page errors or mobile overflow.
+
 ## v5.3.33 — Final release-label consistency
 
 Published September 10, 2026.
