@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.3.0 — Honest Settings
+
+Published September 10, 2026.
+
+### Improved
+
+- Replaced the non-functional Night button with a clear Dark sky status in Settings, matching Crescent’s current local-only theme behavior.
+- Removed the obsolete Night-mode feedback path and updated the product documentation accordingly.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.2.9 — Performance guardrails
 
 Published September 10, 2026.

@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.2.9 — Performance guardrails**
+**v5.3.0 — Honest Settings**
 
-Published September 10, 2026. Crescent now protects its lean published shell with a production smoke budget for core JavaScript and CSS transfer, alongside the keyboard-safe guide and blank-first surfaces.
+Published September 10, 2026. Settings now reports the active local Dark sky theme without presenting an unavailable theme switch, alongside Crescent’s performance guardrails and blank-first surfaces.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -139,7 +139,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Added mobile smoke coverage across all suite routes with compact app-aware actions
 - Tasks can be exported as versioned JSON while retaining completion, project, and due metadata
 - Home Activity’s “See all” now opens the shared Recent workspace instead of ending in a silent no-op
-- Local-only Share, Invite, Night mode, cell-link, and slide-design controls now provide explicit status feedback
+- Local-only Share, Invite, cell-link, and slide-design controls now provide explicit status feedback, while Settings reports the active Dark sky theme honestly
 - Calendar Today, Previous, and new-event dates now follow the browser’s actual date instead of the seeded demo date
 - Calendar Month view now places saved local events in the matching stored day column
 - Calendar Month view keeps pre-date-metadata local events visible on the current day during migration
