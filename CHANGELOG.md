@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.2.4 — Search follows focus
+
+Published September 10, 2026.
+
+### Fixed
+
+- `⌘/Ctrl + K` now exits Focus Mode and focuses the global Search field instead of attempting to focus hidden navigation chrome.
+- Added a desktop smoke assertion for the focused Search shortcut path.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.2.3 — Clearer local controls
 
 Published September 10, 2026.

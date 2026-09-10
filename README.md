@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.2.3 — Clearer local controls**
+**v5.2.4 — Search follows focus**
 
-Published September 10, 2026. Every Crescent app opens in a focused, full-viewport workspace, Settings includes a guarded local reset, and the local controls now explain their keyboard paths clearly.
+Published September 10, 2026. Every Crescent app opens in a focused, full-viewport workspace, and `⌘/Ctrl + K` now exits Focus Mode and opens Search in one step when you need to jump elsewhere.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 

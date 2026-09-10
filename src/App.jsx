@@ -1522,13 +1522,16 @@ export default function App() {
     const handleShortcut = (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
-        document.querySelector(".global-search input")?.focus();
+        if (focusMode) {
+          setFocusMode(false);
+          window.setTimeout(() => document.querySelector(".global-search input")?.focus(), 0);
+        } else document.querySelector(".global-search input")?.focus();
       }
       if (event.key === "Escape" && query) setQuery("");
     };
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
-  }, [query]);
+  }, [focusMode, query]);
   useEffect(() => {
     if (!query) return undefined;
     const handleOutsideSearch = (event) => {

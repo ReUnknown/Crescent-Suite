@@ -72,7 +72,10 @@ try {
         if (pageErrors.length || overflow || accessibility.unnamedButtons || accessibility.unnamedFields) failures.push({ viewport: viewport.name, route, pageErrors, overflow, accessibility });
         if (["docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "mail"].includes(route)) {
           if (!(await page.locator(".app-shell.focus-mode").count()) || !(await page.getByRole("button", { name: "Exit focus mode" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "default focus mode" });
-          await page.getByRole("button", { name: "Exit focus mode" }).click();
+          if (route === "docs" && viewport.name === "desktop") {
+            await page.keyboard.press("ControlOrMeta+KeyK");
+            await page.waitForFunction(() => !document.querySelector(".app-shell")?.classList.contains("focus-mode") && document.activeElement?.matches(".global-search input"));
+          } else await page.getByRole("button", { name: "Exit focus mode" }).click();
           if (!(await page.getByRole("button", { name: "Enter focus mode" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "focus mode exit" });
         }
         if (route === "docs" && await page.title() !== "Docs · Crescent Suite") failures.push({ viewport: viewport.name, route, title: await page.title() });
