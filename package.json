@@ -1,7 +1,7 @@
 {
   "name": "crescent-suite",
   "private": true,
-  "version": "4.0.3",
+  "version": "5.1.4",
   "type": "module",
   "scripts": {
     "dev": "vite",

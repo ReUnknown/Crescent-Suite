@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.1.5 — Release metadata alignment
+
+Published September 10, 2026.
+
+### Fixed
+
+- Aligned the package and lockfile versions with the published Crescent release so local tooling, documentation, and Git tags report the same version.
+
+### Verification
+
+- `npm ci --ignore-scripts --dry-run`, `npm run lint`, and `npm run build` pass.
+
 ## v5.1.1 — Workspace control polish
 
 Published September 10, 2026.
