@@ -1,5 +1,20 @@
 # Changelog
 
+## v5.3.25 — Local-first clarity
+
+Published September 10, 2026.
+
+### Improved
+
+- Replaced unavailable Docs, Sheets, and Slides Share buttons with a clear local-status label.
+- Replaced the Docs inspector’s unavailable Invite action with a browser-only storage status.
+- Removed the global feedback listener that only existed to explain those removed placeholder actions.
+- Added smoke coverage for local-only status labels and the absence of cloud-sharing affordances.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.24 — Honest controls
 
 Published September 10, 2026.

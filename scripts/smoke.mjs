@@ -185,11 +185,10 @@ try {
     await composeDialog.getByRole("button", { name: "Send message" }).click();
     if (await behaviorPage.getByRole("button", { name: "Open message Smoke message" }).count() !== 1) failures.push({ route: "mail", controls: "local message send" });
     await behaviorPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });
-    await behaviorPage.getByRole("button", { name: "Share", exact: true }).click();
-    if (!(await behaviorPage.locator(".toast").innerText()).includes("Sharing will be available")) failures.push({ route: "docs", controls: "local-only sharing notice" });
+    if (await behaviorPage.getByRole("button", { name: "Share", exact: true }).count() !== 0 || await behaviorPage.getByText("Local", { exact: true }).count() !== 1) failures.push({ route: "docs", controls: "local-only sharing status" });
     if (await behaviorPage.getByRole("button", { name: "Show document details" }).count() !== 1) failures.push({ route: "docs", controls: "focus mode starts with details collapsed" });
     await behaviorPage.getByRole("button", { name: "Show document details" }).click();
-    if (await behaviorPage.locator(".doc-inspector").count() !== 1) failures.push({ route: "docs", controls: "restore document details" });
+    if (await behaviorPage.locator(".doc-inspector").count() !== 1 || await behaviorPage.getByText("Browser only", { exact: true }).count() !== 1) failures.push({ route: "docs", controls: "restore document details" });
     await behaviorPage.getByRole("button", { name: "Close details" }).click();
     if (await behaviorPage.locator(".doc-inspector").count() !== 0 || await behaviorPage.getByRole("button", { name: "Show document details" }).count() !== 1) failures.push({ route: "docs", controls: "hide document details" });
     await behaviorPage.getByRole("button", { name: "Show document details" }).click();
@@ -202,9 +201,9 @@ try {
     await linkDialog.getByRole("button", { name: "Add link", exact: true }).click();
     if (await documentBody.locator('a[href="https://example.com/crescent"]').count() !== 1) failures.push({ route: "docs", controls: "local link insertion" });
     await behaviorPage.goto(`${baseUrl}/sheets`, { waitUntil: "networkidle" });
-    if (await behaviorPage.getByRole("button", { name: "Insert link" }).count() !== 0 || await behaviorPage.getByRole("button", { name: /100%/ }).count() !== 0) failures.push({ route: "sheets", controls: "honest toolbar affordances" });
+    if (await behaviorPage.getByRole("button", { name: "Insert link" }).count() !== 0 || await behaviorPage.getByRole("button", { name: /100%/ }).count() !== 0 || await behaviorPage.getByRole("button", { name: "Share", exact: true }).count() !== 0 || await behaviorPage.getByText("Local", { exact: true }).count() !== 1) failures.push({ route: "sheets", controls: "honest local affordances" });
     await behaviorPage.goto(`${baseUrl}/slides`, { waitUntil: "networkidle" });
-    if (await behaviorPage.getByRole("button", { name: "Design options" }).count() !== 0) failures.push({ route: "slides", controls: "honest design affordances" });
+    if (await behaviorPage.getByRole("button", { name: "Design options" }).count() !== 0 || await behaviorPage.getByRole("button", { name: "Share", exact: true }).count() !== 0 || await behaviorPage.getByText("Local", { exact: true }).count() !== 1) failures.push({ route: "slides", controls: "honest local affordances" });
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: "Add workspace" }).click();
     const workspaceDialog = behaviorPage.getByRole("dialog", { name: "Make room for a new space" });

@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.24 — Honest controls**
+**v5.3.25 — Local-first clarity**
 
-Published September 10, 2026. Toolbar controls now stay honest to the local preview: every visible editor action is either usable or clearly presented as status, with no inert Sheets link/zoom buttons or Slides design-options button.
+Published September 10, 2026. Local-only editors now make storage boundaries explicit: Docs, Sheets, and Slides show a local status instead of implying cloud sharing, and the Docs inspector labels browser-only storage without an unavailable invite action.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -57,6 +57,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Untouched Docs, Sheets, Slides, and Forms surfaces discard cleanly without creating placeholder Trash records or resurrecting demo data
 - Recovery preserves named empty Sheets, Slides, and Forms without injecting demo content or blank Trash records
 - Sheets and Slides no longer show inert toolbar affordances that imply unavailable local features
+- Docs, Sheets, and Slides no longer present unavailable cloud sharing as an active primary action
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority
