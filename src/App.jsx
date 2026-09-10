@@ -56,6 +56,7 @@ import {
 } from "lucide-react";
 
 const STORAGE_KEY = "crescent-suite:workspace:v1";
+const SIDEBAR_KEY = "crescent-suite:sidebar-collapsed:v1";
 
 const APP_META = [
   { id: "docs", label: "Docs", icon: FileText, color: "blue", description: "Write with clarity" },
@@ -331,8 +332,9 @@ function normalizeWorkspace(source) {
 
 function loadWorkspace() {
   try {
-    if (new window.URLSearchParams(window.location.search).get("demo") === "1") return INITIAL_WORKSPACE;
+    const demoRequested = new window.URLSearchParams(window.location.search).get("demo") === "1";
     const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored && demoRequested) return INITIAL_WORKSPACE;
     if (!stored) return createEmptyWorkspace();
     const parsed = JSON.parse(stored);
     return parsed?.version === 1 ? normalizeWorkspace(parsed) : createEmptyWorkspace();
@@ -343,11 +345,17 @@ function loadWorkspace() {
 
 function useWorkspace() {
   const [workspace, setWorkspace] = useState(loadWorkspace);
+  const workspaceRef = useRef(workspace);
+  workspaceRef.current = workspace;
   useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(workspace)); } catch { emitNotice("This workspace could not be saved locally."); }
-    }, 180);
-    return () => window.clearTimeout(timeout);
+    const persist = (notify = true) => {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(workspaceRef.current)); } catch { if (notify) emitNotice("This workspace could not be saved locally."); }
+    };
+    const timeout = window.setTimeout(() => persist(), 180);
+    const flushOnExit = () => persist(false);
+    window.addEventListener("pagehide", flushOnExit);
+    window.addEventListener("beforeunload", flushOnExit);
+    return () => { window.clearTimeout(timeout); window.removeEventListener("pagehide", flushOnExit); window.removeEventListener("beforeunload", flushOnExit); };
   }, [workspace]);
   const update = useCallback((patch) => setWorkspace((current) => ({ ...current, ...patch })), []);
   return [workspace, update];
@@ -411,7 +419,7 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update, coll
     emitNotice(`${name} project added locally.`);
   };
   return <>
-    {open && <button className="sidebar-scrim" onClick={onClose} aria-label="Close navigation" />}
+    {open && <button className="sidebar-scrim" onClick={onClose} aria-label="Dismiss navigation" />}
     <aside className={`sidebar ${open ? "sidebar-open" : ""} ${collapsed ? "sidebar-collapsed" : ""}`}>
       <div className="sidebar-header"><BrandMark /><button className="icon-button sidebar-close" onClick={onClose} aria-label="Close navigation"><X size={18} /></button></div>
       <nav className="sidebar-nav" aria-label="Primary">
@@ -433,7 +441,7 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update, coll
   </>;
 }
 
-function Header({ activeApp, onOpenSidebar, onToggleSidebar, sidebarCollapsed, query, onQueryChange, onNavigate, workspace }) {
+function Header({ activeApp, onOpenSidebar, onToggleSidebar, onOpenGuide, sidebarCollapsed, query, onQueryChange, onNavigate, workspace }) {
   const utilityTitles = { recent: "Recent", starred: "Starred", shared: "Shared with me", trash: "Trash", settings: "Settings" };
   const title = activeApp === "home" ? "Home" : APP_META.find((app) => app.id === activeApp)?.label ?? utilityTitles[activeApp] ?? "Crescent";
   const handleSearchKeyDown = (event) => {
@@ -445,7 +453,7 @@ function Header({ activeApp, onOpenSidebar, onToggleSidebar, sidebarCollapsed, q
     <button className="mobile-menu icon-button" onClick={onOpenSidebar} aria-label="Open navigation"><Menu size={20} /></button>
     <div className="mobile-title"><BrandMark small /><span>{title}</span></div>
     <div className="global-search"><Search size={19} /><input value={query} onChange={(event) => onQueryChange(event.target.value)} onKeyDown={handleSearchKeyDown} placeholder="Search across Crescent..." aria-label="Search across Crescent" aria-expanded={Boolean(query)} aria-controls="crescent-search-results" aria-autocomplete="list" aria-haspopup="listbox" /><kbd><Command size={13} />K</kbd></div>
-    <div className="topbar-actions"><button className="icon-button sidebar-toggle" aria-label={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} title={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} onClick={onToggleSidebar}>{sidebarCollapsed ? <PanelLeftOpen size={19} /> : <PanelLeftClose size={19} />}</button><button className="icon-button" aria-label="Help" onClick={() => emitNotice("Open the getting started guide from Home whenever you need a hand.")}><CircleHelp size={19} /></button><button className="icon-button" aria-label="Settings" onClick={() => onNavigate("settings")}><Settings2 size={19} /></button><div className="topbar-divider" /><button className="profile-button" aria-label="Local workspace" onClick={() => emitNotice("Crescent is running locally in this browser.")}><span>⌁</span><ChevronDown size={15} /></button></div>
+    <div className="topbar-actions"><button className="icon-button sidebar-toggle" aria-label={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} title={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} onClick={onToggleSidebar}>{sidebarCollapsed ? <PanelLeftOpen size={19} /> : <PanelLeftClose size={19} />}</button><button className="icon-button" aria-label="Open Crescent guide" onClick={onOpenGuide}><CircleHelp size={19} /></button><button className="icon-button" aria-label="Settings" onClick={() => onNavigate("settings")}><Settings2 size={19} /></button><div className="topbar-divider" /><button className="profile-button" aria-label="Local workspace" onClick={() => emitNotice("Crescent is running locally in this browser.")}><span>⌁</span><ChevronDown size={15} /></button></div>
     {query && <SearchResults query={query} onNavigate={onNavigate} workspace={workspace} />}
   </header>;
 }
@@ -527,6 +535,22 @@ function GettingStarted({ onNavigate, onDismiss }) {
   return <section className="getting-started" aria-labelledby="getting-started-title"><div className="getting-started-copy"><span className="utility-kicker"><Sparkles size={14} />Optional guide</span><h2 id="getting-started-title">Make Crescent yours.</h2><p>Start with a blank workspace and add only what you need. You can hide this guide at any time.</p></div><div className="getting-started-steps">{steps.map((step, index) => <button className="getting-started-step" key={step.app} onClick={() => onNavigate(step.app)}><span className="getting-started-number">{index + 1}</span><span><strong>{step.label}</strong><small>{step.detail}</small></span><ArrowRight size={15} /></button>)}</div><button className="getting-started-dismiss" onClick={onDismiss}>Hide guide</button></section>;
 }
 
+function GuideDialog({ onClose, onNavigate }) {
+  useEffect(() => {
+    const closeOnEscape = (event) => { if (event.key === "Escape") onClose(); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [onClose]);
+  const guideItems = [
+    ["Start at Home", "Use the app launcher to open a blank tool, or follow the optional three-step guide."],
+    ["Keep your focus", "Collapse the navigation rail with the panel button. Your preference is remembered on this device."],
+    ["Work locally", "Crescent saves your documents, tasks, events, and messages in this browser. Nothing is uploaded by this preview."],
+    ["Move work between tools", "Use Drive to create files, Recent to find them, and Search to jump to a title, cell, question, or event."],
+    ["Protect your work", "Open Settings to download a JSON backup. Import that backup later on this device to restore your workspace."],
+  ];
+  return <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section className="file-create-dialog guide-dialog" role="dialog" aria-modal="true" aria-labelledby="guide-title"><div className="file-create-heading"><div><span className="utility-kicker"><CircleHelp size={14} />Crescent guide</span><h2 id="guide-title">A calm way to get things done.</h2><p>Everything you need to start using the suite, without pre-filled work.</p></div><button className="icon-button muted" onClick={onClose} aria-label="Close guide"><X size={18} /></button></div><div className="guide-list">{guideItems.map(([title, body], index) => <article className="guide-item" key={title}><span>{index + 1}</span><div><strong>{title}</strong><p>{body}</p></div></article>)}</div><div className="guide-apps"><span>Open an app</span>{APP_META.slice(0, 5).map((app) => <button className="quiet-button" key={app.id} onClick={() => { onClose(); onNavigate(app.id); }}><AppIcon app={app} size={14} />{app.label}</button>)}</div><div className="file-create-footer"><span><HardDrive size={14} />Saved locally in this browser</span><button className="primary-button" onClick={onClose}>Got it</button></div></section></div>;
+}
+
 function HomeView({ workspace, update, onNavigate, onFocusSearch }) {
   const [filter, setFilter] = useState("All");
   const recentFiles = getLiveRecentFiles(workspace);
@@ -558,7 +582,7 @@ function HomeView({ workspace, update, onNavigate, onFocusSearch }) {
     <aside className="home-rail">
       <section className="rail-card day-card"><div className="rail-heading"><div><h3>My day</h3><p>{new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(new Date())}</p></div><button className="text-link" onClick={() => onNavigate("calendar")}>View calendar</button></div>{(workspace.demo ? [...SCHEDULE, ...localSchedule] : localSchedule).length ? (workspace.demo ? [...SCHEDULE, ...localSchedule] : localSchedule).map((event) => <div className="schedule-row" key={`${event.title}-${event.time}`}><div className="schedule-time"><span>{event.time}</span><span>{event.end}</span></div><span className={`schedule-bar bar-${event.color}`} /><strong>{event.title}</strong></div>) : <div className="rail-empty"><CalendarDays size={18} /><span>Your day is open. Add time in Calendar when you are ready.</span></div>}</section>
       <section className="rail-card activity-card"><div className="rail-heading"><h3>Activity</h3><button className="text-link" onClick={() => onNavigate("recent")}>See all <ArrowRight size={14} /></button></div>{workspace.demo ? <>{[{ initials: "TK", color: "lilac", text: "Taylor Kim commented on", target: "Design review deck", time: "10 minutes ago" }, { initials: "JL", color: "green", text: "Jordan Lee edited", target: "Growth metrics", time: "1 hour ago" }, { initials: "SC", color: "violet", text: "Sam Chen shared", target: "Launch assets with you", time: "3 hours ago" }].map((item) => <div className="activity-row" key={item.initials}><span className={`avatar avatar-${item.color}`}>{item.initials}</span><p>{item.text} <strong>{item.target}</strong><small>{item.time}</small></p></div>)}<div className="activity-task"><CalendarCheck2 size={18} /><p>You have <strong>3 tasks due tomorrow</strong><small>5 hours ago</small></p></div></> : <div className="rail-empty"><Clock3 size={18} /><span>Activity will collect here as you work.</span></div>}</section>
-      <button className="ask-card" onClick={onFocusSearch}><span className="ask-icon"><Sparkles size={16} /></span><span className="ask-copy"><strong>Ask Crescent anything...</strong><small>Search files, notes, tasks, and events...</small></span><ArrowRight size={18} /></button>
+      <button className="ask-card" onClick={onFocusSearch}><span className="ask-icon"><Search size={16} /></span><span className="ask-copy"><strong>Find anything in Crescent</strong><small>Search files, notes, tasks, and events.</small></span><ArrowRight size={18} /></button>
     </aside>
   </div>;
 }
@@ -572,7 +596,8 @@ function PreviewArt({ type }) {
 
 function EditorHeader({ title, icon, onChangeTitle, children, onNavigate }) {
   const titleEditable = !["notes", "tasks", "calendar", "drive", "mail"].includes(icon?.id);
-  return <div className="editor-header"><div className="editor-breadcrumb"><button onClick={() => onNavigate("home")} className="crumb-home" aria-label="Back to Home"><Home size={15} /></button><ChevronRight size={14} /><span className="editor-app-label"><AppIcon app={icon} size={15} />{icon.label}</span><ChevronRight size={14} /><input value={title} onChange={(event) => onChangeTitle(event.target.value)} placeholder={titleEditable && !title ? "Untitled file" : undefined} readOnly={!titleEditable} aria-label="File title" aria-readonly={!titleEditable} /></div><div className="editor-actions"><span className="saved-status"><Check size={14} />Saved locally</span>{children}</div></div>;
+  const handleEditorAction = (event) => { if (event.target.closest("button")?.textContent?.trim() === "Share") emitNotice("Sharing will be available when Crescent Cloud is connected."); };
+  return <div className="editor-header"><div className="editor-breadcrumb"><button onClick={() => onNavigate("home")} className="crumb-home" aria-label="Back to Home"><Home size={15} /></button><ChevronRight size={14} /><span className="editor-app-label"><AppIcon app={icon} size={15} />{icon.label}</span><ChevronRight size={14} /><input value={title} onChange={(event) => onChangeTitle(event.target.value)} placeholder={titleEditable && !title ? "Untitled file" : undefined} readOnly={!titleEditable} aria-label="File title" aria-readonly={!titleEditable} /></div><div className="editor-actions" onClick={handleEditorAction}><span className="saved-status"><Check size={14} />Saved locally</span>{children}</div></div>;
 }
 
 function MailView({ workspace, update, onNavigate, initialSubject }) {
@@ -803,12 +828,12 @@ function SlidesView({ workspace, update, onNavigate, initialSlideTitle }) {
     return () => window.removeEventListener("keydown", handlePresentationKey);
   }, [presenting, slides.length]);
   const updateCurrent = (patch) => update({ slides: slides.map((slide, index) => index === active ? { ...slide, ...patch } : slide) });
-  const addSlide = () => { update({ slides: [...slides, { title: "A new chapter", body: "Add a thought worth sharing.", accent: "blue", notes: "", layout: "title-body" }] }); setActive(slides.length); };
+  const addSlide = () => { const nextSlide = workspace.demo ? { title: "A new chapter", body: "Add a thought worth sharing.", accent: "blue", notes: "", layout: "title-body" } : { title: "", body: "", accent: "blue", notes: "", layout: "title-body" }; update({ slides: [...slides, nextSlide] }); setActive(slides.length); };
   const moveDeckToTrash = () => {
     const starredTitles = getStarredTitles(workspace);
     const deletedDeck = { id: `slides-${Date.now()}`, title: workspace.slidesTitle, slides, type: "Slides", appId: "slides", opened: "just now", owner: "Me", starred: starredTitles.has(workspace.slidesTitle) };
     starredTitles.delete(workspace.slidesTitle);
-    update({ slidesTitle: "Untitled presentation", slides: [{ title: "A new chapter", body: "Add a thought worth sharing.", accent: "blue", notes: "", layout: "title-body" }], starredFiles: [...starredTitles], deletedFiles: [deletedDeck, ...(workspace.deletedFiles ?? [])] });
+    update({ slidesTitle: "", slides: [{ title: "", body: "", accent: "lilac", notes: "", layout: "title-body" }], starredFiles: [...starredTitles], deletedFiles: [deletedDeck, ...(workspace.deletedFiles ?? [])] });
     emitNotice("Presentation moved to local Trash.");
     onNavigate("trash");
   };
@@ -828,7 +853,7 @@ function NotesView({ workspace, update, onNavigate, initialNoteTitle }) {
     const nextNote = workspace.notes.find((item) => item.title === initialNoteTitle);
     if (nextNote) setSelected(nextNote.id);
   }, [initialNoteTitle, workspace.notes]);
-  const addNote = () => { const id = Date.now(); update({ notes: [{ id, title: "Untitled note", body: "Start writing...", color: "blue", updatedAt: "Just now" }, ...workspace.notes] }); setSelected(id); };
+  const addNote = () => { const id = Date.now(); update({ notes: [{ id, title: "Untitled note", body: "", color: "blue", updatedAt: "Just now" }, ...workspace.notes] }); setSelected(id); };
   if (!note) return <div className="notes-page page-enter"><EditorHeader title="Notes" icon={APP_META.find((app) => app.id === "notes")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="primary-button" onClick={addNote}><Plus size={16} />New note</button></EditorHeader><div className="notes-empty-state"><span className="home-empty-icon"><NotebookPen size={18} /></span><div><h2>Keep the good ideas.</h2><p>Your notes start blank and stay local to this browser.</p><button className="primary-button" onClick={addNote}><Plus size={16} />Create your first note</button></div></div></div>;
   const updateNote = (patch) => update({ notes: workspace.notes.map((item) => item.id === note.id ? { ...item, ...patch, updatedAt: "Just now" } : item), ...(Object.prototype.hasOwnProperty.call(patch, "title") ? { starredFiles: renameStarredFile(workspace, note.title, patch.title) } : {}) });
   const removeNote = () => { if (workspace.notes.length <= 1) { emitNotice("Keep one note in the workspace."); return; } const remaining = workspace.notes.filter((item) => item.id !== note.id); const starredTitles = getStarredTitles(workspace); const deletedNote = { id: `note-${note.id}`, noteId: note.id, title: note.title, body: note.body, color: note.color, updatedAt: note.updatedAt, type: "Notes", appId: "notes", opened: "just now", owner: "Me", starred: starredTitles.has(note.title) }; starredTitles.delete(note.title); update({ notes: remaining, starredFiles: [...starredTitles], deletedFiles: [deletedNote, ...(workspace.deletedFiles ?? [])] }); setSelected(remaining[0].id); emitNotice("Note moved to local Trash."); };
@@ -912,8 +937,8 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
   const [editingEventWhen, setEditingEventWhen] = useState("");
   const [highlightedEvent, setHighlightedEvent] = useState(null);
   const [eventDialog, setEventDialog] = useState(false);
-  const [newEventTitle, setNewEventTitle] = useState("New focus block");
-  const [newEventWhen, setNewEventWhen] = useState("Tomorrow · 3:00 PM");
+  const [newEventTitle, setNewEventTitle] = useState("");
+  const [newEventWhen, setNewEventWhen] = useState("");
   const appliedEventNavigation = useRef(null);
   const localEvents = useMemo(() => workspace.calendarEvents ?? [], [workspace.calendarEvents]);
   useEffect(() => {
@@ -924,7 +949,7 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
     setHighlightedEvent(targetEvent.id);
     window.setTimeout(() => [...document.querySelectorAll(".calendar-local-card")].find((card) => card.dataset.eventTitle === initialEventTitle)?.scrollIntoView({ block: "center" }), 0);
   }, [initialEventTitle, localEvents]);
-  const openEventDialog = () => { setNewEventTitle("New focus block"); setNewEventWhen("Tomorrow · 3:00 PM"); setEventDialog(true); };
+  const openEventDialog = () => { setNewEventTitle(""); setNewEventWhen(""); setEventDialog(true); };
   useEffect(() => {
     if (!eventDialog) return undefined;
     const closeOnEscape = (event) => { if (event.key === "Escape") setEventDialog(false); };
@@ -935,7 +960,7 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
     const title = newEventTitle.trim();
     const when = newEventWhen.trim();
     if (!title || !when) { emitNotice("Add an event title and time before saving."); return; }
-    const eventDate = resolveNaturalDate(when, displayDate);
+    const eventDate = resolveNaturalDate(when, now);
     update({ calendarEvents: [{ id: Date.now(), title, when, date: localDateKey(eventDate) }, ...localEvents] });
     setEventDialog(false);
     emitNotice("Event saved in this local workspace.");
@@ -955,7 +980,7 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
     const title = editingEventTitle.trim();
     const when = editingEventWhen.trim();
     if (!title || !when) { emitNotice("Add an event title and time before saving."); return; }
-    const eventDate = resolveNaturalDate(when, displayDate);
+    const eventDate = resolveNaturalDate(when, now);
     update({ calendarEvents: localEvents.map((event) => event.id === id ? { ...event, title, when, date: localDateKey(eventDate) } : event) });
     cancelEventEdit();
     emitNotice("Event updated locally.");
@@ -996,6 +1021,7 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
   const weekHeading = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric" }).format(weekStart);
   const displayMonth = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(displayDate);
   const shortDisplayDay = new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(displayDate);
+  const calendarScope = workspace.demo ? "Product workspace" : "Local schedule";
   const localEventTop = (when, index) => {
     const match = String(when ?? "").match(/\b(\d{1,2})(?::(\d{2}))?\s*(AM|PM)\b/i);
     if (!match) return Math.max(4, 510 - (index * 50));
@@ -1023,7 +1049,7 @@ function CalendarView({ workspace, update, onNavigate, initialEventTitle }) {
     </EditorHeader>
     <div className="calendar-content">
       <div className="calendar-heading">
-        <div><h1>{mode === "month" ? displayMonth : mode === "week" ? weekHeading : displayHeading}</h1><p>{mode === "month" ? `${displayMonth} · Product workspace` : mode === "day" ? `${shortDisplayDay} · Product workspace` : `Week of ${weekHeading} · Product workspace`}</p></div>
+        <div><h1>{mode === "month" ? displayMonth : mode === "week" ? weekHeading : displayHeading}</h1><p>{mode === "month" ? `${displayMonth} · ${calendarScope}` : mode === "day" ? `${shortDisplayDay} · ${calendarScope}` : `Week of ${weekHeading} · ${calendarScope}`}</p></div>
         <div className="calendar-switch"><button className={mode === "day" ? "selected" : ""} onClick={() => setMode("day")} aria-pressed={mode === "day"}>Day</button><button className={mode === "week" ? "selected" : ""} onClick={() => setMode("week")} aria-pressed={mode === "week"}>Week</button><button className={mode === "month" ? "selected" : ""} onClick={() => setMode("month")} aria-pressed={mode === "month"}>Month</button></div>
       </div>
       {localEvents.length > 0 && <section className="calendar-local-events" aria-label="Saved local events">
@@ -1106,7 +1132,44 @@ function DriveView({ workspace, update, onNavigate, initialFolderName, initialFi
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [folderDialog, newFileDialog]);
-  const createFile = () => { const type = newFileType; const title = newFileTitle.trim(); if (!title) { emitNotice("Name your new file first."); return; } const starredTitles = getStarredTitles(workspace); const deletedFiles = [...(workspace.deletedFiles ?? [])]; const archive = (record) => { const starred = starredTitles.has(record.title); starredTitles.delete(record.title); deletedFiles.unshift({ ...record, starred }); }; if (type === "Docs") { const previous = workspace.docs; archive({ id: `doc-${Date.now()}`, title: previous.title, body: previous.body, updatedAt: previous.updatedAt, type, appId: "docs", opened: "just now", owner: "Me" }); update({ docs: { title, body: `<h1>${escapeHtml(title)}</h1><p>Start writing your next idea here.</p>`, updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles }); } else if (type === "Sheets") { const previous = workspace.sheets; archive({ id: `sheet-${Date.now()}`, title: previous.title, cells: previous.cells, tabs: previous.tabs, styles: previous.styles, activeSheet: previous.activeSheet, type, appId: "sheets", opened: "just now", owner: "Me" }); const cells = { A1: "" }; update({ sheets: { title, cells, tabs: [{ name: "Sheet 1", cells }], activeSheet: 0, styles: {}, updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles }); } else if (type === "Slides") { const previousTitle = workspace.slidesTitle; archive({ id: `slides-${Date.now()}`, title: previousTitle, slides: workspace.slides, type, appId: "slides", opened: "just now", owner: "Me" }); update({ slidesTitle: title, slides: [{ title: "A new chapter", body: "Add a thought worth sharing.", accent: "blue", notes: "", layout: "title-body" }], starredFiles: [...starredTitles], deletedFiles }); } else if (type === "Forms") { const previousTitle = workspace.formTitle; archive({ id: `form-${Date.now()}`, title: previousTitle, formTitle: previousTitle, formTheme: workspace.formTheme, formSettings: workspace.formSettings, forms: workspace.forms, formPublished: workspace.formPublished, formResponses: workspace.formResponses, lastFormResponse: workspace.lastFormResponse, type, appId: "forms", opened: "just now", owner: "Me" }); update({ formTitle: title, formTheme: "lilac", formSettings: { ...INITIAL_WORKSPACE.formSettings }, forms: [...INITIAL_WORKSPACE.forms], formPublished: false, formResponses: [], lastFormResponse: undefined, starredFiles: [...starredTitles], deletedFiles }); } else { const newNote = { id: Date.now(), title, body: "Start writing...", color: "blue", updatedAt: "just now" }; update({ notes: [newNote, ...(workspace.notes ?? [])] }); } setNewFileDialog(false); emitNotice(`${type} created in this local workspace.`); onNavigate(type.toLowerCase(), { title }); };
+  const createFile = () => {
+    const type = newFileType;
+    const title = newFileTitle.trim();
+    if (!title) { emitNotice("Name your new file first."); return; }
+    const starredTitles = getStarredTitles(workspace);
+    const deletedFiles = [...(workspace.deletedFiles ?? [])];
+    const archive = (record) => {
+      if (!record.title?.trim()) return;
+      const starred = starredTitles.has(record.title);
+      starredTitles.delete(record.title);
+      deletedFiles.unshift({ ...record, starred });
+    };
+    if (type === "Docs") {
+      const previous = workspace.docs;
+      archive({ id: `doc-${Date.now()}`, title: previous.title, body: previous.body, updatedAt: previous.updatedAt, type, appId: "docs", opened: "just now", owner: "Me" });
+      update({ docs: { title, body: `<h1>${escapeHtml(title)}</h1><p>Start writing your next idea here.</p>`, updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles });
+    } else if (type === "Sheets") {
+      const previous = workspace.sheets;
+      archive({ id: `sheet-${Date.now()}`, title: previous.title, cells: previous.cells, tabs: previous.tabs, styles: previous.styles, activeSheet: previous.activeSheet, type, appId: "sheets", opened: "just now", owner: "Me" });
+      const cells = { A1: "" };
+      update({ sheets: { title, cells, tabs: [{ name: "Sheet 1", cells }], activeSheet: 0, styles: {}, updatedAt: "just now" }, starredFiles: [...starredTitles], deletedFiles });
+    } else if (type === "Slides") {
+      const previousTitle = workspace.slidesTitle;
+      archive({ id: `slides-${Date.now()}`, title: previousTitle, slides: workspace.slides, type, appId: "slides", opened: "just now", owner: "Me" });
+      const slide = workspace.demo ? { title: "A new chapter", body: "Add a thought worth sharing.", accent: "blue", notes: "", layout: "title-body" } : { title: "", body: "", accent: "lilac", notes: "", layout: "title-body" };
+      update({ slidesTitle: title, slides: [slide], starredFiles: [...starredTitles], deletedFiles });
+    } else if (type === "Forms") {
+      const previousTitle = workspace.formTitle;
+      archive({ id: `form-${Date.now()}`, title: previousTitle, formTitle: previousTitle, formTheme: workspace.formTheme, formSettings: workspace.formSettings, forms: workspace.forms, formPublished: workspace.formPublished, formResponses: workspace.formResponses, lastFormResponse: workspace.lastFormResponse, type, appId: "forms", opened: "just now", owner: "Me" });
+      update({ formTitle: title, formTheme: "lilac", formSettings: workspace.demo ? { ...INITIAL_WORKSPACE.formSettings } : { collectEmail: false, oneResponse: false }, forms: workspace.demo ? [...INITIAL_WORKSPACE.forms] : [], formPublished: false, formResponses: [], lastFormResponse: undefined, starredFiles: [...starredTitles], deletedFiles });
+    } else {
+      const newNote = { id: Date.now(), title, body: "", color: "blue", updatedAt: "just now" };
+      update({ notes: [newNote, ...(workspace.notes ?? [])] });
+    }
+    setNewFileDialog(false);
+    emitNotice(`${type} created in this local workspace.`);
+    onNavigate(type.toLowerCase(), { title });
+  };
   return <>
     <div className="drive-page page-enter"><EditorHeader title="Drive" icon={APP_META.find((app) => app.id === "drive")} onChangeTitle={() => {}} onNavigate={onNavigate}><button className="secondary-button" onClick={openFolderDialog}><FolderPlus size={16} />New folder</button><button className="primary-button" onClick={openCreateFile}><FilePlus2 size={16} />New file</button></EditorHeader><div className="drive-content"><div className="drive-heading"><div><h1>{activeFolder ? activeFolder.name : "Everything in one place."}</h1><p>{activeFolder ? "A local folder ready for the work you want to keep together." : "Organize your work without losing the thread."}</p></div><div className="drive-view"><button className={view === "grid" ? "selected" : ""} onClick={() => setView("grid")} aria-label="Grid view" aria-pressed={view === "grid"}><Grid2X2 size={16} /></button><button className={view === "list" ? "selected" : ""} onClick={() => setView("list")} aria-label="List view" aria-pressed={view === "list"}><List size={16} /></button></div></div><div className="drive-section"><div className="drive-section-title"><span>Folders</span><small>{folders.length} folders</small></div><div className={`folder-grid ${view === "list" ? "folder-list-view" : ""}`}>{folders.map((folder) => <button className={`folder-card ${selectedFolder === folder.name ? "selected" : ""}`} data-folder-name={folder.name} key={folder.name} onClick={() => selectFolder(folder)} aria-pressed={selectedFolder === folder.name}><span className={`folder-icon folder-${folder.color}`}><FolderOpen size={21} /></span><strong>{folder.name}</strong><small>{folder.items} items</small><MoreHorizontal size={17} /></button>)}</div>{activeFolder && <div className="drive-folder-detail"><span className={`folder-icon folder-${activeFolder.color}`}><FolderOpen size={18} /></span><div><strong>{activeFolder.name} selected</strong><small>{activeFolder.items} items · saved in this browser</small></div><button className="text-link" onClick={() => setSelectedFolder(null)}>Clear selection</button></div>}</div><div className="drive-section"><div className="drive-section-title"><span>Recent files</span><button className="text-link" onClick={() => onNavigate("recent")}>See all <ArrowRight size={14} /></button></div><div className={`drive-file-grid ${view === "list" ? "drive-list-view" : ""}`}>{displayRecentFiles.map((file) => <button className={`drive-file ${selectedRecentTitle === file.title ? "selected" : ""}`} data-file-title={file.title} key={file.title} onClick={() => onNavigate(file.type.toLowerCase(), fileNavigationContext(file))} aria-pressed={selectedRecentTitle === file.title}><div className={`drive-file-preview preview-${file.color}`}><PreviewArt type={file.type} /></div><div><AppIcon app={{ ...file, id: file.type.toLowerCase() }} size={15} /><strong>{file.title}</strong></div><small>{file.type} · {file.opened}</small></button>)}</div></div></div></div>
     {newFileDialog && <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setNewFileDialog(false); }}><section className="file-create-dialog" role="dialog" aria-modal="true" aria-labelledby="file-create-title"><div className="file-create-heading"><div><span className="utility-kicker"><FilePlus2 size={14} />New local file</span><h2 id="file-create-title">Start something new</h2><p>Choose a Crescent tool, then give your new work a name.</p></div><button className="icon-button muted" onClick={() => setNewFileDialog(false)} aria-label="Close new file dialog"><X size={18} /></button></div><div className="file-type-grid" aria-label="File type">{DRIVE_FILE_TYPES.map(({ type, icon: Icon, color, description }) => <button className={`file-type-option ${newFileType === type ? "selected" : ""}`} key={type} onClick={() => selectNewFileType(type)} aria-pressed={newFileType === type}><span className={`app-icon app-icon-${color}`}><Icon size={17} /></span><span><strong>{type}</strong><small>{description}</small></span>{newFileType === type && <Check size={16} />}</button>)}</div><label className="file-name-field"><span>File name</span><input autoFocus value={newFileTitle} aria-label="File name" onChange={(event) => setNewFileTitle(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") createFile(); }} /></label><div className="file-create-footer"><span><HardDrive size={14} />Saved locally in this browser</span><div><button className="secondary-button" onClick={() => setNewFileDialog(false)}>Cancel</button><button className="primary-button" onClick={createFile}><FilePlus2 size={16} />Create {newFileType}</button></div></div></section></div>}
@@ -1161,7 +1224,7 @@ function FormsView({ workspace, update, onNavigate, initialQuestionId }) {
   const cycleQuestionType = (id) => { const types = ["Short answer", "Long answer", "Scale"]; update({ forms: workspace.forms.map((question) => { if (question.id !== id) return question; const nextType = types[(types.indexOf(question.type) + 1) % types.length]; return { ...question, type: nextType }; }) }); };
   const toggleFormSetting = (setting) => update({ formSettings: { ...formSettings, [setting]: !formSettings[setting] } });
   const setFormTheme = (theme) => update({ formTheme: theme });
-  const publishForm = () => { setPublished(true); update({ formPublished: true }); };
+  const publishForm = () => { if (!workspace.forms.length) { emitNotice("Add at least one question before publishing."); return; } setPublished(true); update({ formPublished: true }); };
   const moveFormToTrash = () => {
     const starredTitles = getStarredTitles(workspace);
     const deletedForm = { id: `form-${Date.now()}`, title: formTitle, formTitle, formTheme, formSettings, forms: workspace.forms, formPublished: published, formResponses: workspace.formResponses ?? [], lastFormResponse: workspace.lastFormResponse, type: "Forms", appId: "forms", opened: "just now", owner: "Me", starred: starredTitles.has(formTitle) };
@@ -1174,7 +1237,31 @@ function FormsView({ workspace, update, onNavigate, initialQuestionId }) {
   const exportResponses = () => { const headers = ["Submitted at", ...(formSettings.collectEmail ? ["Email address"] : []), ...workspace.forms.map((question) => question.label)]; const rows = responses.map((response) => [response.submittedAt ?? "", ...(formSettings.collectEmail ? [response.answers?.email ?? ""] : []), ...workspace.forms.map((question) => question.type === "Scale" ? response.scaleAnswers?.[question.id] ?? response.scale ?? "" : response.answers?.[question.id] ?? "")]); const csv = [headers, ...rows].map((row) => row.map((value) => JSON.stringify(String(value ?? ""))).join(",")).join("\n"); downloadText(`${safeFileName(formTitle || "crescent-form")}-responses.csv`, `${csv}\n`, "text/csv"); emitNotice("Form responses exported as CSV."); };
   const submitResponse = () => { const email = answers.email?.trim() ?? ""; if (formSettings.collectEmail && (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) { emitNotice("Add a valid email address before submitting."); return; } const missingRequired = workspace.forms.some((question) => question.required && (question.type === "Scale" ? !scaleAnswers[question.id] : !answers[question.id]?.trim())); if (missingRequired) { emitNotice("Complete all required questions before submitting."); return; } const response = { id: Date.now(), saved: true, submittedAt: new Date().toISOString(), scale: Object.values(scaleAnswers).find((value) => Number.isInteger(value) && value >= 1 && value <= 5) ?? null, scaleAnswers, answers }; setSubmitted(true); update({ lastFormResponse: response, formResponses: [response, ...(workspace.formResponses ?? [])] }); emitNotice("Response saved in this local workspace."); };
   if (!workspace.demo && !formTitle && workspace.forms.length === 0 && !showResponses) return <div className={`forms-page page-enter form-theme-${formTheme}`}><EditorHeader title="" icon={APP_META.find((app) => app.id === "forms")} onChangeTitle={(value) => { setFormTitle(value); update({ formTitle: value }); }} onNavigate={onNavigate}><button className="secondary-button" onClick={exportForm}><Download size={16} />Export</button><button className="secondary-button" onClick={() => setPreviewing(true)}><EyeIcon />Preview</button><button className="primary-button" onClick={addQuestion}><Plus size={16} />Add question</button></EditorHeader><div className="form-empty-state"><span className="home-empty-icon"><FormInput size={18} /></span><h1>Build a form that fits the moment.</h1><p>Name your form above, then add one clear question to get started. Everything stays in this browser.</p><button className="primary-button" onClick={addQuestion}><Plus size={16} />Add your first question</button></div></div>;
-  return <div className={`forms-page page-enter form-theme-${formTheme}`}><EditorHeader title={formTitle} icon={APP_META.find((app) => app.id === "forms")} onChangeTitle={(value) => { setFormTitle(value); update({ formTitle: value, starredFiles: renameStarredFile(workspace, workspace.formTitle, value) }); }} onNavigate={onNavigate}><button className="secondary-button" onClick={exportForm}><Download size={16} />Export</button><button className="secondary-button" onClick={() => setShowResponses((current) => !current)}><CheckCircle2 size={15} />Responses {responses.length ? `(${responses.length})` : ""}</button><button className="secondary-button" onClick={() => setPreviewing((current) => !current)}><EyeIcon />{previewing ? "Edit form" : "Preview"}</button><button className="secondary-button editor-trash-button" onClick={moveFormToTrash}><Trash2 size={16} />Move to Trash</button><button className="primary-button" onClick={publishForm}><Share2 size={16} />{published ? "Published" : "Publish"}</button></EditorHeader><div className={`forms-content ${previewing ? "forms-preview-mode" : ""}`}><div className="forms-heading"><div><h1>{formTitle}</h1><p>Ask the questions that help the next move become obvious.</p></div><span className={`publish-status ${published ? "is-published" : ""}`}><span />{published ? "Live" : "Draft"}</span></div>{showResponses ? <FormResponses workspace={workspace} responses={responses} onBack={() => setShowResponses(false)} onExport={exportResponses} /> : <div className="form-builder"><div className="form-preview"><div className="form-cover"><div className="form-cover-orbit" /><span>CRESCENT / FEEDBACK</span><h2>Help us make the next release better.</h2><p>A two-minute check-in for the people who use the work.</p></div><div className="form-questions">{formSettings.collectEmail && <div className="form-question"><span>•</span><div><strong>Email address</strong><small>Required to respond</small><input className="form-input" type="email" value={answers.email ?? ""} onChange={(event) => setAnswers((current) => ({ ...current, email: event.target.value }))} placeholder="you@example.com" aria-label="Email address" aria-required="true" /></div></div>}{workspace.forms.map((question, index) => <div className="form-question" key={question.id}><span>{index + 1}</span><div>{previewing ? <strong>{question.label}</strong> : <input className="question-label-input" value={question.label} aria-label={`Question ${index + 1} label`} onChange={(event) => updateQuestion(question.id, event.target.value)} />}{previewing ? <small>{question.type} {question.required && "· Required"}</small> : <div className="question-edit-actions"><button className="question-type-toggle" onClick={() => cycleQuestionType(question.id)} aria-label={`Change question ${index + 1} type`}>{question.type}</button><button className="question-required-toggle" onClick={() => toggleRequired(question.id)} aria-pressed={question.required}>{question.required ? "Required" : "Optional"}</button><button className="icon-button muted" onClick={() => removeQuestion(question.id)} aria-label={`Delete question ${index + 1}`}><Trash2 size={15} /></button></div>}{question.type === "Scale" ? <div className="fake-input scale-input">{[1, 2, 3, 4, 5].map((value) => <button className={scaleAnswers[question.id] === value ? "selected" : ""} key={value} onClick={() => setScaleAnswers((current) => ({ ...current, [question.id]: value }))} aria-label={`${question.label}: ${value}`} aria-pressed={scaleAnswers[question.id] === value} aria-required={question.required}>{value}</button>)}</div> : question.type === "Long answer" ? <textarea className="form-input form-textarea" aria-label={question.label} aria-required={question.required} value={answers[question.id] ?? ""} onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))} placeholder="Your answer..." /> : <input className="form-input" aria-label={question.label} aria-required={question.required} value={answers[question.id] ?? ""} onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))} placeholder="Your answer..." />}</div></div>)}<button className="add-question" onClick={addQuestion}><Plus size={16} />Add question</button><button className="form-submit" onClick={submitResponse} disabled={submitted && formSettings.oneResponse}>{submitted && formSettings.oneResponse ? <><Check size={16} />Response saved</> : "Submit response"}</button>{submitted && <p className="form-success"><CheckCircle2 size={14} />Thanks — your response is saved locally.</p>}</div></div><aside className="form-settings"><div className="inspector-heading"><span>Form settings</span><Settings2 size={16} /></div><div className="inspector-section"><span className="inspector-label">Responses</span><div className="setting-row"><span>Collect email addresses</span><button className={`toggle ${formSettings.collectEmail ? "active" : ""}`} onClick={() => toggleFormSetting("collectEmail")} aria-label="Collect email addresses" aria-pressed={formSettings.collectEmail}><i /></button></div><div className="setting-row"><span>Allow one response</span><button className={`toggle ${formSettings.oneResponse ? "active" : ""}`} onClick={() => toggleFormSetting("oneResponse")} aria-label="Allow one response" aria-pressed={formSettings.oneResponse}><i /></button></div></div><div className="inspector-section"><span className="inspector-label">Theme</span><div className="form-theme"><button className={`theme-swatch swatch-lilac ${formTheme === "lilac" ? "selected" : ""}`} onClick={() => setFormTheme("lilac")} aria-label="Lilac theme" aria-pressed={formTheme === "lilac"} /><button className={`theme-swatch swatch-blue ${formTheme === "blue" ? "selected" : ""}`} onClick={() => setFormTheme("blue")} aria-label="Blue theme" aria-pressed={formTheme === "blue"} /><button className={`theme-swatch swatch-gold ${formTheme === "gold" ? "selected" : ""}`} onClick={() => setFormTheme("gold")} aria-label="Gold theme" aria-pressed={formTheme === "gold"} /></div></div></aside></div> }</div></div>;
+  const displayTitle = formTitle || "Untitled form";
+  return <div className={`forms-page page-enter form-theme-${formTheme}`}>
+    <EditorHeader title={formTitle} icon={APP_META.find((app) => app.id === "forms")} onChangeTitle={(value) => { setFormTitle(value); update({ formTitle: value, starredFiles: renameStarredFile(workspace, workspace.formTitle, value) }); }} onNavigate={onNavigate}>
+      <button className="secondary-button" onClick={exportForm}><Download size={16} />Export</button>
+      <button className="secondary-button" onClick={() => setShowResponses((current) => !current)}><CheckCircle2 size={15} />Responses {responses.length ? `(${responses.length})` : ""}</button>
+      <button className="secondary-button" onClick={() => setPreviewing((current) => !current)}><EyeIcon />{previewing ? "Edit form" : "Preview"}</button>
+      <button className="secondary-button editor-trash-button" onClick={moveFormToTrash}><Trash2 size={16} />Move to Trash</button>
+      <button className="primary-button" onClick={publishForm}><Share2 size={16} />{published ? "Published" : "Publish"}</button>
+    </EditorHeader>
+    <div className={`forms-content ${previewing ? "forms-preview-mode" : ""}`}>
+      <div className="forms-heading"><div><h1>{displayTitle}</h1><p>{workspace.demo ? "Ask the questions that help the next move become obvious." : "Create a focused form and keep responses on this device."}</p></div><span className={`publish-status ${published ? "is-published" : ""}`}><span />{published ? "Live" : "Draft"}</span></div>
+      {showResponses ? <FormResponses workspace={workspace} responses={responses} onBack={() => setShowResponses(false)} onExport={exportResponses} /> : <div className="form-builder">
+        <div className="form-preview">
+          <div className="form-cover"><div className="form-cover-orbit" /><span>{workspace.demo ? "CRESCENT / FEEDBACK" : "LOCAL FORM"}</span><h2>{workspace.demo ? "Help us make the next release better." : displayTitle === "Untitled form" ? "Start with one clear question." : displayTitle}</h2><p>{workspace.demo ? "A two-minute check-in for the people who use the work." : "Add a question below whenever you are ready."}</p></div>
+          <div className="form-questions">
+            {formSettings.collectEmail && <div className="form-question"><span>•</span><div><strong>Email address</strong><small>Required to respond</small><input className="form-input" type="email" value={answers.email ?? ""} onChange={(event) => setAnswers((current) => ({ ...current, email: event.target.value }))} placeholder="you@example.com" aria-label="Email address" aria-required="true" /></div></div>}
+            {!workspace.forms.length && <div className="form-question-empty"><FormInput size={18} /><span>Add a question to give this form a purpose.</span></div>}
+            {workspace.forms.map((question, index) => <div className="form-question" key={question.id}><span>{index + 1}</span><div>{previewing ? <strong>{question.label}</strong> : <input className="question-label-input" value={question.label} aria-label={`Question ${index + 1} label`} onChange={(event) => updateQuestion(question.id, event.target.value)} />}{previewing ? <small>{question.type} {question.required && "· Required"}</small> : <div className="question-edit-actions"><button className="question-type-toggle" onClick={() => cycleQuestionType(question.id)} aria-label={`Change question ${index + 1} type`}>{question.type}</button><button className="question-required-toggle" onClick={() => toggleRequired(question.id)} aria-pressed={question.required}>{question.required ? "Required" : "Optional"}</button><button className="icon-button muted" onClick={() => removeQuestion(question.id)} aria-label={`Delete question ${index + 1}`}><Trash2 size={15} /></button></div>}{question.type === "Scale" ? <div className="fake-input scale-input">{[1, 2, 3, 4, 5].map((value) => <button className={scaleAnswers[question.id] === value ? "selected" : ""} key={value} onClick={() => setScaleAnswers((current) => ({ ...current, [question.id]: value }))} aria-label={`${question.label}: ${value}`} aria-pressed={scaleAnswers[question.id] === value} aria-required={question.required}>{value}</button>)}</div> : question.type === "Long answer" ? <textarea className="form-input form-textarea" aria-label={question.label} aria-required={question.required} value={answers[question.id] ?? ""} onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))} placeholder="Your answer..." /> : <input className="form-input" aria-label={question.label} aria-required={question.required} value={answers[question.id] ?? ""} onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))} placeholder="Your answer..." />}</div></div>)}
+            <button className="add-question" onClick={addQuestion}><Plus size={16} />Add question</button><button className="form-submit" onClick={submitResponse} disabled={!workspace.forms.length || (submitted && formSettings.oneResponse)}>{submitted && formSettings.oneResponse ? <><Check size={16} />Response saved</> : "Submit response"}</button>{submitted && <p className="form-success"><CheckCircle2 size={14} />Thanks — your response is saved locally.</p>}
+          </div>
+        </div>
+        <aside className="form-settings"><div className="inspector-heading"><span>Form settings</span><Settings2 size={16} /></div><div className="inspector-section"><span className="inspector-label">Responses</span><div className="setting-row"><span>Collect email addresses</span><button className={`toggle ${formSettings.collectEmail ? "active" : ""}`} onClick={() => toggleFormSetting("collectEmail")} aria-label="Collect email addresses" aria-pressed={formSettings.collectEmail}><i /></button></div><div className="setting-row"><span>Allow one response</span><button className={`toggle ${formSettings.oneResponse ? "active" : ""}`} onClick={() => toggleFormSetting("oneResponse")} aria-label="Allow one response" aria-pressed={formSettings.oneResponse}><i /></button></div></div><div className="inspector-section"><span className="inspector-label">Theme</span><div className="form-theme"><button className={`theme-swatch swatch-lilac ${formTheme === "lilac" ? "selected" : ""}`} onClick={() => setFormTheme("lilac")} aria-label="Lilac theme" aria-pressed={formTheme === "lilac"} /><button className={`theme-swatch swatch-blue ${formTheme === "blue" ? "selected" : ""}`} onClick={() => setFormTheme("blue")} aria-label="Blue theme" aria-pressed={formTheme === "blue"} /><button className={`theme-swatch swatch-gold ${formTheme === "gold" ? "selected" : ""}`} onClick={() => setFormTheme("gold")} aria-label="Gold theme" aria-pressed={formTheme === "gold"} /></div></div></aside>
+      </div>}
+    </div>
+  </div>;
 }
 
 function EyeIcon() { return <span className="eye-icon">◉</span>; }
@@ -1371,9 +1458,12 @@ export default function App() {
   const [workspace, update] = useWorkspace();
   const [activeApp, setActiveApp] = useState(appFromLocation);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try { return localStorage.getItem(SIDEBAR_KEY) !== "false"; } catch { return true; }
+  });
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
+  const [guideOpen, setGuideOpen] = useState(false);
   const [navigationContext, setNavigationContext] = useState(null);
   useEffect(() => {
     const handleNotice = (event) => setNotice(event.detail);
@@ -1396,6 +1486,9 @@ export default function App() {
     const timeout = window.setTimeout(() => setNotice(""), 2600);
     return () => window.clearTimeout(timeout);
   }, [notice]);
+  useEffect(() => {
+    try { localStorage.setItem(SIDEBAR_KEY, String(sidebarCollapsed)); } catch { /* local preference is optional */ }
+  }, [sidebarCollapsed]);
   useEffect(() => {
     const handleActionFeedback = (event) => {
       const button = event.target.closest("button");
@@ -1444,5 +1537,5 @@ export default function App() {
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} initialQuestionId={navigationContext?.questionId} />;
     return <UtilityView id={activeApp} workspace={workspace} update={update} onNavigate={navigate} />;
   }, [activeApp, navigationContext, workspace, update]);
-  return <div className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} workspace={workspace} update={update} collapsed={sidebarCollapsed} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} onToggleSidebar={() => setSidebarCollapsed((current) => !current)} sidebarCollapsed={sidebarCollapsed} query={query} onQueryChange={setQuery} onNavigate={navigate} workspace={workspace} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div></div>;
+  return <div className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""} ${workspace.demo ? "workspace-demo" : "workspace-local"}`}><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} workspace={workspace} update={update} collapsed={sidebarCollapsed} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} onToggleSidebar={() => setSidebarCollapsed((current) => !current)} onOpenGuide={() => setGuideOpen(true)} sidebarCollapsed={sidebarCollapsed} query={query} onQueryChange={setQuery} onNavigate={navigate} workspace={workspace} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div>{guideOpen && <GuideDialog onClose={() => setGuideOpen(false)} onNavigate={navigate} />}</div>;
 }

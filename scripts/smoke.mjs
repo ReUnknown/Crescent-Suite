@@ -10,6 +10,18 @@ const viewports = [
   { name: "desktop", width: 1440, height: 1000 },
   { name: "mobile", width: 390, height: 844 },
 ];
+const smokeData = process.env.SMOKE_DATA ?? "demo";
+const preparePage = (page) => {
+  const originalGoto = page.goto.bind(page);
+  page.goto = (url, options) => {
+      const nextUrl = new globalThis.URL(url);
+    nextUrl.searchParams.delete("demo");
+    nextUrl.searchParams.delete("fresh");
+    nextUrl.searchParams.set(smokeData === "fresh" ? "fresh" : "demo", "1");
+    return originalGoto(nextUrl.toString(), options);
+  };
+  return page;
+};
 
 const server = spawn("npm", ["run", "preview", "--", "--host", "127.0.0.1", "--port", String(port)], { stdio: "ignore" });
 
@@ -33,7 +45,7 @@ try {
   if (manifest.start_url !== "./" || manifest.scope !== "./" || manifest.icons?.[0]?.src !== "./favicon.svg") throw new Error("PWA manifest is not subpath-safe");
   const browser = await chromium.launch({ headless: true });
   const failures = [];
-  const reducedMotionPage = await browser.newPage({ viewport: viewports[0] });
+  const reducedMotionPage = preparePage(await browser.newPage({ viewport: viewports[0] }));
   try {
     await reducedMotionPage.emulateMedia({ reducedMotion: "reduce" });
     await reducedMotionPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
@@ -45,7 +57,7 @@ try {
 
   for (const viewport of viewports) {
     for (const route of routes) {
-      const page = await browser.newPage({ viewport });
+      const page = preparePage(await browser.newPage({ viewport }));
       const pageErrors = [];
       page.on("pageerror", (error) => pageErrors.push(error.message));
       try {
@@ -113,7 +125,7 @@ try {
     }
   }
 
-  const behaviorPage = await browser.newPage({ viewport: viewports[0] });
+  const behaviorPage = preparePage(await browser.newPage({ viewport: viewports[0] }));
   try {
     await behaviorPage.goto(`${baseUrl}/mail`, { waitUntil: "networkidle" });
     if (await behaviorPage.getByRole("button", { name: "Open message Design review tomorrow" }).count() !== 1) failures.push({ route: "mail", controls: "inbox message" });
@@ -133,7 +145,7 @@ try {
     if (await behaviorPage.getByRole("button", { name: "Open message Smoke message" }).count() !== 1) failures.push({ route: "mail", controls: "local message send" });
     await behaviorPage.goto(`${baseUrl}/docs`, { waitUntil: "networkidle" });
     await behaviorPage.getByRole("button", { name: "Share", exact: true }).click();
-    if (!(await behaviorPage.getByRole("status").innerText()).includes("Sharing will be available")) failures.push({ route: "docs", controls: "local-only sharing notice" });
+    if (!(await behaviorPage.locator(".toast").innerText()).includes("Sharing will be available")) failures.push({ route: "docs", controls: "local-only sharing notice" });
     const documentBody = behaviorPage.getByRole("textbox", { name: "Document body" });
     await documentBody.evaluate((node) => { const textNode = document.createTreeWalker(node, globalThis.NodeFilter.SHOW_TEXT).nextNode(); const range = document.createRange(); range.setStart(textNode, 0); range.setEnd(textNode, Math.min(8, textNode.textContent.length)); const selection = globalThis.getSelection(); selection.removeAllRanges(); selection.addRange(range); });
     await behaviorPage.getByRole("button", { name: "Add link" }).click();
@@ -158,6 +170,7 @@ try {
     await behaviorPage.goto(`${baseUrl}/home`, { waitUntil: "networkidle" });
     await behaviorPage.reload({ waitUntil: "networkidle" });
     if (!(await behaviorPage.locator(".workspace-list").innerText()).includes("Smoke workspace") || !(await behaviorPage.locator(".project-list").innerText()).includes("Smoke project")) failures.push({ route: "home", controls: "workspace/project persistence" });
+    await behaviorPage.getByRole("button", { name: "Expand navigation" }).click();
     await behaviorPage.getByRole("button", { name: "Smoke workspace" }).click();
     await behaviorPage.waitForSelector('[data-folder-name="Smoke workspace"].selected');
     if (behaviorPage.url().split("#")[1] !== "drive") failures.push({ route: "home", controls: "sidebar workspace destination", url: behaviorPage.url() });
@@ -189,7 +202,7 @@ try {
     await behaviorPage.waitForSelector('[data-folder-name="Smoke folder"].selected');
     if (behaviorPage.url().split("#")[1] !== "drive" || await behaviorPage.locator('[data-folder-name="Smoke folder"].selected').count() !== 1) failures.push({ route: "search", controls: "open exact Drive folder result", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/calendar`, { waitUntil: "networkidle" });
-    const addCalendarEvent = async (title, when) => { await behaviorPage.getByRole("button", { name: "Event" }).click(); const dialog = behaviorPage.getByRole("dialog", { name: "Block time with intention" }); await dialog.waitFor(); await dialog.getByRole("textbox", { name: "Event title" }).fill(title); await dialog.getByRole("textbox", { name: "Event time" }).fill(when); await dialog.getByRole("button", { name: "Save event" }).click(); };
+    const addCalendarEvent = async (title, when) => { await behaviorPage.getByRole("button", { name: "Event" }).click(); const dialog = behaviorPage.getByRole("dialog", { name: "Block time with intention" }); await dialog.waitFor(); await dialog.getByRole("textbox", { name: "Event title" }).fill(title); await dialog.getByRole("textbox", { name: "Event time" }).fill(when); await dialog.getByRole("button", { name: "Save event" }).click(); await behaviorPage.waitForTimeout(250); };
     await addCalendarEvent("Smoke focus block", "Tomorrow · 3:00 PM");
     const localEvent = behaviorPage.locator(".calendar-event-local");
     const localEventStyle = await localEvent.getAttribute("style");
@@ -476,13 +489,14 @@ try {
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     await behaviorPage.waitForSelector(".document-inner .search-target");
     await behaviorPage.goBack();
-    await behaviorPage.waitForURL(/\/home$/);
+    await behaviorPage.waitForFunction(() => globalThis.location.pathname.endsWith("/home") && (!globalThis.location.hash || globalThis.location.hash === "#home"));
     await behaviorPage.goForward();
     await behaviorPage.waitForSelector(".document-inner .search-target");
     if (behaviorPage.url().split("#")[1] !== "docs") failures.push({ route: "history", controls: "restore exact search context", url: behaviorPage.url() });
     await behaviorPage.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
     await behaviorPage.locator('input[type="file"]').setInputFiles({ name: "malformed-records.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ version: 1, docs: { title: "Safe import" }, sheets: { title: "Safe sheet" }, slides: [null], notes: [null], tasks: [null], forms: [null], calendarEvents: [null], driveFolders: [null], deletedFiles: [null], formResponses: [{ submittedAt: "not a date", scaleAnswers: { 2: "invalid", 3: "5" }, scale: "9", answers: null }] })) });
     await behaviorPage.getByRole("status").filter({ hasText: "Workspace backup restored locally." }).waitFor({ state: "visible" });
+    await behaviorPage.waitForTimeout(250);
     const normalizedScaleResponse = await behaviorPage.evaluate(() => JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").formResponses?.[0] ?? {});
     if (normalizedScaleResponse.scale !== null || Object.prototype.hasOwnProperty.call(normalizedScaleResponse.scaleAnswers ?? {}, "2") || normalizedScaleResponse.scaleAnswers?.[3] !== 5) failures.push({ route: "settings", controls: "malformed Scale response normalization", normalizedScaleResponse });
     await behaviorPage.goto(`${baseUrl}/slides`, { waitUntil: "networkidle" });
