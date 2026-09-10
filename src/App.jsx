@@ -1544,7 +1544,12 @@ export default function App() {
   const focusSearch = () => { setQuery(""); window.setTimeout(() => document.querySelector(".global-search input")?.focus(), 0); };
   useEffect(() => {
     const handleFocusShortcut = (event) => {
-      if (event.key === "Escape" && focusMode) { event.preventDefault(); setFocusMode(false); return; }
+      if (event.key === "Escape" && focusMode) {
+        if (document.querySelector('.modal-scrim [role="dialog"]')) return;
+        event.preventDefault();
+        setFocusMode(false);
+        return;
+      }
       if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toLowerCase() === "f" && FOCUS_APP_IDS.has(activeApp)) { event.preventDefault(); setFocusMode((current) => !current); }
     };
     window.addEventListener("keydown", handleFocusShortcut);

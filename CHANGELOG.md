@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.2.5 — Predictable modal escape
+
+Published September 10, 2026.
+
+### Fixed
+
+- Escape now closes an open editor or creation dialog before leaving Focus Mode, preserving the expected modal interaction order.
+- Added mobile Calendar coverage for opening and dismissing a dialog while Focus Mode remains active.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.2.4 — Search follows focus
 
 Published September 10, 2026.

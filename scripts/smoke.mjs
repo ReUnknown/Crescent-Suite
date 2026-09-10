@@ -72,9 +72,14 @@ try {
         if (pageErrors.length || overflow || accessibility.unnamedButtons || accessibility.unnamedFields) failures.push({ viewport: viewport.name, route, pageErrors, overflow, accessibility });
         if (["docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "mail"].includes(route)) {
           if (!(await page.locator(".app-shell.focus-mode").count()) || !(await page.getByRole("button", { name: "Exit focus mode" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "default focus mode" });
-          if (route === "docs" && viewport.name === "desktop") {
+        if (route === "docs" && viewport.name === "desktop") {
             await page.keyboard.press("ControlOrMeta+KeyK");
             await page.waitForFunction(() => !document.querySelector(".app-shell")?.classList.contains("focus-mode") && document.activeElement?.matches(".global-search input"));
+          } else if (route === "calendar" && viewport.name === "mobile") {
+            await page.getByRole("button", { name: "Event", exact: true }).click();
+            await page.keyboard.press("Escape");
+            if (!(await page.locator(".app-shell.focus-mode").count()) || await page.getByRole("dialog", { name: "Block time with intention" }).count()) failures.push({ viewport: viewport.name, route, controls: "modal Escape preserves Focus Mode" });
+            await page.getByRole("button", { name: "Exit focus mode" }).click();
           } else await page.getByRole("button", { name: "Exit focus mode" }).click();
           if (!(await page.getByRole("button", { name: "Enter focus mode" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "focus mode exit" });
         }
