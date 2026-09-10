@@ -82,6 +82,14 @@ try {
             const slideWorkspace = await page.locator(".slide-workspace").boundingBox();
             if (await page.locator(".slide-inspector:visible").count() || !slideWorkspace || (await page.locator(".slide-rail").boundingBox())?.width > 180) failures.push({ viewport: viewport.name, route, controls: "focus mode keeps wide slide inspector rail", slideWorkspace });
           }
+          if (viewport.name === "desktop" && route === "notes") {
+            const notesList = await page.locator(".notes-list").boundingBox();
+            if (!notesList || notesList.width > 260) failures.push({ viewport: viewport.name, route, controls: "focus mode keeps an oversized notes rail", notesList });
+          }
+          if (viewport.name === "desktop" && route === "mail") {
+            const mailList = await page.locator(".mail-list-panel").boundingBox();
+            if (!mailList || mailList.width > 320) failures.push({ viewport: viewport.name, route, controls: "focus mode keeps an oversized mail rail", mailList });
+          }
         if (route === "docs" && viewport.name === "desktop") {
             await page.keyboard.press("ControlOrMeta+KeyK");
             await page.waitForFunction(() => !document.querySelector(".app-shell")?.classList.contains("focus-mode") && document.activeElement?.matches(".global-search input"));

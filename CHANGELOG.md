@@ -1,5 +1,23 @@
 # Changelog
 
+## v5.3.35 — Focus workspace ergonomics
+
+Published September 10, 2026.
+
+### Improved
+
+- Compact Notes navigation from 300px to 240px in Focus Mode while preserving one-click note selection.
+- Compact Mail navigation from 360px to 300px in Focus Mode while preserving the inbox/detail workflow.
+- Preserved the responsive stacked layouts at mobile widths.
+- Added smoke assertions for the contextual rail widths so future Focus Mode changes stay intentional.
+
+### Verification
+
+- `npm run lint`
+- `npm run build`
+- `npm run test:smoke`
+- Local Playwright geometry checks for Docs, Slides, Notes, Mail, and mobile Docs.
+
 ## v5.3.34 — Focus canvas polish
 
 Published September 10, 2026.
