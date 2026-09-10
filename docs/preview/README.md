@@ -1,10 +1,12 @@
-# v5.3.14 visual preview
+# Crescent Suite visual preview archive
+
+The newest screenshots in this archive were captured from v5.3.14. The current live release is v5.3.16; the releases after the screenshot capture are keyboard and semantic accessibility refinements with no persistent visual state.
 
 These screenshots are committed with Crescent milestones so the product can be reviewed directly from GitHub. The live preview is deployed from `main` through GitHub Pages when Pages is enabled for the repository.
 
 ## Current first-run pass
 
-These four screenshots capture the blank-workspace experience published in the current release:
+These four screenshots capture the blank-workspace experience published in the v5.3.14 first-run pass:
 
 - `mail-empty.png` — Mail with a useful local inbox state and direct New message action
 - `drive-empty.png` — Drive explaining both empty folders and empty recent files with direct actions
