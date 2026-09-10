@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.3.26 — Clean blank-workspace search
+
+Published September 10, 2026.
+
+### Fixed
+
+- Search no longer indexes blank initial Slides or untitled Notes records as if they were files.
+- Added fresh-workspace smoke coverage that rejects empty Search result titles.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.25 — Local-first clarity
 
 Published September 10, 2026.

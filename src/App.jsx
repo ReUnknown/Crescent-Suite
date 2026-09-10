@@ -468,8 +468,8 @@ function SearchResults({ query, onNavigate, workspace }) {
     workspace.docs?.title && { title: workspace.docs.title, type: "Docs", opened: workspace.docs.updatedAt ?? "just now", owner: "Me", icon: FileText, color: "blue" },
     workspace.sheets?.title && { title: workspace.sheets.title, type: "Sheets", opened: workspace.sheets.updatedAt ?? "just now", owner: "Me", icon: FileSpreadsheet, color: "green" },
     workspace.slidesTitle && { title: workspace.slidesTitle, type: "Slides", opened: "just now", owner: "Me", icon: Presentation, color: "gold" },
-    ...(workspace.slides ?? []).map((slide) => ({ title: slide.title, type: "Slides", opened: "just now", owner: "Me", icon: Presentation, color: "gold" })),
-    ...(workspace.notes ?? []).map((note) => ({ title: note.title, type: "Notes", opened: note.updatedAt ?? "just now", owner: "Me", icon: StickyNote, color: "lilac" })),
+    ...(workspace.slides ?? []).filter((slide) => String(slide.title ?? "").trim()).map((slide) => ({ title: slide.title, type: "Slides", opened: "just now", owner: "Me", icon: Presentation, color: "gold" })),
+    ...(workspace.notes ?? []).filter((note) => String(note.title ?? "").trim()).map((note) => ({ title: note.title, type: "Notes", opened: note.updatedAt ?? "just now", owner: "Me", icon: StickyNote, color: "lilac" })),
     workspace.formTitle && { title: workspace.formTitle, type: "Forms", opened: "just now", owner: "Me", icon: FormInput, color: "peach" },
     ...(workspace.mail ?? []).map((message) => ({ title: message.subject, type: "Mail", appId: "mail", opened: message.time ?? "just now", owner: message.from, icon: Mail, color: "peach" })),
   ].filter(Boolean);

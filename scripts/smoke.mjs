@@ -610,6 +610,10 @@ try {
           if (pageErrors.length || state.overflow || !state.workspaceClass.includes("workspace-local") || seededCopy.test(state.text) || hasLocalSlideResidue) failures.push({ viewport: viewport.name, route, pageErrors, overflow: state.overflow, workspaceClass: state.workspaceClass, seededCopy: seededCopy.test(state.text), hasLocalSlideResidue });
           if (route === "home" && viewport.name === "desktop" && await freshPage.getByText("Make Crescent yours.").count() !== 1) failures.push({ viewport: viewport.name, route, emptyState: "optional guide" });
           if (route === "home" && viewport.name === "desktop") {
+            await freshPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Slides");
+            const blankSearchTitles = await freshPage.locator(".search-result strong").allTextContents();
+            if (blankSearchTitles.some((title) => !title.trim())) failures.push({ viewport: viewport.name, route, search: "blank editor residue" });
+            await freshPage.keyboard.press("Escape");
             await freshPage.getByRole("button", { name: "Expand navigation", exact: true }).click();
             if (await freshPage.getByRole("button", { name: "More projects", exact: true }).count()) failures.push({ viewport: viewport.name, route, controls: "inert projects placeholder" });
             if (await freshPage.getByRole("button", { name: "Add your first project", exact: true }).count() !== 1) failures.push({ viewport: viewport.name, route, controls: "first project action" });
