@@ -13,7 +13,7 @@ These four screenshots capture the blank-workspace experience published in the c
 
 The earlier screenshots below document the seeded preview and interaction milestones that led to the current local-first product shell.
 
-- `home.png` — desktop home dashboard with all eight apps visible and a focused local-day rail
+- `home.png` — desktop home dashboard with all nine apps visible and a focused local-day rail
 - `local-workspaces.png` — Home with the persistent Workspaces and Projects navigation shell
 - `workspace-drive.png` — a locally created Workspace mirrored as an empty Drive folder
 - `search-local-navigation.png` — Global Search finding a locally created Workspace
