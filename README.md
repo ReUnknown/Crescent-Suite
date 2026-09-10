@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.35 — Focus workspace ergonomics**
+**v5.3.36 — Focus preview polish**
 
-Published September 10, 2026. Focus Mode now gives every suite surface more room for the work itself while keeping contextual navigation close at hand.
+Published September 10, 2026. Focus Mode keeps the work surface clear of navigation chrome and non-blocking preview notices.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -23,7 +23,7 @@ Public preview: [reunknown.github.io/Crescent-Suite](https://reunknown.github.io
 5. Use Settings → Reset workspace when you want a confirmed, blank local start; download a backup first if you may need the current work later.
 6. Your work is saved in this browser. Cloud sharing is intentionally not connected in this preview.
 
-Focus Mode hides the global sidebar and top navigation. Docs opens on a centered writing canvas with Outline hidden and Details available on demand; Slides keeps a compact slide picker while hiding the secondary design inspector; Notes and Mail keep compact selection rails so navigation remains one click away without taking over the canvas.
+Focus Mode hides the global sidebar and top navigation. Docs opens on a centered writing canvas with Outline hidden and Details available on demand; Slides keeps a compact slide picker while hiding the secondary design inspector; Notes and Mail keep compact selection rails so navigation remains one click away without taking over the canvas. The explicit Demo Preview status pill stays out of the editor header and never intercepts controls.
 
 ### Included
 

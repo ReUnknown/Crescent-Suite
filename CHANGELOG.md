@@ -1,5 +1,21 @@
 # Changelog
 
+## v5.3.36 — Focus preview polish
+
+Published September 10, 2026.
+
+### Improved
+
+- Moved the explicit Demo Preview status pill to the lower corner in Focus Mode so it no longer competes with editor actions or mobile headers.
+- Added a smoke assertion that preview status never overlaps an editor header on desktop.
+
+### Verification
+
+- `npm run lint`
+- `npm run build`
+- `npm run test:smoke`
+- Local Playwright desktop and mobile visual checks.
+
 ## v5.3.35 — Focus workspace ergonomics
 
 Published September 10, 2026.

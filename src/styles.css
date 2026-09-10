@@ -112,6 +112,7 @@ input, textarea { color: var(--text); }
 .app-shell.focus-mode .slide-inspector { display: none; }
 .app-shell.focus-mode .notes-workspace { grid-template-columns: 240px minmax(0, 840px); }
 .app-shell.focus-mode .mail-workspace { grid-template-columns: minmax(260px, 300px) minmax(0, 1fr); }
+.app-shell.focus-mode .demo-preview-banner { top: auto; bottom: 16px; }
 .demo-preview-banner { position: fixed; top: 14px; right: 18px; z-index: 55; display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid rgba(186, 172, 255, .30); border-radius: 999px; color: #e9e5ff; background: rgba(26, 24, 48, .94); box-shadow: 0 10px 28px rgba(0, 0, 0, .24); font-size: 11px; pointer-events: none; }
 .demo-preview-banner svg { color: #c2b5ff; }
 .demo-preview-banner strong { font-weight: 650; }

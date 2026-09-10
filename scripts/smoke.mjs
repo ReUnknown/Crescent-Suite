@@ -74,6 +74,12 @@ try {
         if (pageErrors.length || overflow || accessibility.unnamedButtons || accessibility.unnamedFields) failures.push({ viewport: viewport.name, route, pageErrors, overflow, accessibility });
         if (["docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms", "mail"].includes(route)) {
           if (!(await page.locator(".app-shell.focus-mode").count()) || !(await page.getByRole("button", { name: "Exit focus mode" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "default focus mode" });
+          if (viewport.name === "desktop") {
+            const banner = await page.locator(".demo-preview-banner").boundingBox();
+            const editorHeader = await page.locator(".editor-header").boundingBox();
+            const overlapsHeader = banner && editorHeader && banner.left < editorHeader.right && banner.right > editorHeader.left && banner.top < editorHeader.bottom && banner.bottom > editorHeader.top;
+            if (overlapsHeader) failures.push({ viewport: viewport.name, route, controls: "demo preview badge overlaps editor header" });
+          }
         if (viewport.name === "desktop" && route === "docs") {
             const docWorkspace = await page.locator(".doc-workspace").boundingBox();
             if (await page.locator(".doc-outline:visible").count() || !docWorkspace || docWorkspace.width < 800) failures.push({ viewport: viewport.name, route, controls: "focus mode wastes document canvas on outline rail", docWorkspace });
