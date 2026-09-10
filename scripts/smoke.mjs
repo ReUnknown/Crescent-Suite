@@ -168,6 +168,9 @@ try {
     await replyDialog.getByRole("button", { name: "Cancel" }).click();
     await behaviorPage.getByRole("button", { name: "New message" }).click();
     const composeDialog = behaviorPage.getByRole("dialog", { name: "Write something clear." });
+    await composeDialog.getByRole("textbox", { name: "To" }).press("Shift+Tab");
+    if (!(await behaviorPage.evaluate(() => document.activeElement?.getAttribute("aria-label") === "Close compose dialog"))) failures.push({ route: "mail", controls: "dialog focus trap" });
+    await composeDialog.getByRole("textbox", { name: "To" }).focus();
     await composeDialog.getByRole("textbox", { name: "To" }).fill("casey");
     await composeDialog.getByRole("textbox", { name: "Subject" }).fill("Smoke message");
     await composeDialog.getByRole("textbox", { name: "Message" }).fill("A local smoke-test message.");

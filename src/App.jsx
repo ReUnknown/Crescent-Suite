@@ -1556,6 +1556,22 @@ export default function App() {
     window.addEventListener("keydown", handleFocusShortcut);
     return () => window.removeEventListener("keydown", handleFocusShortcut);
   }, [activeApp, focusMode]);
+  useEffect(() => {
+    const handleDialogTab = (event) => {
+      if (event.key !== "Tab" || event.defaultPrevented) return;
+      const dialog = document.querySelector(".modal-scrim [role=\"dialog\"]");
+      if (!dialog) return;
+      const focusable = [...dialog.querySelectorAll("button, [href], input, textarea, select, [tabindex]:not([tabindex=\"-1\"])")].filter((node) => !node.disabled && node.getAttribute("aria-hidden") !== "true" && (node.offsetWidth || node.offsetHeight || node.getClientRects().length));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!dialog.contains(document.activeElement)) { event.preventDefault(); first.focus(); return; }
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    window.addEventListener("keydown", handleDialogTab);
+    return () => window.removeEventListener("keydown", handleDialogTab);
+  }, []);
   const currentView = useMemo(() => {
     if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} onFocusSearch={focusSearch} />;
     if (activeApp === "mail") return <MailView workspace={workspace} update={update} onNavigate={navigate} initialSubject={navigationContext?.title} />;

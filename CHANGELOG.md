@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.14 — Consistent dialog keyboarding
+
+Published September 10, 2026.
+
+### Improved
+
+- Added a shared keyboard focus guard for active Crescent dialogs.
+- Tab and Shift+Tab now stay inside Mail compose, Guide-adjacent creation flows, Calendar, Drive, Sidebar, and Trash dialogs until the user closes them.
+- Added smoke coverage for the Mail compose focus loop.
+
+### Verification
+
+- Local lint, build, and full smoke checks pass.
+
 ## v5.3.13 — Clear editor naming
 
 Published September 10, 2026.

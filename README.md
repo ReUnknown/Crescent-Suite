@@ -4,9 +4,9 @@ An all-in-one productivity workspace built to keep the work in one calm, consist
 
 ## Current release
 
-**v5.3.13 — Clear editor naming**
+**v5.3.14 — Consistent dialog keyboarding**
 
-Published September 10, 2026. Blank editor headers now use app-specific naming hints—document, spreadsheet, presentation, or form—instead of one generic label.
+Published September 10, 2026. Crescent dialogs now keep keyboard focus inside the active modal across the suite.
 
 Review the [committed visual preview archive](docs/preview/README.md) for milestone screenshots.
 
@@ -46,6 +46,7 @@ The current release provides a usable Crescent product shell and a local-first s
 - Drive’s New folder action now uses the same accessible dialog, duplicate guard, local-save language, and mobile-safe layout
 - Drive’s empty folders and recent-files sections now provide direct first-run actions instead of blank space
 - Blank editor headers now use app-specific “Untitled document/spreadsheet/presentation/form” hints for a more consistent first-run experience
+- Shared modal focus behavior now keeps Tab and Shift+Tab inside active dialogs, including Mail compose and local creation flows
 - Docs now adds links through a focused, URL-validated dialog that preserves the selected text and saves the result locally
 - Docs Details can be collapsed from the inspector or editor header and restored without leaving the document
 - Docs Focus Mode now starts with the optional Details inspector collapsed so the writing surface gets priority
