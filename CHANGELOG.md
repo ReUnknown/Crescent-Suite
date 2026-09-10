@@ -1,5 +1,22 @@
 # Changelog
 
+## v5.3.38 — Discoverable unnamed work
+
+Published September 10, 2026.
+
+### Improved
+
+- Recent now includes Docs, Sheets, Slides, Notes, and Forms after the user adds content even if the file is still unnamed.
+- Added honest fallback labels such as “Untitled document” without creating records for untouched blank editors.
+- Added smoke coverage for writing in Docs before naming the document.
+
+### Verification
+
+- `npm run lint`
+- `npm run build`
+- `npm run test:smoke`
+- Local Playwright visual check of the unnamed-document Recent card.
+
 ## v5.3.37 — First-run workflow coverage
 
 Published September 10, 2026.

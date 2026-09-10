@@ -203,14 +203,21 @@ function renameStarredFile(workspace, previousTitle, nextTitle) {
 
 function getLiveRecentFiles(workspace) {
   const sourceFor = (type, fallback) => RECENT_FILES.find((file) => file.type === type) ?? fallback;
+  const documentBody = String(workspace.docs?.body ?? "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const documentTitle = String(workspace.docs?.title ?? "").trim();
+  const sheetHasContent = Object.values(workspace.sheets?.cells ?? {}).some((value) => String(value ?? "").trim());
+  const presentationHasContent = (workspace.slides ?? []).some((slide) => [slide?.title, slide?.body, slide?.notes].some((value) => String(value ?? "").trim()));
+  const firstNote = (workspace.notes ?? []).find((note) => String(note?.title ?? "").trim() || String(note?.body ?? "").trim());
+  const firstNoteTitle = String(firstNote?.title ?? "").trim();
+  const formHasContent = Boolean(workspace.formTitle?.trim() || workspace.forms?.length);
   const liveFiles = [
-    workspace.docs?.title && { ...sourceFor("Docs"), title: workspace.docs.title, opened: workspace.docs.updatedAt ?? "just now", owner: "Me" },
-    workspace.sheets?.title && { ...sourceFor("Sheets"), title: workspace.sheets.title, opened: workspace.sheets.updatedAt ?? "just now", owner: "Me" },
-    (workspace.slidesTitle || workspace.slides?.[0]?.title) && { ...sourceFor("Slides"), title: workspace.slidesTitle || workspace.slides[0].title, opened: "just now", owner: "Me" },
-    workspace.notes?.[0]?.title && { ...sourceFor("Notes"), title: workspace.notes[0].title, opened: workspace.notes[0].updatedAt ?? "just now", owner: "Me" },
+    (documentTitle || documentBody) && { ...sourceFor("Docs"), title: documentTitle || "Untitled document", opened: workspace.docs.updatedAt ?? "just now", owner: "Me" },
+    (workspace.sheets?.title || sheetHasContent) && { ...sourceFor("Sheets"), title: workspace.sheets.title || "Untitled spreadsheet", opened: workspace.sheets.updatedAt ?? "just now", owner: "Me" },
+    (workspace.slidesTitle || presentationHasContent) && { ...sourceFor("Slides"), title: workspace.slidesTitle || "Untitled presentation", opened: "just now", owner: "Me" },
+    firstNote && { ...sourceFor("Notes"), title: firstNoteTitle || "Untitled note", opened: firstNote.updatedAt ?? "just now", owner: "Me" },
     workspace.tasks?.[0]?.title && { ...sourceFor("Tasks"), title: workspace.tasks[0].title, opened: workspace.tasks[0].due ?? "just now", owner: "Me" },
     workspace.calendarEvents?.[0]?.title && { ...sourceFor("Calendar"), title: workspace.calendarEvents[0].title, opened: workspace.calendarEvents[0].when ?? "just now", owner: "Me" },
-    workspace.formTitle && { ...sourceFor("Forms", { type: "Forms", icon: FormInput, color: "peach", owner: "Me", starred: false }), title: workspace.formTitle, opened: "just now", owner: "Me" },
+    formHasContent && { ...sourceFor("Forms", { type: "Forms", icon: FormInput, color: "peach", owner: "Me", starred: false }), title: workspace.formTitle?.trim() || "Untitled form", opened: "just now", owner: "Me" },
     workspace.mail?.[0]?.subject && { ...sourceFor("Mail"), title: workspace.mail[0].subject, opened: workspace.mail[0].time ?? "just now", owner: workspace.mail[0].from ?? "Me" },
   ].filter(Boolean);
   const liveTypes = new Set(liveFiles.map((file) => file.type));
