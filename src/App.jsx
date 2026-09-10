@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   AlignCenter,
   AlignLeft,
@@ -33,6 +33,8 @@ import {
   Menu,
   Mail,
   MailOpen,
+  Maximize2,
+  Minimize2,
   MoreHorizontal,
   NotebookPen,
   PanelLeftClose,
@@ -57,6 +59,7 @@ import {
 
 const STORAGE_KEY = "crescent-suite:workspace:v1";
 const SIDEBAR_KEY = "crescent-suite:sidebar-collapsed:v1";
+const FOCUS_APP_IDS = new Set(["docs", "sheets", "slides", "notes", "forms"]);
 
 const APP_META = [
   { id: "docs", label: "Docs", icon: FileText, color: "blue", description: "Write with clarity" },
@@ -441,7 +444,7 @@ function Sidebar({ activeApp, onNavigate, open, onClose, workspace, update, coll
   </>;
 }
 
-function Header({ activeApp, onOpenSidebar, onToggleSidebar, onOpenGuide, sidebarCollapsed, query, onQueryChange, onNavigate, workspace }) {
+function Header({ activeApp, onOpenSidebar, onToggleSidebar, onOpenGuide, onToggleFocus, focusMode, sidebarCollapsed, query, onQueryChange, onNavigate, workspace }) {
   const utilityTitles = { recent: "Recent", starred: "Starred", shared: "Shared with me", trash: "Trash", settings: "Settings" };
   const title = activeApp === "home" ? "Home" : APP_META.find((app) => app.id === activeApp)?.label ?? utilityTitles[activeApp] ?? "Crescent";
   const handleSearchKeyDown = (event) => {
@@ -453,7 +456,7 @@ function Header({ activeApp, onOpenSidebar, onToggleSidebar, onOpenGuide, sideba
     <button className="mobile-menu icon-button" onClick={onOpenSidebar} aria-label="Open navigation"><Menu size={20} /></button>
     <div className="mobile-title"><BrandMark small /><span>{title}</span></div>
     <div className="global-search"><Search size={19} /><input value={query} onChange={(event) => onQueryChange(event.target.value)} onKeyDown={handleSearchKeyDown} placeholder="Search across Crescent..." aria-label="Search across Crescent" aria-expanded={Boolean(query)} aria-controls="crescent-search-results" aria-autocomplete="list" aria-haspopup="listbox" /><kbd><Command size={13} />K</kbd></div>
-    <div className="topbar-actions"><button className="icon-button sidebar-toggle" aria-label={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} title={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} onClick={onToggleSidebar}>{sidebarCollapsed ? <PanelLeftOpen size={19} /> : <PanelLeftClose size={19} />}</button><button className="icon-button" aria-label="Open Crescent guide" onClick={onOpenGuide}><CircleHelp size={19} /></button><button className="icon-button" aria-label="Settings" onClick={() => onNavigate("settings")}><Settings2 size={19} /></button><div className="topbar-divider" /><button className="profile-button" aria-label="Local workspace" onClick={() => emitNotice("Crescent is running locally in this browser.")}><span>⌁</span><ChevronDown size={15} /></button></div>
+    <div className="topbar-actions"><button className="icon-button sidebar-toggle" aria-label={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} title={sidebarCollapsed ? "Expand navigation" : "Collapse navigation"} onClick={onToggleSidebar}>{sidebarCollapsed ? <PanelLeftOpen size={19} /> : <PanelLeftClose size={19} />}</button>{FOCUS_APP_IDS.has(activeApp) && <button className="icon-button focus-toggle" aria-label={focusMode ? "Exit focus mode" : "Enter focus mode"} title={focusMode ? "Exit focus mode" : "Enter focus mode"} onClick={onToggleFocus}>{focusMode ? <Minimize2 size={18} /> : <Maximize2 size={18} />}</button>}<button className="icon-button" aria-label="Open Crescent guide" onClick={onOpenGuide}><CircleHelp size={19} /></button><button className="icon-button" aria-label="Settings" onClick={() => onNavigate("settings")}><Settings2 size={19} /></button><div className="topbar-divider" /><button className="profile-button" aria-label="Local workspace" onClick={() => emitNotice("Crescent is running locally in this browser.")}><span>⌁</span><ChevronDown size={15} /></button></div>
     {query && <SearchResults query={query} onNavigate={onNavigate} workspace={workspace} />}
   </header>;
 }
@@ -536,11 +539,11 @@ function GettingStarted({ onNavigate, onDismiss }) {
 }
 
 function GuideDialog({ onClose, onNavigate }) {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const closeOnEscape = (event) => { if (event.key === "Escape") onClose(); };
-    const focusTimer = window.setTimeout(() => document.querySelector(".guide-dialog button")?.focus(), 0);
+    document.querySelector(".guide-dialog button")?.focus();
     window.addEventListener("keydown", closeOnEscape);
-    return () => { window.clearTimeout(focusTimer); window.removeEventListener("keydown", closeOnEscape); };
+    return () => window.removeEventListener("keydown", closeOnEscape);
   }, [onClose]);
   const guideItems = [
     ["Start at Home", "Use the app launcher to open a blank tool, or follow the optional three-step guide."],
@@ -548,7 +551,7 @@ function GuideDialog({ onClose, onNavigate }) {
     ["Plan and analyze", "Use Sheets for calculations, Tasks for next steps, and Calendar for time you want to protect."],
     ["Present, ask, and communicate", "Use Slides to tell the story, Forms to collect answers, and Mail to keep a local thread."],
     ["Keep work together", "Use Drive for named files and folders, Recent for momentum, and Search to jump to exact work."],
-    ["Keep your focus", "Collapse the navigation rail with the panel button. Your preference is remembered on this device."],
+    ["Keep your focus", "Docs, Sheets, Slides, Notes, and Forms open in Focus Mode to give the canvas the full viewport. Press Escape or use the corner control to return to navigation."],
     ["Protect your work", "Crescent saves your work in this browser. Open Settings to download a JSON backup before moving devices."],
   ];
   return <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section className="file-create-dialog guide-dialog" role="dialog" aria-modal="true" aria-labelledby="guide-title"><div className="file-create-heading"><div><span className="utility-kicker"><CircleHelp size={14} />Crescent guide</span><h2 id="guide-title">A calm way to get things done.</h2><p>Everything you need to start using the suite, without pre-filled work.</p></div><button className="icon-button muted" onClick={onClose} aria-label="Close guide"><X size={18} /></button></div><div className="guide-list">{guideItems.map(([title, body], index) => <article className="guide-item" key={title}><span>{index + 1}</span><div><strong>{title}</strong><p>{body}</p></div></article>)}</div><div className="guide-apps"><span>Open an app</span>{APP_META.map((app) => <button className="quiet-button" key={app.id} onClick={() => { onClose(); onNavigate(app.id); }}><AppIcon app={app} size={14} />{app.label}</button>)}</div><div className="file-create-footer"><span><HardDrive size={14} />Saved locally in this browser</span><button className="primary-button" onClick={onClose}>Got it</button></div></section></div>;
@@ -1460,6 +1463,7 @@ function appFromLocation() {
 export default function App() {
   const [workspace, update] = useWorkspace();
   const [activeApp, setActiveApp] = useState(appFromLocation);
+  const [focusMode, setFocusMode] = useState(() => FOCUS_APP_IDS.has(appFromLocation()));
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     try { return localStorage.getItem(SIDEBAR_KEY) !== "false"; } catch { return true; }
@@ -1474,7 +1478,7 @@ export default function App() {
     return () => window.removeEventListener("crescent:notice", handleNotice);
   }, []);
   useEffect(() => {
-    const handleLocationChange = () => { setActiveApp(appFromLocation()); setNavigationContext(window.history.state?.context ?? null); };
+    const handleLocationChange = () => { const nextApp = appFromLocation(); setActiveApp(nextApp); setFocusMode(FOCUS_APP_IDS.has(nextApp)); setNavigationContext(window.history.state?.context ?? null); };
     window.addEventListener("popstate", handleLocationChange);
     window.addEventListener("hashchange", handleLocationChange);
     return () => { window.removeEventListener("popstate", handleLocationChange); window.removeEventListener("hashchange", handleLocationChange); };
@@ -1525,8 +1529,16 @@ export default function App() {
     document.addEventListener("pointerdown", handleOutsideSearch);
     return () => document.removeEventListener("pointerdown", handleOutsideSearch);
   }, [query]);
-  const navigate = (id, context = null) => { setActiveApp(id); setNavigationContext(context); setQuery(""); setSidebarOpen(false); const nextHash = `#${id}`; const currentContext = window.history.state?.context ?? null; if (window.location.hash !== nextHash || JSON.stringify(currentContext) !== JSON.stringify(context)) window.history.pushState({ app: id, context }, "", nextHash); window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); };
+  const navigate = (id, context = null) => { setActiveApp(id); setFocusMode(FOCUS_APP_IDS.has(id)); setNavigationContext(context); setQuery(""); setSidebarOpen(false); const nextHash = `#${id}`; const currentContext = window.history.state?.context ?? null; if (window.location.hash !== nextHash || JSON.stringify(currentContext) !== JSON.stringify(context)) window.history.pushState({ app: id, context }, "", nextHash); window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); };
   const focusSearch = () => { setQuery(""); window.setTimeout(() => document.querySelector(".global-search input")?.focus(), 0); };
+  useEffect(() => {
+    const handleFocusShortcut = (event) => {
+      if (event.key === "Escape" && focusMode) { event.preventDefault(); setFocusMode(false); return; }
+      if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toLowerCase() === "f" && FOCUS_APP_IDS.has(activeApp)) { event.preventDefault(); setFocusMode((current) => !current); }
+    };
+    window.addEventListener("keydown", handleFocusShortcut);
+    return () => window.removeEventListener("keydown", handleFocusShortcut);
+  }, [activeApp, focusMode]);
   const currentView = useMemo(() => {
     if (activeApp === "home") return <HomeView workspace={workspace} update={update} onNavigate={navigate} onFocusSearch={focusSearch} />;
     if (activeApp === "mail") return <MailView workspace={workspace} update={update} onNavigate={navigate} initialSubject={navigationContext?.title} />;
@@ -1540,5 +1552,5 @@ export default function App() {
     if (activeApp === "forms") return <FormsView workspace={workspace} update={update} onNavigate={navigate} initialQuestionId={navigationContext?.questionId} />;
     return <UtilityView id={activeApp} workspace={workspace} update={update} onNavigate={navigate} />;
   }, [activeApp, navigationContext, workspace, update]);
-  return <div className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""} ${workspace.demo ? "workspace-demo" : "workspace-local"}`}><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} workspace={workspace} update={update} collapsed={sidebarCollapsed} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} onToggleSidebar={() => setSidebarCollapsed((current) => !current)} onOpenGuide={() => setGuideOpen(true)} sidebarCollapsed={sidebarCollapsed} query={query} onQueryChange={setQuery} onNavigate={navigate} workspace={workspace} /><div className="app-content">{currentView}</div></div><div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div>{guideOpen && <GuideDialog onClose={() => setGuideOpen(false)} onNavigate={navigate} />}</div>;
+  return <div className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""} ${focusMode ? "focus-mode" : ""} ${workspace.demo ? "workspace-demo" : "workspace-local"}`}><Sidebar activeApp={activeApp} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} workspace={workspace} update={update} collapsed={sidebarCollapsed} /><div className="app-main"><Header activeApp={activeApp} onOpenSidebar={() => setSidebarOpen(true)} onToggleSidebar={() => setSidebarCollapsed((current) => !current)} onOpenGuide={() => setGuideOpen(true)} onToggleFocus={() => setFocusMode((current) => !current)} focusMode={focusMode} sidebarCollapsed={sidebarCollapsed} query={query} onQueryChange={setQuery} onNavigate={navigate} workspace={workspace} /><div className="app-content">{currentView}</div></div>{focusMode && <button className="focus-exit" onClick={() => setFocusMode(false)} aria-label="Exit focus mode" title="Exit focus mode"><Minimize2 size={17} /></button>}<div className={`toast ${notice ? "toast-visible" : ""}`} role="status" aria-live="polite"><CheckCircle2 size={16} />{notice}</div>{guideOpen && <GuideDialog onClose={() => setGuideOpen(false)} onNavigate={navigate} />}</div>;
 }

@@ -70,6 +70,11 @@ try {
           unnamedFields: [...document.querySelectorAll("input,textarea,select,[contenteditable=true]")].filter((node) => !((node.getAttribute("aria-label") || node.getAttribute("title") || node.getAttribute("placeholder") || node.labels?.length || node.getAttribute("role") || "").toString().trim())).length,
         }));
         if (pageErrors.length || overflow || accessibility.unnamedButtons || accessibility.unnamedFields) failures.push({ viewport: viewport.name, route, pageErrors, overflow, accessibility });
+        if (["docs", "sheets", "slides", "notes", "forms"].includes(route)) {
+          if (!(await page.locator(".app-shell.focus-mode").count()) || !(await page.getByRole("button", { name: "Exit focus mode" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "default focus mode" });
+          await page.getByRole("button", { name: "Exit focus mode" }).click();
+          if (!(await page.getByRole("button", { name: "Enter focus mode" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "focus mode exit" });
+        }
         if (route === "docs" && await page.title() !== "Docs · Crescent Suite") failures.push({ viewport: viewport.name, route, title: await page.title() });
         if (viewport.name === "mobile" && ["docs", "sheets", "slides", "forms"].includes(route) && !(await page.getByRole("button", { name: "Move to Trash" }).isVisible())) failures.push({ viewport: viewport.name, route, controls: "mobile editor Trash action" });
         if (viewport.name === "mobile" && ["docs", "sheets", "slides", "notes", "tasks", "calendar", "drive", "forms"].includes(route) && !(await page.locator(".editor-actions > .secondary-button:visible").count())) failures.push({ viewport: viewport.name, route, controls: "mobile editor secondary actions" });
@@ -132,6 +137,10 @@ try {
 
   const behaviorPage = preparePage(await browser.newPage({ viewport: viewports[0] }));
   try {
+    const ensureGlobalChrome = async () => {
+      const exitFocus = behaviorPage.getByRole("button", { name: "Exit focus mode" });
+      if (await exitFocus.count()) await exitFocus.click();
+    };
     await behaviorPage.goto(`${baseUrl}/mail`, { waitUntil: "networkidle" });
     if (await behaviorPage.getByRole("button", { name: "Open message Design review tomorrow" }).count() !== 1) failures.push({ route: "mail", controls: "inbox message" });
     await behaviorPage.getByRole("button", { name: "Open message Growth metrics are ready" }).click();
@@ -465,16 +474,19 @@ try {
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     await behaviorPage.waitForFunction(() => document.querySelector(".name-box")?.textContent === "A2");
     if (behaviorPage.url().split("#")[1] !== "sheets" || await behaviorPage.getByRole("textbox", { name: "Formula bar" }).inputValue() !== "Organic") failures.push({ route: "search", controls: "open exact Sheets cell result", url: behaviorPage.url() });
+    await ensureGlobalChrome();
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("What are you working on?");
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     await behaviorPage.waitForSelector(".form-question.selected");
     if (behaviorPage.url().split("#")[1] !== "forms" || await behaviorPage.locator(".form-question.selected").count() !== 1) failures.push({ route: "search", controls: "open exact Forms question result", url: behaviorPage.url() });
+    await ensureGlobalChrome();
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("North star");
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     await behaviorPage.waitForSelector(".document-inner .search-target");
     if (behaviorPage.url().split("#")[1] !== "docs" || !(await behaviorPage.locator(".document-inner .search-target").innerText()).includes("North star")) failures.push({ route: "search", controls: "open exact Docs heading result", url: behaviorPage.url() });
     await behaviorPage.locator(".document-inner").evaluate((editor) => editor.blur());
     await behaviorPage.waitForFunction(() => !JSON.parse(localStorage.getItem("crescent-suite:workspace:v1") ?? "{}").docs?.body?.includes("search-target"));
+    await ensureGlobalChrome();
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).fill("Launch ideas");
     await behaviorPage.getByRole("textbox", { name: "Search across Crescent" }).press("Enter");
     if (behaviorPage.url().split("#")[1] !== "notes" || await behaviorPage.getByRole("textbox", { name: "Note title" }).inputValue() !== "Launch ideas") failures.push({ route: "search", controls: "open exact note result", url: behaviorPage.url() });
@@ -566,7 +578,7 @@ try {
     console.error(JSON.stringify(failures, null, 2));
     process.exitCode = 1;
   } else {
-    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; actionable empty-state navigation; local-only sharing feedback; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
+    console.log(`Crescent smoke: ${routes.length * viewports.length} routes passed; ${freshRoutes.length * viewports.length} isolated blank-workspace routes passed; default Focus Mode and keyboard-safe exit controls; actionable empty-state navigation; local-only sharing feedback; guided local workspace/project/folder creation and project-linked task creation; Calendar Week has 7 days; mobile Calendar navigation; guided local event creation with inline editing, natural-language dates, live Recent, reversible Calendar events, and timed ICS export; Month has 42 cells; recoverable Docs, Sheets, Slides, and Forms files with displaced-file recovery; independent Form Scale answers; editable task titles and due dates; guided Docs link insertion; guided Trash cleanup confirmations; clear Forms multi-response state and Long answer controls; live Task Starred recovery; content search, local formulas (including COUNT), response history and CSV export, safe exports, accessible cross-app Drive file creation and recovery, and Slides presentation controls are active.`);
   }
 } finally {
   server.kill("SIGTERM");

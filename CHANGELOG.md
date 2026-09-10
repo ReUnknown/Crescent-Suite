@@ -1,5 +1,20 @@
 # Changelog
 
+## v5.2.0 — Focus workspace
+
+Published September 10, 2026.
+
+### Improved
+
+- Docs, Sheets, Slides, Notes, and Forms now open in Focus Mode so the canvas uses the full viewport without the persistent navigation rail or global header.
+- Added an explicit corner exit control, Escape dismissal, and `⌘/Ctrl + Shift + F` toggle for predictable navigation recovery.
+- Updated the in-product guide and README to explain the new workspace posture and its keyboard path.
+- Added desktop/mobile smoke coverage for entering and leaving Focus Mode, while keeping global Search coverage explicit after exiting the focused surface.
+
+### Verification
+
+- `npm run lint`, `npm run build`, and `npm run test:smoke` pass with 32 main routes and 30 isolated blank-workspace routes.
+
 ## v5.1.9 — Complete in-product guide
 
 Published September 10, 2026.
